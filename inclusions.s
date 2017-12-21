@@ -6,6 +6,7 @@
 .include "utils/stack.s"
 .include "utils/strings.s"
 .include "utils/zornil.s"
+.include "lispfuncs/append.s"
 .include "lispfuncs/atom.s"
 .include "lispfuncs/car_cdr.s"
 .include "lispfuncs/cons.s"

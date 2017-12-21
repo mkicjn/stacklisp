@@ -21,3 +21,10 @@
 	movq	\code, %rdi
 	call	exit@plt
 .endm
+
+.macro	debug_disp
+	call	dup
+	call	disp
+	call	drop
+	call	terpri
+.endm

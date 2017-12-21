@@ -3,6 +3,16 @@
 teststr:
 	.string "sym"
 
+xstr:
+	.string "0x%x\n"
+
+print_addr:
+	leaq	xstr(%rip), %rdi
+	movq	8(%rsp), %rsi
+	xorq	%rax, %rax
+	call	printf@plt
+	ret
+
 .globl	main
 .type	main, @function
 main:
@@ -27,10 +37,17 @@ main:
 	call	cons # (sym . 30)
 	call	cons # (10 sym . 30)
 
-	call	copy
+	call	print_addr
+	call	dup
 	call	disp
-	call	drop
 	call	terpri
+	call	drop
+	call	copy
+	call	print_addr
+	call	disp
+	call	terpri
+	call	drop
+	call	drop
 
 	leave
 	ret
