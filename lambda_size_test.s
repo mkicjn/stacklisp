@@ -3,19 +3,6 @@
 teststr:
 	.string "sym"
 
-iform:
-	.string "%li\n"
-
-.type	printint, @function
-printint:
-	leaq	iform(%rip), %rdi
-	movq	8(%rsp), %rsi
-	xorq	%rax, %rax
-	call	printf@plt
-	call	swap
-	addq	$8, %rsp
-	ret
-
 .globl	main
 .type	main, @function
 main:
@@ -59,6 +46,7 @@ main:
 	call	terpri
 	call	lambda_size
 	call	printint
+	call	drop
 
 	leave
 	ret

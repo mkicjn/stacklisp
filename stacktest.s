@@ -8,14 +8,15 @@ main:
 	# Pretend these are addresses
 	pushq	$1
 	pushq	$2
-	call	cons
-	call	dup
-	call	car
+	pushq	$3
+	pushq	$4
+	pushq	$5
+	call	drop
+	call	drop
 	call	printint
 	call	drop
-	call	cdr
-	call	printint
 	call	drop
+	call	printint
 
 	leave
 	ret

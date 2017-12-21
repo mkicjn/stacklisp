@@ -48,6 +48,7 @@ disp:
 	call	putchar@plt # space
 
 	call	cdr # Get the cell's tail
+	movq	(%rsp), %rdi
 	call	zornil # Is it null?
 	cmpq	$1, %rax
 	jz	.disp_cell_lx 

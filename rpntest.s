@@ -30,6 +30,10 @@ main:
 	call	cons
 	call	cons
 	call	cons
+	call	dup
+	call	disp
+	call	drop
+	call	terpri
 	call	rpn
 	call	disp
 	call	drop

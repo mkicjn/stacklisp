@@ -3,6 +3,7 @@ lambda_size: # Predicts the size of the compiled body, not including # of args (
 	xorq	%r8, %r8
 	pushq	8(%rsp)
 	.lambda_size_loop:
+	movq	(%rsp), %rdi
 	call	zornil
 	cmpq	$1, %rax
 	je	.lambda_size_ret

@@ -4,6 +4,7 @@ nconc:
 	.nconc_loop:
 	call	dup
 	call	cdr
+	movq	(%rsp), %rdi
 	call	zornil
 	cmpq	$1, %rax
 	call	drop

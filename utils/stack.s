@@ -56,3 +56,15 @@ over:
 	pushq	8(%rsp)
 	pushq	%rdi
 	ret
+##########################################
+iform:
+	.string "%li\n"
+.type	printint, @function
+printint:
+	leaq	iform(%rip), %rdi
+	movq	8(%rsp), %rsi
+	xorq	%rax, %rax
+	call	printf@plt
+	#popq	%rdi
+	#movq	%rdi, (%rsp)
+	ret
