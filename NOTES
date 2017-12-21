@@ -318,3 +318,4 @@ Here's a perfect two-function solution:
 (defun maprpn (l) (if l (append (rpn (car l)) (maprpn (cdr l))) nil))
 
 This is much easier to translate.
+New observation: append can be replaced with nconc to help avoid memory management issues

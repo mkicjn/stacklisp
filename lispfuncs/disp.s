@@ -7,13 +7,13 @@ fstr:
 disp:
 	movq	8(%rsp), %rdi
 	call	zornil
-	cmp	$1, %rdi
+	cmpq	$1, %rdi
 	je	.disp_nil
-	cmp	$0, (%rdi)
+	cmpq	$0, (%rdi)
 	jz	.disp_cell
-	cmp	$1, (%rdi)
+	cmpq	$1, (%rdi)
 	je	.disp_sym
-	cmp	$2, (%rdi)
+	cmpq	$2, (%rdi)
 	je	.disp_num
 	jmp	.disp_exit # Unknown datatype
 	.disp_nil:
