@@ -299,3 +299,22 @@ Then it needs to be flattened, and this resulted in the final product above.
 On its own, flatten can be defined by (defun flatten (l) (if (atom l) (cons l nil) (reduce #'append (mapcar #'flatten l))))
 
 Now I just need figure out how to translate rpn into assembly
+
+One thing that would make it easier would be to take the functional programming techniques out of it.
+If I can rewrite rpn using loop (and recursion), the translation will be much easier.
+
+Here's a candidate that's almost good:
+(defun rpn (l) (if (atom l) (cons l nil) (append (rpn (cdr l)) (rpn (car l)))))
+But, it leaves a few NILs in the list, one before any nested expression's translation.
+I suspect that a small modification would fix this. The other option is remove-if #'null.
+Another issue is that it reverses the arguments.
+A two-function solution could work for this.
+
+Here's a candidate that solves the NIL problem:
+(defun rpn (l) (cond ((null l) nil) ((atom l) (cons l nil)) (t (append (rpn (cdr l)) (rpn (car l))))))
+
+Here's a perfect two-function solution:
+(defun rpn (l) (cond ((null l) nil) ((atom l) (cons l nil)) (t (append (maprpn (cdr l)) (rpn (car l))))))
+(defun maprpn (l) (if l (append (rpn (car l)) (maprpn (cdr l))) nil))
+
+This is much easier to translate.
