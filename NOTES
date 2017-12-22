@@ -301,7 +301,7 @@ On its own, flatten can be defined by (defun flatten (l) (if (atom l) (cons l ni
 Addendum - Flatten can also be defined this way without using any functional programming techniques:
 (defun flatten (l) (cond ((null l) nil) ((atom l) (cons l nil)) (t (append (flatten (car l)) (flatten (cdr l))))))
 It's at least a more elegant solution than the LISP I Programmer's Manual solution, "collapse", on page 100.
-Note that append can be defined in terms of only predicates. As per MJLisp's examples.lisp:
+Note that append can be defined in terms of only primitives. As per MJLisp's examples.lisp:
 (define 'append (lambda (l a) (if l (cons (car l) (append (cdr l) a)) a)))
 
 Now I just need figure out how to translate rpn into assembly

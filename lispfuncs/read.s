@@ -82,17 +82,17 @@ to_var: # Standard calling convention
 	leaq	NIL(%rip), %rax
 	ret
 
-.type	tospace, @function
-tospace: # Standard calling convention
+.type	to_space, @function
+to_space: # Standard calling convention
 	pushq	%rdi
 	xorq	%rax, %rax
 	movq	$-1, %rcx
-	.tospace_loop:
+	.to_space_loop:
 	incq	%rcx
 	cmpb	$0, (%rdi,%rcx,1)
-	jz	.tospace_break
+	jz	.to_space_break
 	cmpb	$32, (%rdi,%rcx,1)
-	jne	.tospace_loop
+	jne	.to_space_loop
 	push	%rcx
 	movq	%rcx, %rdi
 	call	malloc@plt
@@ -104,30 +104,31 @@ tospace: # Standard calling convention
 	popq	%rax
 	call	drop
 	call	drop
-	.tospace_break:
+	.to_space_break:
 	ret
 
-.type	toparen, @function
-toparen: # Standard calling convention
+.type	to_paren, @function
+to_paren: # Standard calling convention
 	pushq	%rdi
+	xorq	%rax, %rax
 	xorq	%rdx, %rdx
 	movq	$-1, %rcx
-	.toparen_loop:
+	.to_paren_loop:
 	incq	%rcx
 	cmpb	$0, (%rdi,%rcx,1)
-	jz	.toparen_break
+	jz	.to_paren_break
 	cmpb	$40, (%rdi,%rcx,1)
-	je	.toparen_lp
+	je	.to_paren_lp
 	cmpb	$41, (%rdi,%rcx,1)
-	je	.toparen_rp
-	jmp	.toparen_loop
-	.toparen_lp:
+	je	.to_paren_rp
+	jmp	.to_paren_loop
+	.to_paren_lp:
 	incq	%rdx
-	jmp	.toparen_loop
-	.toparen_rp:
+	jmp	.to_paren_loop
+	.to_paren_rp:
 	decq	%rdx
 	cmpq	$0, %rdx
-	jne	.toparen_loop
+	jne	.to_paren_loop
 	incq	%rcx
 	pushq	%rcx
 	movq	%rcx, %rdi
@@ -137,6 +138,62 @@ toparen: # Standard calling convention
 	popq	%rsi
 	pushq	%rdi
 	call	memcpy@plt
-	.toparen_break:
+	.to_paren_break:
 	popq	%rax
 	ret
+
+.type	read_str, @function
+read_str: # Standard calling convention
+	leaq	NIL(%rip), %rax
+	pushq	%rax
+	decq	%rdi
+	.read_str_loop:
+	incq	%rdi
+	cmpb	$0, (%rdi)	# Check for end of string
+	jz	.read_str_ret
+	cmpb	$40, (%rdi)	# Check for open parenthesis
+	je	.read_str_list
+				# Checks for whitespace
+	cmpb	$32, (%rdi)
+	je	.read_str_loop
+	cmpb	$13, (%rdi)
+	je	.read_str_loop
+	cmpb	$10, (%rdi)
+	je	.read_str_loop
+	cmpb	$9, (%rdi)
+	je	.read_str_loop
+				# Must be an atom, then
+	pushq	%rdi
+	call	to_space
+	pushq	%rax
+	movq	%rax, %rdi
+	call	strlen@plt
+	popq	%rdi
+	addq	%rax, (%rsp) # Add string length to string pointer
+	call	to_var
+	popq	%rdi
+	pushq	%rax
+	leaq	NIL(%rip), %rax
+	pushq	%rax
+	call	cons
+	jmp	.read_str_loop
+	.read_str_list:
+	#############################
+	pushq	%rdi
+	call	to_paren
+	pushq	%rax
+	movq	%rax, %rdi
+	call	strlen@plt
+	popq	%rdi
+	addq	%rax, (%rsp) # Add string length to string pointer
+	call	read_str
+	popq	%rdi
+	pushq	%rax
+	leaq	NIL(%rip), %rax
+	pushq	%rax
+	call	cons
+	call	nconc
+	jmp	.read_str_loop
+	#############################
+	.read_str_ret:
+	ret #########################

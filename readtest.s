@@ -1,13 +1,7 @@
 .include "inclusions.s"
 
-str1:
-	.string "1234567890"
-str2:
-	.string "abcdefghij"
-str3:
-	.string "(1 2) 3 4 5 6 7 8 9 0)"
-str4:
-	.string "((((test)))"
+str:
+	.string "123 "
 
 .globl	main
 .type	main, @function
@@ -15,10 +9,12 @@ main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 
-	leaq	str3(%rip), %rdi
-	call	toparen
+	leaq	str(%rip), %rdi
+	call	read_str
 	movq	%rax, %rdi
-	call	puts@plt
+	call	disp
+	call	drop
+	call	terpri
 
 	leave
 	ret
