@@ -58,6 +58,7 @@ main:
 	call	disp
 	call	drop
 	call	terpri
+	call	copy
 	call	rpn
 	call	disp # Expect (2 3 1 1 + - - 2 +)
 	call	drop

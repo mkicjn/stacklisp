@@ -15,4 +15,5 @@
 .include "lispfuncs/eq.s"
 .include "lispfuncs/funcall.s"
 .include "lispfuncs/nconc.s"
+.include "lispfuncs/read.s"
 .include "lispfuncs/terpri.s"
