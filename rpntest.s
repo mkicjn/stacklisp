@@ -35,7 +35,7 @@ main:
 	call	drop
 	call	terpri
 	call	rpn
-	call	disp
+	call	disp # Expecting (2 1 +) with maprpn in rpn changed to rpn
 	call	drop
 	call	terpri
 

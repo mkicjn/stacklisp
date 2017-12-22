@@ -26,8 +26,13 @@ main:
 	movq	$2, %rsi
 	call	new_var
 	pushq	%rax
+	movq	$4, %rdi
+	movq	$2, %rsi
+	call	new_var
+	pushq	%rax
 	leaq	NIL(%rip), %rax
 	pushq	%rax
+	call	cons
 	call	cons
 	call	dup
 	call	disp

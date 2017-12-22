@@ -1,70 +1,9 @@
-# Recursion is easier with standard calling conventions (preserving registers)
-# So, these will be written with standard calling conventions, with a helper function for argument on the stack
-
-#
-#	Something is broken in here at the moment
-#	It looks to be a problem in maprpn
-#
-
-# (defun rpn (l) (cond ((null l) nil) ((atom l) (cons l nil)) (t (nconc (maprpn (cdr l)) (rpn (car l))))))
-.type	scc_rpn, @function
-scc_rpn:
-	pushq	%rdi
-	#debug_disp
-	call	zornil
-	cmpq	$1, %rax
-	leaq	NIL(%rip), %rax
-	je	.scc_rpn_nil
-	movq	(%rsp), %rdi # Recall form
-	cmpq	$0, (%rdi) # Check if list
-	jnz	.scc_rpn_atom
-	popq	%rdi
-	movq	16(%rdi), %rdi	# cdr
-	call	maprpn
-	pushq	%rax
-	movq	8(%rsp), %rdi # Recall form
-	movq	8(%rdi), %rdi # car
-	call	scc_rpn
-	pushq	%rax
-	call	nconc
-	popq	%rax
-	ret
-	.scc_rpn_atom:
-	pushq	%rax # nil
-	call	cons
-	popq	%rax
-	ret
-	.scc_rpn_nil:
-	popq	%rdi
-	ret
-
-# (defun maprpn (l) (if l (nconc (rpn (car l)) (maprpn (cdr l))) nil))
-.type	maprpn, @function
-maprpn: # Standard calling convention. Never to be called on an atom (other than nil)
-	pushq	%rdi
-	call	zornil
-	call	drop
-	cmpq	$1, %rax
-	je	.maprpn_nil
-	movq	8(%rsp), %rdi
-	movq	8(%rdi), %rdi # car
-	call	scc_rpn
-	pushq	%rax
-	movq	16(%rsp), %rdi
-	movq	16(%rdi), %rdi # cdr
-	call	maprpn
-	pushq	%rax
-	call	nconc
-	popq	8(%rsp)
-	ret
-	.maprpn_nil:
-	popq	%rdi
-	leaq	NIL(%rip), %rax
-	ret
-
+# (defun rpn (l) (if (atom l) (cons l nil) (nconc (maprpn (cdr l)) (rpn (car l)))))
 .type	rpn, @function
-rpn: # Stack-based helper function
-	movq	8(%rsp), %rdi
-	call	scc_rpn
-	movq	%rax, 8(%rsp)
+rpn:
+	ret
+
+# (defun maprpn (l) (if (atom l) l (nconc (rpn (car l)) (maprpn (cdr l)))))
+.type	maprpn, @function
+maprpn:
 	ret

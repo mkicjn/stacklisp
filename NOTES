@@ -319,3 +319,36 @@ Here's a perfect two-function solution:
 
 This is much easier to translate.
 New observation: append can be replaced with nconc to help avoid memory management issues
+Another new observation: maprpn can be replaced by rpn.
+This reintroduces the argument rearranging issue but can be used to test rpn alone instead of debugging two functions at once.
+
+Side note: It would be cool if, down the line, I add address and dereference functions to implement "pointers" in the language.
+
+I've had trouble producing a working rpn function in assembly.
+So, here's another interesting idea that might help: The rpn translator function can translate itself.
+This might help with the translation into assembly, even if the conditionals are mangled and NIL doesn't appear.
+Here they are, with important bits in braces, and missing NILs in brackets:
+rpn: ([NIL] L NULL L [NIL] CONS L ATOM {L CDR MAPRPN L CAR RPN APPEND} T COND)
+maprpn: (L {L CAR RPN L CDR MAPRPN APPEND} IF)
+
+The repetition between them makes me think I could have them be almost copies of each other, so I'll experiment with that.
+Here is a function pair solution where the two functions are very similar:
+(defun rpn (l) (cond ((atom l) (cons l nil)) (t (if l (append (maprpn (cdr l)) (rpn (car l))) nil))))
+(defun maprpn (l) (cond ((atom l) l) (t (if l (append (rpn (car l)) (maprpn (cdr l))) nil))))
+
+Example output:
+(rpn '(+ (- 2 (- 3 (+ 1 1))) 2))
+	=> (2 3 1 1 + - - 2 +)
+
+Here's an even better iteration, a much shorter one that produces the same output as above:
+
+(defun rpn (l) (if (atom l) (cons l nil) (nconc (maprpn (cdr l)) (rpn (car l)))))
+(defun maprpn (l) (if (atom l) l (nconc (rpn (car l)) (maprpn (cdr l)))))
+
+There are only two difference between the functions:
+1.	rpn: (cons l nil) -> maprpn: l
+2.	Swap (maprpn (cdr l)) and (rpn (car l))
+
+Upon further testing, I have determined that this new function pair preserves NILs.
+This is a good development! I'm going to rewrite the assembly functions with these instead.
+I'm honestly not sure I could come up with a better solution, so this is what I'm going with.

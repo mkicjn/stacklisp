@@ -1,9 +1,9 @@
 # Stack-oriented functions meant to be called in succession, Forth-style
 .type	dup, @function
 dup:
-	popq	%rdi
+	popq	%rax
 	pushq	(%rsp)
-	pushq	%rdi
+	pushq	%rax
 	ret
 .type	inc, @function
 inc:				# : inc 1 + ;
@@ -55,6 +55,12 @@ over:
 	popq	%rdi
 	pushq	8(%rsp)
 	pushq	%rdi
+	ret
+.type	nip, @function
+nip:
+	movq	8(%rsp), %rax
+	movq	%rax, 16(%rsp)
+	popq	(%rsp)
 	ret
 ##########################################
 iform:

@@ -28,3 +28,12 @@
 	call	drop
 	call	terpri
 .endm
+
+.macro	debug_disp_rdi
+	pushq	%rdi
+	call	dup
+	call	disp
+	call	drop
+	popq	%rdi
+	call	terpri
+.endm

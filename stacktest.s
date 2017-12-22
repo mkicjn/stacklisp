@@ -11,10 +11,12 @@ main:
 	pushq	$3
 	pushq	$4
 	pushq	$5
+	call	nip
+	call	dup
+	call	printint
 	call	drop
 	call	drop
 	call	printint
-	call	drop
 	call	drop
 	call	printint
 
