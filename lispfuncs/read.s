@@ -81,3 +81,62 @@ to_var: # Standard calling convention
 	addq	$8, %rsp # drop
 	leaq	NIL(%rip), %rax
 	ret
+
+.type	tospace, @function
+tospace: # Standard calling convention
+	pushq	%rdi
+	xorq	%rax, %rax
+	movq	$-1, %rcx
+	.tospace_loop:
+	incq	%rcx
+	cmpb	$0, (%rdi,%rcx,1)
+	jz	.tospace_break
+	cmpb	$32, (%rdi,%rcx,1)
+	jne	.tospace_loop
+	push	%rcx
+	movq	%rcx, %rdi
+	call	malloc@plt
+	pushq	%rax
+	movq	%rax, %rdi
+	movq	16(%rsp), %rsi
+	movq	8(%rsp), %rdx
+	call	memcpy@plt
+	popq	%rax
+	call	drop
+	call	drop
+	.tospace_break:
+	ret
+
+.type	toparen, @function
+toparen: # Standard calling convention
+	pushq	%rdi
+	xorq	%rdx, %rdx
+	movq	$-1, %rcx
+	.toparen_loop:
+	incq	%rcx
+	cmpb	$0, (%rdi,%rcx,1)
+	jz	.toparen_break
+	cmpb	$40, (%rdi,%rcx,1)
+	je	.toparen_lp
+	cmpb	$41, (%rdi,%rcx,1)
+	je	.toparen_rp
+	jmp	.toparen_loop
+	.toparen_lp:
+	incq	%rdx
+	jmp	.toparen_loop
+	.toparen_rp:
+	decq	%rdx
+	cmpq	$0, %rdx
+	jne	.toparen_loop
+	incq	%rcx
+	pushq	%rcx
+	movq	%rcx, %rdi
+	call	malloc@plt
+	movq	%rax, %rdi
+	popq	%rdx
+	popq	%rsi
+	pushq	%rdi
+	call	memcpy@plt
+	.toparen_break:
+	popq	%rax
+	ret
