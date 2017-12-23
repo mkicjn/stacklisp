@@ -160,7 +160,7 @@ next_tok: # Standard calling convention
 	ret
 
 .type	read_list, @function
-read_list:
+read_list: # Standard calling convention
 	pushq	%rdi # string
 	call	infer_type
 	cmpq	$0, %rax
@@ -195,4 +195,21 @@ read_list:
 	.read_list_ret:
 	popq	%rax
 	addq	$8, %rsp
+	ret
+
+.type	lread, @function
+lread: # Stack-oriented. Expects number of bytes to read from stdin as var on stack.
+	movq	8(%rsp), %rax
+	movq	8(%rax), %rdi
+	pushq	%rdi
+	incq	%rdi
+	call	malloc@plt
+	xorq	%rdi, %rdi
+	movq	%rax, %rsi
+	popq	%rdx
+	pushq	%rsi
+	call	read@plt
+	popq	%rdi
+	call	read_list
+	movq	%rax, 8(%rsp)
 	ret

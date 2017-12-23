@@ -1,18 +1,17 @@
 .include "inclusions.s"
 
-str:
-	.string "(1 (2 test 3) 4)"
-
 .globl	main
 .type	main, @function
 main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 
-	leaq	str(%rip), %rdi
-
-	call	read_list
+	movq	$100, %rdi
+	movq	$2, %rsi
+	call	new_var
 	pushq	%rax
+	call	lread
+	call	rpn
 	call	disp
 	call	drop
 	call	terpri
