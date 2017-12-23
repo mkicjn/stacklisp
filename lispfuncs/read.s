@@ -67,6 +67,7 @@ to_var: # Standard calling convention
 	pushq	%rax
 	leaq	scanl(%rip), %rsi	# format
 	leaq	8(%rax), %rdx		# &long
+	xorq	%rax, %rax		# No floating point arguments
 	call	sscanf@plt
 	popq	%rax
 	ret
@@ -76,7 +77,9 @@ to_var: # Standard calling convention
 	call	new_var
 	ret
 	.to_var0:
-	# This one's a little more complicated -- To be written
+	popq	%rdi
+	call	read_list
+	ret
 	.to_var_err:
 	addq	$8, %rsp # drop
 	leaq	NIL(%rip), %rax
@@ -84,7 +87,6 @@ to_var: # Standard calling convention
 
 .type	to_space, @function
 to_space: # Standard calling convention
-	pushq	%rdi
 	xorq	%rax, %rax
 	movq	$-1, %rcx
 	.to_space_loop:
@@ -92,18 +94,22 @@ to_space: # Standard calling convention
 	cmpb	$0, (%rdi,%rcx,1)
 	jz	.to_space_break
 	cmpb	$32, (%rdi,%rcx,1)
-	jne	.to_space_loop
-	push	%rcx
+	je	.to_space_ret
+	cmpb	$41, (%rdi,%rcx,1)
+	je	.to_space_ret
+	jmp	.to_space_loop
+	.to_space_ret:
+	pushq	%rdi
+	pushq	%rcx
 	movq	%rcx, %rdi
+	incq	%rdi ###
 	call	malloc@plt
-	pushq	%rax
 	movq	%rax, %rdi
-	movq	16(%rsp), %rsi
-	movq	8(%rsp), %rdx
+	popq	%rdx
+	popq	%rsi
+	pushq	%rdi
 	call	memcpy@plt
 	popq	%rax
-	call	drop
-	call	drop
 	.to_space_break:
 	ret
 
@@ -132,6 +138,7 @@ to_paren: # Standard calling convention
 	incq	%rcx
 	pushq	%rcx
 	movq	%rcx, %rdi
+	incq	%rdi ###
 	call	malloc@plt
 	movq	%rax, %rdi
 	popq	%rdx
@@ -142,58 +149,50 @@ to_paren: # Standard calling convention
 	popq	%rax
 	ret
 
-.type	read_str, @function
-read_str: # Standard calling convention
-	leaq	NIL(%rip), %rax
-	pushq	%rax
-	decq	%rdi
-	.read_str_loop:
-	incq	%rdi
-	cmpb	$0, (%rdi)	# Check for end of string
-	jz	.read_str_ret
-	cmpb	$40, (%rdi)	# Check for open parenthesis
-	je	.read_str_list
-				# Checks for whitespace
-	cmpb	$32, (%rdi)
-	je	.read_str_loop
-	cmpb	$13, (%rdi)
-	je	.read_str_loop
-	cmpb	$10, (%rdi)
-	je	.read_str_loop
-	cmpb	$9, (%rdi)
-	je	.read_str_loop
-				# Must be an atom, then
-	pushq	%rdi
+.type	next_tok, @function
+next_tok: # Standard calling convention
+	cmpb	$40, (%rdi)
+	je	.next_tok_lp
 	call	to_space
-	pushq	%rax
-	movq	%rax, %rdi
-	call	strlen@plt
-	popq	%rdi
-	addq	%rax, (%rsp) # Add string length to string pointer
-	call	to_var
-	popq	%rdi
-	pushq	%rax
-	leaq	NIL(%rip), %rax
-	pushq	%rax
-	call	cons
-	jmp	.read_str_loop
-	.read_str_list:
-	#############################
-	pushq	%rdi
+	ret
+	.next_tok_lp:
 	call	to_paren
-	pushq	%rax
+	ret
+
+.type	read_list, @function
+read_list:
+	pushq	%rdi # string
+	call	infer_type
+	cmpq	$0, %rax
+	jnz	.read_list_atom
+	leaq	NIL(%rip), %rax
+	pushq	%rax # list
+	incq	8(%rsp)
+	.read_list_loop:
+	movq	8(%rsp), %rdi
+	cmpq	$41, (%rdi)
+	je	.read_list_ret
+	call	next_tok
+	cmpq	$0, %rax
+	jz	.read_list_ret
+	pushq	%rax # token string
 	movq	%rax, %rdi
 	call	strlen@plt
-	popq	%rdi
-	addq	%rax, (%rsp) # Add string length to string pointer
-	call	read_str
-	popq	%rdi
-	pushq	%rax
+	incq	%rax
+	addq	%rax, 16(%rsp) # Skip string to next pointer
+	popq	%rdi # token string
+	call	to_var
+	pushq	%rax # var
 	leaq	NIL(%rip), %rax
-	pushq	%rax
+	pushq	%rax # nil
 	call	cons
 	call	nconc
-	jmp	.read_str_loop
-	#############################
-	.read_str_ret:
-	ret #########################
+	jmp	.read_list_loop
+	.read_list_atom:
+	popq	%rdi
+	call	to_var
+	ret
+	.read_list_ret:
+	popq	%rax
+	addq	$8, %rsp
+	ret
