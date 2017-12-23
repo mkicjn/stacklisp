@@ -85,20 +85,26 @@ to_var: # Standard calling convention
 	leaq	NIL(%rip), %rax
 	ret
 
-.type	to_space, @function
-to_space: # Standard calling convention
+.type	captok, @function
+captok: # Standard calling convention
 	xorq	%rax, %rax
 	movq	$-1, %rcx
-	.to_space_loop:
+	.captok_loop:
 	incq	%rcx
-	cmpb	$0, (%rdi,%rcx,1)
-	jz	.to_space_break
-	cmpb	$32, (%rdi,%rcx,1)
-	je	.to_space_ret
-	cmpb	$41, (%rdi,%rcx,1)
-	je	.to_space_ret
-	jmp	.to_space_loop
-	.to_space_ret:
+	cmpb	$0, (%rdi,%rcx,1) # Null
+	jz	.captok_break
+	cmpb	$32, (%rdi,%rcx,1) # Space
+	je	.captok_ret
+	cmpb	$41, (%rdi,%rcx,1) # Right parenthesis
+	je	.captok_ret
+	cmpb	$9, (%rdi,%rcx,1) # Horizontal tab
+	je	.captok_ret
+	cmpb	$10, (%rdi,%rcx,1) # Line feed (Newline)
+	je	.captok_ret
+	cmpb	$13, (%rdi,%rcx,1) # Carriage return
+	je	.captok_ret
+	jmp	.captok_loop
+	.captok_ret:
 	pushq	%rdi
 	pushq	%rcx
 	movq	%rcx, %rdi
@@ -110,31 +116,31 @@ to_space: # Standard calling convention
 	pushq	%rdi
 	call	memcpy@plt
 	popq	%rax
-	.to_space_break:
+	.captok_break:
 	ret
 
-.type	to_paren, @function
-to_paren: # Standard calling convention
+.type	caplist, @function
+caplist: # Standard calling convention
 	pushq	%rdi
 	xorq	%rax, %rax
 	xorq	%rdx, %rdx
 	movq	$-1, %rcx
-	.to_paren_loop:
+	.caplist_loop:
 	incq	%rcx
 	cmpb	$0, (%rdi,%rcx,1)
-	jz	.to_paren_break
+	jz	.caplist_break
 	cmpb	$40, (%rdi,%rcx,1)
-	je	.to_paren_lp
+	je	.caplist_lp
 	cmpb	$41, (%rdi,%rcx,1)
-	je	.to_paren_rp
-	jmp	.to_paren_loop
-	.to_paren_lp:
+	je	.caplist_rp
+	jmp	.caplist_loop
+	.caplist_lp:
 	incq	%rdx
-	jmp	.to_paren_loop
-	.to_paren_rp:
+	jmp	.caplist_loop
+	.caplist_rp:
 	decq	%rdx
 	cmpq	$0, %rdx
-	jne	.to_paren_loop
+	jne	.caplist_loop
 	incq	%rcx
 	pushq	%rcx
 	movq	%rcx, %rdi
@@ -145,22 +151,24 @@ to_paren: # Standard calling convention
 	popq	%rsi
 	pushq	%rdi
 	call	memcpy@plt
-	.to_paren_break:
+	.caplist_break:
 	popq	%rax
 	ret
 
 .type	next_tok, @function
 next_tok: # Standard calling convention
-	cmpb	$40, (%rdi)
+	cmpb	$40, (%rdi) # Left parenthesis
 	je	.next_tok_lp
-	call	to_space
+	call	captok
 	ret
 	.next_tok_lp:
-	call	to_paren
+	call	caplist
 	ret
 
 .type	read_list, @function
 read_list: # Standard calling convention
+	call	skip_white
+	movq	%rax, %rdi
 	pushq	%rdi # string
 	call	infer_type
 	cmpq	$0, %rax
@@ -170,6 +178,9 @@ read_list: # Standard calling convention
 	incq	8(%rsp)
 	.read_list_loop:
 	movq	8(%rsp), %rdi
+	call	skip_white
+	movq	%rax, %rdi
+	movq	%rdi, 8(%rsp)
 	cmpq	$41, (%rdi)
 	je	.read_list_ret
 	call	next_tok
@@ -190,6 +201,8 @@ read_list: # Standard calling convention
 	jmp	.read_list_loop
 	.read_list_atom:
 	popq	%rdi
+	call	skip_white
+	movq	%rax, %rdi
 	call	to_var
 	ret
 	.read_list_ret:
@@ -210,6 +223,8 @@ lread: # Stack-oriented. Expects number of bytes to read from stdin as var on st
 	pushq	%rsi
 	call	read@plt
 	popq	%rdi
+	call	chomp
+	movq	%rax, %rdi
 	call	read_list
 	movq	%rax, 8(%rsp)
 	ret

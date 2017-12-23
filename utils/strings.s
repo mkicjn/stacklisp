@@ -64,3 +64,19 @@ mystrlen:
 	jmp	.mystrlenl
 	.mystrlenr:
 	ret
+
+.type	skip_white, @function
+skip_white:
+	decq	%rdi
+	.read_list_white:
+	incq	%rdi
+	cmpb	$9, (%rdi) # Horizontal tab
+	je	.read_list_white
+	cmpb	$10, (%rdi) # Line feed (Newline)
+	je	.read_list_white
+	cmpb	$13, (%rdi) # Carriage return
+	je	.read_list_white
+	cmpb	$32, (%rdi) # Space
+	je	.read_list_white
+	movq	%rdi, %rax
+	ret
