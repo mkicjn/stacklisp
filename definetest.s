@@ -6,6 +6,7 @@ main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 
+	.main_loop:
 	movq	$200, %rdi
 	call	read_bytes
 	pushq	%rax
@@ -16,22 +17,19 @@ main:
 	call	car
 	call	define
 
+	pushq	ENV(%rip)
+	call	disp
+	call	drop
+	call	terpri
+
 	movq	$200, %rdi
 	call	read_bytes
 	pushq	%rax
 	call	reference
-###
-/*
-	movq	ENV(%rip), %rdi
-	movq	(%rsp), %rsi
-	call	env_assoc
-	movq	16(%rax), %rax
-	movq	%rax, (%rsp)
-*/
-###
 	call	disp
 	call	drop
 	call	terpri
+	jmp	.main_loop # Infinite loop. Sloppy, but works
 
 	leave
 	ret

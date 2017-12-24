@@ -18,4 +18,7 @@
 .include "lispfuncs/funcall.s"
 .include "lispfuncs/nconc.s"
 .include "lispfuncs/read.s"
+.include "lispfuncs/rplac.s"
+.include "lispfuncs/set.s"
 .include "lispfuncs/terpri.s"
+.include "lispfuncs/type.s"

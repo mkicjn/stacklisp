@@ -49,8 +49,8 @@ env_def: # Standard calling convention, 3 args. No intended return value.
 	cmpq	$1, %rax
 	popq	%rax # (sym . def)
 	je	.env_def_add
-	popq	16(%rax) # rplacd
-	addq	$8, %rsp # drop
+	popq	16(%rax)
+	addq	$16, %rsp
 	ret
 	.env_def_add:
 	call	cons
