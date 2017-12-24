@@ -7,6 +7,7 @@
 .include "utils/rpn.s"
 .include "utils/stack.s"
 .include "utils/strings.s"
+.include "utils/var_copy.s"
 .include "utils/zornil.s"
 .include "lispfuncs/append.s"
 .include "lispfuncs/atom.s"
