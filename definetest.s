@@ -1,41 +1,34 @@
 .include "inclusions.s"
 
-teststr:
-	.string "(a b)"
-
 .globl	main
 .type	main, @function
 main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 
-	leaq	teststr(%rip), %rdi
-	call	read_list
-	pushq	%rax
+	movq	$200, %rdi
+	call	read_bytes
 	pushq	%rax
 	pushq	%rax
 	call	car
 	call	swap
 	call	cdr
 	call	car
+	call	define
 
-	leaq	ENV(%rip), %rdi
-	popq	%rdx
-	popq	%rsi
-	call	env_def
-
-	movq	ENV(%rip), %rax
+	movq	$200, %rdi
+	call	read_bytes
 	pushq	%rax
-	call	disp
-	call	drop
-	call	terpri
-
-	call	car
-	popq	%rsi
+	call	reference
+###
+/*
 	movq	ENV(%rip), %rdi
+	movq	(%rsp), %rsi
 	call	env_assoc
-	pushq	%rax
-	call	cdr
+	movq	16(%rax), %rax
+	movq	%rax, (%rsp)
+*/
+###
 	call	disp
 	call	drop
 	call	terpri

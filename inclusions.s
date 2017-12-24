@@ -12,6 +12,7 @@
 .include "lispfuncs/car_cdr.s"
 .include "lispfuncs/cons.s"
 .include "lispfuncs/copy.s"
+.include "lispfuncs/define.s"
 .include "lispfuncs/disp.s"
 .include "lispfuncs/eq.s"
 .include "lispfuncs/funcall.s"

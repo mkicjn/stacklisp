@@ -224,25 +224,30 @@ read_list: # Standard calling convention
 	addq	$8, %rsp
 	ret
 
-.type	lread, @function
-lread: # Stack-oriented. Expects number of bytes to read from stdin as var on stack.
-	movq	8(%rsp), %rax
-	movq	8(%rax), %rdi
+.type	read_bytes, @function
+read_bytes: # Standard calling convention.
 	pushq	%rdi
 	incq	%rdi
 	call	malloc@plt
+	popq	%rdx
+	pushq	%rax
 	xorq	%rdi, %rdi
 	movq	%rax, %rsi
-	popq	%rdx
-	pushq	%rsi
 	call	read@plt
-	popq	%rdi
+	movq	(%rsp), %rdi
 	call	chomp
-	movq	%rax, %rdi
-	pushq	%rdi
+	movq	(%rsp), %rdi
 	call	read_list
 	popq	%rdi
 	pushq	%rax
 	call	free@plt
-	popq	8(%rsp)
+	popq	%rax
+	ret
+
+.type	lread, @function
+lread: # Stack-oriented. Expects number of bytes to read from stdin as var on stack.
+	movq	8(%rsp), %rax
+	movq	8(%rax), %rdi
+	call	read_bytes
+	movq	%rax, 8(%rsp)
 	ret

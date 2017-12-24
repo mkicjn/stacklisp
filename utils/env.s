@@ -1,28 +1,24 @@
 .data
-GLOBAL_ENV: # Pointer to list. leaq for &env, movq for env
+# Pointers to a list (leaq for &env, movq for env)
+GLOBAL_ENV:
+	.quad	NIL
+ENV:
 	.quad	NIL
 .text
 
-.type	init_env, @function
-init_global_env:
-	leaq	GLOBAL_ENV(%rip), %rax
-	leaq	NIL(%rip), %rdx
-	movq	%rdx, (%rax)
-	ret
-
 .type	env_assoc, @function
 env_assoc: # Standard calling convention
-	pushq	%rsi
-	pushq	%rdi
+	pushq	%rsi # sym
+	pushq	%rdi # env
 	.env_assoc_loop:
 	pushq	8(%rsp)
 	pushq	8(%rsp) # Duplicate both arguments
 	call	car
-	call	car
+	call	car # Get token for definition
 	call	eq
 	popq	%rdi
 	call	zornil
-	cmpq	$1, %rax
+	cmpq	$1, %rax # Check definition match
 	jne	.env_assoc_ret
 	call	cdr
 	movq	(%rsp), %rdi
@@ -32,9 +28,8 @@ env_assoc: # Standard calling convention
 	jmp	.env_assoc_loop
 	.env_assoc_ret:
 	call	car
-	popq	%rax
+	popq	%rax # Symbol-definition pair
 	addq	$8, %rsp # drop
-	popq	(%rsp) # nip
 	ret
 	.env_assoc_undef:
 	addq	$16, %rsp # 2drop
@@ -65,4 +60,13 @@ env_def: # Standard calling convention, 3 args. No intended return value.
 	popq	%rsi
 	popq	%rdi
 	movq	%rsi, (%rdi) # env=cons(cons(sym,def),env)
+	ret
+
+.type	reference, @function
+reference: # Stack-based
+	movq	ENV(%rip), %rdi
+	movq	8(%rsp), %rsi
+	call	env_assoc
+	movq	16(%rax), %rax
+	movq	%rax, 8(%rsp)
 	ret
