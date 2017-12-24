@@ -13,6 +13,7 @@ main:
 	call	read_list
 	pushq	%rax
 	pushq	%rax
+	pushq	%rax
 	call	car
 	call	swap
 	call	cdr
@@ -21,8 +22,20 @@ main:
 	leaq	GLOBAL_ENV(%rip), %rdi
 	popq	%rdx
 	popq	%rsi
-	pushq	%rdi
 	call	env_def
+########
+	movq	GLOBAL_ENV(%rip), %rax
+	pushq	%rax
+	call	disp
+	call	drop
+	call	terpri
+########
+	call	car
+	popq	%rsi
+	movq	GLOBAL_ENV(%rip), %rdi
+	call	env_assoc
+	pushq	%rax
+	call	cdr
 	call	disp
 	call	drop
 	call	terpri
