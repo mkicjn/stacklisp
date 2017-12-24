@@ -8,6 +8,8 @@ ENV:
 
 .type	env_assoc, @function
 env_assoc: # Standard calling convention
+	cmpq	$1, (%rsi) # Catch invalid definitions
+	jne	.env_assoc_err
 	pushq	%rsi # sym
 	pushq	%rdi # env
 	.env_assoc_loop:
@@ -33,11 +35,14 @@ env_assoc: # Standard calling convention
 	ret
 	.env_assoc_undef:
 	addq	$16, %rsp # 2drop
+	.env_assoc_err:
 	leaq	NIL(%rip), %rax
 	ret
 
 .type	env_def, @function
 env_def: # Standard calling convention, 3 args. No intended return value.
+	cmpq	$1, (%rsi) # Catch invalid definitions
+	jne	.env_def_err
 	pushq	%rdi # &env
 	pushq	%rsi # sym
 	pushq	%rdx # def
@@ -60,13 +65,5 @@ env_def: # Standard calling convention, 3 args. No intended return value.
 	popq	%rsi
 	popq	%rdi
 	movq	%rsi, (%rdi) # env=cons(cons(sym,def),env)
-	ret
-
-.type	reference, @function
-reference: # Stack-based
-	movq	ENV(%rip), %rdi
-	movq	8(%rsp), %rsi
-	call	env_assoc
-	movq	16(%rax), %rax
-	movq	%rax, 8(%rsp)
+	.env_def_err:
 	ret

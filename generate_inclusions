@@ -1,6 +1,4 @@
 #!/usr/bin/perl
 # A proper usage of this script would be `./generate_inclusions utils lispfuncs > inclusions.s`
 use strict;
-for (@ARGV) {
-	print ".include \"$_\"\n" for (<$_/*.s>)
-}
+for (@ARGV) {print ".include \"$_\"\n" for (<$_/*.s>)}
