@@ -1,5 +1,5 @@
 .type	zornil, @function
-zornil: # Returns 1 to %rax if the %rdi is 0 or NIL, 0 otherwise
+zornil: # Returns 1 to %rax if %rdi is 0 or NIL, 0 otherwise
 	cmpq	$0, %rdi
 	jz	.null_ret1
 	leaq	NIL(%rip), %rax

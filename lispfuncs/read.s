@@ -181,7 +181,9 @@ read_list: # Standard calling convention
 	call	skip_white
 	movq	%rax, %rdi
 	movq	%rdi, 8(%rsp)
-	cmpq	$41, (%rdi)
+	cmpb	$46, (%rdi) # Period
+	je	.read_list_dot
+	cmpb	$41, (%rdi) # Right parenthesis
 	je	.read_list_ret
 	call	next_tok
 	cmpq	$0, %rax
@@ -205,6 +207,18 @@ read_list: # Standard calling convention
 	movq	%rax, %rdi
 	call	to_var
 	ret
+	.read_list_dot:
+	incq	%rdi
+	call	skip_white
+	movq	%rax, %rdi
+	call	next_tok
+	movq	%rax, %rdi
+	cmpb	$0, (%rax)
+	jz	.read_list_ret
+	movq	%rax, %rdi
+	call	to_var
+	pushq	%rax
+	call	nconc
 	.read_list_ret:
 	popq	%rax
 	addq	$8, %rsp
@@ -225,6 +239,10 @@ lread: # Stack-oriented. Expects number of bytes to read from stdin as var on st
 	popq	%rdi
 	call	chomp
 	movq	%rax, %rdi
+	pushq	%rdi
 	call	read_list
-	movq	%rax, 8(%rsp)
+	popq	%rdi
+	pushq	%rax
+	call	free@plt
+	popq	8(%rsp)
 	ret
