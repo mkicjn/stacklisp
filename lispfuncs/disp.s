@@ -2,6 +2,8 @@ fnum:
 	.string "%li"
 fstr:
 	.string "%s"
+ffun:
+	.string	"{FUNCTION}"
 
 .type	disp, @function
 disp:
@@ -11,10 +13,13 @@ disp:
 	je	.disp_nil
 	cmpq	$0, (%rdi)
 	jz	.disp_cell
+	jl	.disp_func
 	cmpq	$1, (%rdi)
 	je	.disp_sym
 	cmpq	$2, (%rdi)
 	je	.disp_num
+	cmpq	$3, (%rdi)
+	je	.disp_func
 	jmp	.disp_exit # Unknown datatype
 	.disp_nil:
 	leaq	NILstr(%rip), %rdi
@@ -30,6 +35,11 @@ disp:
 	.disp_num:
 	movq	8(%rdi), %rsi
 	leaq	fnum(%rip), %rdi
+	xorq	%rax, %rax
+	call	printf@plt
+	jmp	.disp_exit
+	.disp_func:
+	leaq	ffun(%rip), %rdi
 	xorq	%rax, %rax
 	call	printf@plt
 	jmp	.disp_exit
@@ -76,8 +86,6 @@ disp:
 	call	putchar@plt # )
 
 	.disp_exit:
-	#popq	%rdi # preserve return address
-	#movq	%rdi, (%rsp) # clobber top stack item with return address
 	leaq	NIL(%rip), %rdi
 	movq	%rdi, 8(%rsp) # Return NIL
 	ret
