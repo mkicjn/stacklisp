@@ -26,17 +26,16 @@ lmul:
 	ret
 
 x:
-	.quad	2,10
+	.quad	2,3
 y:
-	.quad	2,20
+	.quad	2,4
 fnil:
 	.quad	-1,0xaf,NIL,0xee
 f:	# (lambda (x y) (* y (- y x))) => (y y x - *)
-	#.quad	-3,0xaa,2,0xaa,2,0xaa,1,lsub,lmul,0xca,0
-	.quad	-3,0xaa,2,0xaa,1,lsub,0xee
+	.quad	-3,0xaa,2,0xaa,2,0xaa,1,lsub,lmul,0xee
 
-g:	# (lambda () (* 20 (- (f 10 20) 10))) => (20 10 20 f 10 - *)
-	.quad	-1,0xaf,y,0xaf,x,0xaf,y,0xca,f,0xaf,x,lsub,lmul,0xee
+g:	# (lambda () (* x (- (f x y) x))) => (y x y f x - *)
+	.quad	-3,0xaf,y,0xaf,x,0xaf,y,0xca,f,0xaf,x,lsub,lmul,0xee
 	
 	
 
@@ -51,7 +50,6 @@ main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 
-/*
 	peaq	x
 	peaq	y
 	peaq	f
@@ -59,7 +57,7 @@ main:
 	call	disp
 	call	drop
 	call	terpri
-*/
+
 	peaq	g
 	call	funcall
 	call	disp

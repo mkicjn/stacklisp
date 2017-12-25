@@ -14,6 +14,7 @@ main:
 	call	car
 	call	swap
 	call	cdr
+	call	car
 	call	define
 
 	pushq	ENV(%rip)

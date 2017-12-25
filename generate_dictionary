@@ -1,0 +1,29 @@
+#!/usr/bin/perl
+# A proper usage of this script would be `./generate_dictionary lispfuncs/*.s > utils/dictionary.s`
+use strict;
+my @funcs;
+my $last="";
+for (@ARGV) {
+	open(fh,"<",$_);
+	while (my $line=<fh>) {
+		$line=~/.type\t(.*), \@function/;
+		@funcs=(@funcs,$1) if ($1);
+	}
+	close(fh);
+}
+@funcs=reverse @funcs;
+print ".data\n";
+my $c=0;
+for (@funcs) { 
+	print "dict_${_}_str:\n\t.string\t\"${_}\"\n";
+	print "dict_${_}_sym:\n\t.quad\t1,dict_${_}_str\n";
+	print "dict_${_}_var:\n\t.quad\t3,$_\n";
+	print "dict_${_}_cell:\n\t.quad\t0,dict_${_}_sym,dict_${_}_var\n";
+	print ($c==@funcs-1?"DICT":"dict_${_}_def");
+	print ":\n\t.quad\t0,dict_${_}_cell,";
+	print ($last?"dict_${last}_def":"NIL");
+	print "\n";
+	$last=$_;
+	$c++;
+}
+print ".text\n";

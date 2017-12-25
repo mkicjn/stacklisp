@@ -1,4 +1,5 @@
 .include "utils/consts.s"
+.include "utils/dictionary.s"
 .include "utils/env.s"
 .include "utils/lambda_size.s"
 .include "utils/macros.s"

@@ -1,9 +1,9 @@
 .data
 # Pointers to a list (leaq for &env, movq for env)
 GLOBAL_ENV:
-	.quad	NIL
+	.quad	DICT
 ENV:
-	.quad	NIL
+	.quad	DICT
 .text
 
 .type	env_assoc, @function
