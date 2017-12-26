@@ -12,7 +12,6 @@ rpn:
 	call	cdr
 	call	swap
 	call	car
-test:
 	call	reference
 	popq	%rax
 	cmpq	$4, (%rax)
