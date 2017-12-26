@@ -30,13 +30,15 @@ x:
 y:
 	.quad	2,4
 fnil:
-	.quad	-1,0xaf,NIL,0xee
+	.quad	-1,0xa1,NIL,0xee
 f:	# (lambda (x y) (* y (- y x))) => (y y x - *)
 	.quad	-3,0xaa,2,0xaa,2,0xaa,1,lsub,lmul,0xee
 g:	# (lambda () (* x (- (f x y) x))) => (y x y f x - *)
-	.quad	-3,0xaf,y,0xaf,x,0xaf,y,0xca,f,0xaf,x,lsub,lmul,0xee
+	.quad	-3,0xa1,y,0xa1,x,0xa1,y,0xca,f,0xa1,x,lsub,lmul,0xee
 cadr:	# (lambda (x) (car (cdr x))) -> (x cdr car)
 	.quad	-2,0xaa,1,0xca,dict_cdr_var,0xca,dict_car_var,0xee
+stest:	# (lambda () (list x y)) => (*0* x y list)
+	.quad	-2,0xa1,0x0,0xa1,x,0xa1,y,0xca,dict_list_var,0xee
 	
 .macro	peaq	mem
 	leaq	\mem(%rip), %rax
@@ -49,11 +51,7 @@ main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 
-	movq	$200, %rdi
-	call	new_ivar
-	pushq	%rax
-	call	lread
-	peaq	cadr
+	peaq	stest
 	call	funcall
 	call	disp
 	call	drop

@@ -59,16 +59,16 @@ dict_reference_cell:
 	.quad	0,dict_reference_sym,dict_reference_var
 dict_reference_def:
 	.quad	0,dict_reference_cell,dict_rplaca_def
-dict_lread_str:
-	.string	"lread"
-dict_lread_sym:
-	.quad	1,dict_lread_str
-dict_lread_var:
+dict_read_str:
+	.string	"read"
+dict_read_sym:
+	.quad	1,dict_read_str
+dict_read_var:
 	.quad	3,lread
-dict_lread_cell:
-	.quad	0,dict_lread_sym,dict_lread_var
-dict_lread_def:
-	.quad	0,dict_lread_cell,dict_reference_def
+dict_read_cell:
+	.quad	0,dict_read_sym,dict_read_var
+dict_read_def:
+	.quad	0,dict_read_cell,dict_reference_def
 dict_nconc_str:
 	.string	"nconc"
 dict_nconc_sym:
@@ -78,13 +78,13 @@ dict_nconc_var:
 dict_nconc_cell:
 	.quad	0,dict_nconc_sym,dict_nconc_var
 dict_nconc_def:
-	.quad	0,dict_nconc_cell,dict_lread_def
+	.quad	0,dict_nconc_cell,dict_read_def
 dict_list_str:
 	.string	"list"
 dict_list_sym:
 	.quad	1,dict_list_str
 dict_list_var:
-	.quad	3,list
+	.quad	4,list
 dict_list_cell:
 	.quad	0,dict_list_sym,dict_list_var
 dict_list_def:

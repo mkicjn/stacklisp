@@ -1,4 +1,4 @@
-# (defun rpn (l) (if (atom l) (cons l nil) (nconc (maprpn (cdr l)) (rpn (car l)))))
+# Original: (defun rpn (l) (if (atom l) (cons l nil) (nconc (maprpn (cdr l)) (rpn (car l)))))
 .type	rpn, @function
 rpn:
 	movq	8(%rsp), %rax
@@ -6,7 +6,18 @@ rpn:
 	jnz	.rpn_atom
 	pushq	%rax
 	pushq	%rax
+	pushq	%rax
+	call	car
+	call	reference
+	popq	%rax
+	movq	(%rax), %rax
+	cmpq	$4, %rax
 	call	cdr
+	jne	.rpn_unspecial
+	pushq	$0
+	call	swap
+	call	cons
+	.rpn_unspecial:
 	call	maprpn
 	call	swap
 	call	car
@@ -19,14 +30,15 @@ rpn:
 	pushq	%rax
 	call	cons
 	.rpn_ret:
-	popq	%rax
-	movq	%rax, 8(%rsp)
+	popq	8(%rsp)
 	ret
 
-# (defun maprpn (l) (if (atom l) l (nconc (rpn (car l)) (maprpn (cdr l)))))
+# Original: (defun maprpn (l) (if (atom l) l (nconc (rpn (car l)) (maprpn (cdr l)))))
 .type	maprpn, @function
 maprpn:
 	movq	8(%rsp), %rax
+	cmpq	$0, %rax
+	jnz	.maprpn_atom
 	cmpq	$0, (%rax)
 	jnz	.maprpn_atom
 	pushq	%rax
@@ -37,7 +49,6 @@ maprpn:
 	call	cdr
 	call	maprpn
 	call	nconc
-	popq	%rax
-	movq	%rax, 8(%rsp)
+	popq	8(%rsp)
 	.maprpn_atom:
 	ret

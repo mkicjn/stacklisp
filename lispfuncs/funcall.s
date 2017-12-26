@@ -8,14 +8,12 @@ funcall:
 	movq	$1, %rcx # Set the counter to 1 (At 0 would be # of args)
 	.funcall_loop:
 	movq	(%rax,%rcx,8), %rdx # Load the next instruction
-	cmpq	$0xaf, %rdx
+	cmpq	$0xa1, %rdx
 	jz	.funcall_pushq
 	cmpq	$0xaa, %rdx
 	je	.funcall_pusharg
 	cmpq	$0xca, %rdx
 	je	.funcall_call
-	cmpq	$0xc4, %rdx
-	je	.funcall_special
 	cmpq	$0xee, %rdx
 	je	.funcall_exit
 	# It is assumed at this point that the instruction must be a function pointer
@@ -47,7 +45,7 @@ funcall:
 	incq	%rcx
 	movq	(%rax,%rcx,8), %rdx # Load the function to be called
 	cmpq	$3, (%rdx)
-	je	.funcall_asmfunc
+	jge	.funcall_asmfunc
 	pushq	%rdx
 	call	funcall
 	incq	%rcx
@@ -55,32 +53,6 @@ funcall:
 	.funcall_asmfunc:
 	movq	8(%rdx), %rdx
 	jmp	.funcall_asmcall
-	########################
-	.funcall_special: # Basically .funcall_asmfunc with more preparation
-	incq	%rcx
-	movq	(%rax,%rcx,8), %rdx # Load the number of arguments given
-	pushq	$0 # Push null so the special form knows where to stop
-	incq	%rdx # Skip the zero separator
-	.funcall_special_loop: # Load up the arguments
-	pushq	(%rsp,%rdx,8)
-	decq	%rdx
-	cmpq	$1, %rdx
-	jg	.funcall_special_loop
-	incq	%rcx
-	movq	(%rax,%rcx,8), %rdx # Load the function
-	movq	8(%rdx), %rdx
-	call	sspush_a_c
-	call	*%rdx
-	call	sspop_a_c
-	popq	%rdi # The function is expected to leave the return value in place of the zero separator
-	movq	%rcx, %rdx
-	subq	$2, %rdx
-	movq	(%rax,%rdx,8), %rdx # Reload number of arguments
-	leaq	(,%rdx,8), %rdx # Multiply %rdx by 8
-	addq	%rdx, %rsp # Take away args
-	pushq	%rdi # Put return value on stack
-	jmp	.funcall_loop
-	########################
 	.funcall_exit:
 	# At this point there must only be one thing on the stack
 	popq	%rdi # Take that thing off the stack
