@@ -20,6 +20,8 @@ disp:
 	je	.disp_num
 	cmpq	$3, (%rdi)
 	je	.disp_func
+	cmpq	$4, (%rdi)
+	je	.disp_func
 	jmp	.disp_exit # Unknown datatype
 	.disp_nil:
 	leaq	NILstr(%rip), %rdi

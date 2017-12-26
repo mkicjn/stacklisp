@@ -79,6 +79,16 @@ dict_nconc_cell:
 	.quad	0,dict_nconc_sym,dict_nconc_var
 dict_nconc_def:
 	.quad	0,dict_nconc_cell,dict_lread_def
+dict_list_str:
+	.string	"list"
+dict_list_sym:
+	.quad	1,dict_list_str
+dict_list_var:
+	.quad	3,list
+dict_list_cell:
+	.quad	0,dict_list_sym,dict_list_var
+dict_list_def:
+	.quad	0,dict_list_cell,dict_nconc_def
 dict_funcall_str:
 	.string	"funcall"
 dict_funcall_sym:
@@ -88,7 +98,7 @@ dict_funcall_var:
 dict_funcall_cell:
 	.quad	0,dict_funcall_sym,dict_funcall_var
 dict_funcall_def:
-	.quad	0,dict_funcall_cell,dict_nconc_def
+	.quad	0,dict_funcall_cell,dict_list_def
 dict_eq_str:
 	.string	"eq"
 dict_eq_sym:

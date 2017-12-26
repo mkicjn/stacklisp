@@ -32,39 +32,6 @@ chomp:
 	popq	%rax
 	ret
 
-.type	mystrcmp, @function
-mystrcmp:
-	cmpq	%rdi, %rsi
-	je	.mystrcmpq
-	.mystrcmpl:
-	cmpb	$0, (%rdi)
-	jz	.mystrcmpq
-	cmpb	$0, (%rsi)
-	jz	.mystrcmpq
-	movsbq	(%rdi), %rcx
-	cmpq	%rcx, (%rsi)
-	jne	.mystrcmpq
-	incq	%rdi
-	incq	%rsi
-	jmp	.mystrcmpl
-	.mystrcmpq:
-	movsbq	(%rdi), %rax
-	movsbq	(%rsi), %rcx
-	subq	%rcx, %rax
-	ret
-
-.type	mystrlen, @function
-mystrlen:
-	zero	%rax
-	.mystrlenl:
-	cmpb	$0, (%rdi)
-	jz	.mystrlenr
-	incq	%rax	
-	incq	%rdi
-	jmp	.mystrlenl
-	.mystrlenr:
-	ret
-
 .type	skip_white, @function
 skip_white:
 	decq	%rdi
