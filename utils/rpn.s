@@ -2,17 +2,20 @@
 .type	rpn, @function
 rpn:
 	movq	8(%rsp), %rax
+	cmpq	$0, %rax
+	jz	.rpn_atom
 	cmpq	$0, (%rax)
 	jnz	.rpn_atom
 	pushq	%rax
 	pushq	%rax
 	pushq	%rax
+	call	cdr
+	call	swap
 	call	car
+test:
 	call	reference
 	popq	%rax
-	movq	(%rax), %rax
-	cmpq	$4, %rax
-	call	cdr
+	cmpq	$4, (%rax)
 	jne	.rpn_unspecial
 	pushq	$0
 	call	swap
@@ -38,7 +41,7 @@ rpn:
 maprpn:
 	movq	8(%rsp), %rax
 	cmpq	$0, %rax
-	jnz	.maprpn_atom
+	jz	.maprpn_atom
 	cmpq	$0, (%rax)
 	jnz	.maprpn_atom
 	pushq	%rax
