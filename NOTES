@@ -176,7 +176,7 @@ One idea I have for this is to leave a 0x0 on the stack and drop up to it. Howev
 Perhaps the best option is to make the first 8 bytes of a function represent the number of arguments
 
 The bigger issue with this approach (as a whole) is branching. How might an 'if' or 'cond' be implemented?
-In Forth, if works like this (to print zero if the top of the stack is zero):
+In Forth, 'if' works like this (to print zero if the top of the stack is zero):
 : zero 0 = if ." zero" else ." non-zero" then cr ;
 However, this is a compile-only feature.
 This could maybe be implemented as a flag which decides whether to go through with function calls.
@@ -358,3 +358,79 @@ There are only two difference between the functions:
 Upon further testing, I have determined that this new function pair preserves NILs.
 This is a good development! I'm going to rewrite the assembly functions with these instead.
 I'm honestly not sure I could come up with a better solution, so this is what I'm going with.
+
+Idea for special forms: Write the Lisp functions to take values off the stack until they hit null.
+To-do: Come up with a bytecode flag for special forms which dictates the number of arguments given.
+Of course, all special forms must be written in assembly.
+
+Now, I need to come up with a way to make conditionals work in the bytecode.
+In Forth, those are compile-only words, so it's okay if there aren't any actual functions for them.
+A translation could be Forth-style and look like this:
+(f a (if c x y) b)  => (a c if x else y then b f)
+
+The problem is that x and y could be anything.
+I could have "if", "else", and "then" as 0xc1, 0xc2 and 0xc3 with a flag for control execution.
+
+Another issue is that I wanted to opt for cond instead of 'if', or both if I can.
+But, I'm not sure how that would work in a stack-based way.
+I could adapt however Forth does switch-case structures to work here.
+
+C:
+switch (x) {
+	case 1:
+		{1}
+		break;
+	case 2:
+		{2}
+		break;
+	default:
+		{d}
+}
+Forth:
+x case 1 of {1} endof 2 of {2} endof {d} endcase
+Lisp:
+(cond ((eq x 1) {1}) ((eq x 2) {2}) (t {d}))
+
+Perhaps I could do something like:
+((condflag) x 1 eq (flag) {1} (endflag) x 2 eq (flag) {2} (endflag) t (flag) {d} (endflag) (endcond))
+Maybe it would look like this:
+(cond ((eq x 1) {1}) ((eq x 2) {2}) (t {d}))
+=> 0xc0,0xaa,1,0xaf,&1,eq,0xc1,{1},0xc2,0xaf,&2,eq,0xc1,{2},0xc2,0xaf,&t,0xc1,{d},0xc2,0xc3,0xee
+
+To handle the translation, there are two ways I could do it:
+I could figure out some way to translate conditionals in a special way, as with variadic functions.
+However, variadic functions were simple. Conditional structures like this one are less so.
+If there's a way to "disassemble" the bytecode snippet above into Lisp's notation, I could maybe use that.
+I believe it would look like this:
+(0xc3 0xc0 (0xc2 (eq x 1) 0xc1 {1}) (0xc2 (eq x 1) 0xc1 {1}) (0xc2 t 0xc1 {d}))
+
+Plugging this into the rpn Common Lisp function gives the expected result:
+(0XC0 X 1 EQ 0XC1 {1} 0XC2 X 1 EQ 0XC1 {1} 0XC2 T 0XC1 {D} 0XC2 0XC3)
+
+This isn't much of a step up in complexity from the original structure.
+It might be worth writing a new function build specifically to handle cond.
+Or more specifically, to transform cond into something more friendly to the translator.
+To do this, I could take the same approach as with rpn: Write a Lisp function and translate to assembly.
+
+Here it is:
+(defun pcond (f) (append '(0xc3 0xc0) (pcon1 f)))
+(defun pcon1 (f) (if f (cons (nconc (cons '0xc2 (cons (caar f) nil)) (cons '0xc1 (cdar f))) (pcon1 (cdr f))) nil))
+
+This looks like it'll work when I implement it.
+And, I've decided that if it has cond, it's not worth doing something separate for 'if'.
+
+I need to consider how to display these new codes, for debugging purposes.
+That is, I need to give them names.
+0xc0 : {COND}
+0xc1 : {CASE}
+0xc2 : {CASE_END}
+0xc3 : {COND_END}
+
+After assigning these names, I've realized that 'if' could be implemented as a separate flag.
+The flag would tell the bytecode interpreter to act differently when it encounters the other flags.
+I don't want to do too much at a time, especially if I have a more powerful alternative (cond) anyway.
+
+An issue has just occurred to me: Nested conditionals.
+If I had a separate function to deal with evaluating conditionals, it could be recursive to solve the problem.
+Another possibility is to do what I did with reading parentheses and use a counter to keep track of nested conditions.
+This seems like the best option and will probably find itself implemented in due time.

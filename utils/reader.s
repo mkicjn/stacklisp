@@ -191,7 +191,6 @@ read_str: # Standard calling convention
 	pushq	%rax # token string
 	movq	%rax, %rdi
 	call	strlen@plt
-	incq	%rax
 	addq	%rax, 16(%rsp) # Skip string to next pointer
 	popq	%rdi # token string
 	call	to_var

@@ -2,8 +2,8 @@
 .type	rpn, @function
 rpn:
 	movq	8(%rsp), %rax
-	cmpq	$0, %rax
-	jz	.rpn_atom
+	cmpq	$0xFF, %rax
+	jle	.rpn_atom
 	cmpq	$0, (%rax)
 	jnz	.rpn_atom
 	pushq	%rax

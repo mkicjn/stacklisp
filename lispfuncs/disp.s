@@ -4,14 +4,12 @@ fstr:
 	.string "%s"
 ffun:
 	.string	"{FUNCTION}"
-fnull:
-	.string "{NULL}"
 
 .type	disp, @function
 disp:
 	movq	8(%rsp), %rdi
-	cmpq	$0, %rdi
-	jz	.disp_null
+	cmpq	$0xff, %rdi
+	jle	.disp_flag
 	call	zornil
 	cmpq	$1, %rdi
 	je	.disp_nil
@@ -27,10 +25,8 @@ disp:
 	cmpq	$4, (%rdi)
 	je	.disp_func
 	jmp	.disp_exit # Unknown datatype
-	.disp_null:
-	leaq	fnull(%rip), %rdi
-	xorq	%rax, %rax
-	call	printf@plt
+	.disp_flag:
+	call	disp_flag
 	jmp	.disp_exit
 	.disp_nil:
 	leaq	NILstr(%rip), %rdi

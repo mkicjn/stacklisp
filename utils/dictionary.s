@@ -1,6 +1,6 @@
 .data
 dict_type_str:
-	.string	"type"
+	.string	"TYPE"
 dict_type_sym:
 	.quad	1,dict_type_str
 dict_type_var:
@@ -10,7 +10,7 @@ dict_type_cell:
 dict_type_def:
 	.quad	0,dict_type_cell,NIL
 dict_terpri_str:
-	.string	"terpri"
+	.string	"TERPRI"
 dict_terpri_sym:
 	.quad	1,dict_terpri_str
 dict_terpri_var:
@@ -20,7 +20,7 @@ dict_terpri_cell:
 dict_terpri_def:
 	.quad	0,dict_terpri_cell,dict_type_def
 dict_set_str:
-	.string	"set"
+	.string	"SET"
 dict_set_sym:
 	.quad	1,dict_set_str
 dict_set_var:
@@ -30,7 +30,7 @@ dict_set_cell:
 dict_set_def:
 	.quad	0,dict_set_cell,dict_terpri_def
 dict_rplacd_str:
-	.string	"rplacd"
+	.string	"RPLACD"
 dict_rplacd_sym:
 	.quad	1,dict_rplacd_str
 dict_rplacd_var:
@@ -40,7 +40,7 @@ dict_rplacd_cell:
 dict_rplacd_def:
 	.quad	0,dict_rplacd_cell,dict_set_def
 dict_rplaca_str:
-	.string	"rplaca"
+	.string	"RPLACA"
 dict_rplaca_sym:
 	.quad	1,dict_rplaca_str
 dict_rplaca_var:
@@ -50,7 +50,7 @@ dict_rplaca_cell:
 dict_rplaca_def:
 	.quad	0,dict_rplaca_cell,dict_rplacd_def
 dict_reference_str:
-	.string	"reference"
+	.string	"REFERENCE"
 dict_reference_sym:
 	.quad	1,dict_reference_str
 dict_reference_var:
@@ -60,7 +60,7 @@ dict_reference_cell:
 dict_reference_def:
 	.quad	0,dict_reference_cell,dict_rplaca_def
 dict_read_str:
-	.string	"read"
+	.string	"READ"
 dict_read_sym:
 	.quad	1,dict_read_str
 dict_read_var:
@@ -70,7 +70,7 @@ dict_read_cell:
 dict_read_def:
 	.quad	0,dict_read_cell,dict_reference_def
 dict_nconc_str:
-	.string	"nconc"
+	.string	"NCONC"
 dict_nconc_sym:
 	.quad	1,dict_nconc_str
 dict_nconc_var:
@@ -80,7 +80,7 @@ dict_nconc_cell:
 dict_nconc_def:
 	.quad	0,dict_nconc_cell,dict_read_def
 dict_list_str:
-	.string	"list"
+	.string	"LIST"
 dict_list_sym:
 	.quad	1,dict_list_str
 dict_list_var:
@@ -90,7 +90,7 @@ dict_list_cell:
 dict_list_def:
 	.quad	0,dict_list_cell,dict_nconc_def
 dict_funcall_str:
-	.string	"funcall"
+	.string	"FUNCALL"
 dict_funcall_sym:
 	.quad	1,dict_funcall_str
 dict_funcall_var:
@@ -100,7 +100,7 @@ dict_funcall_cell:
 dict_funcall_def:
 	.quad	0,dict_funcall_cell,dict_list_def
 dict_eq_str:
-	.string	"eq"
+	.string	"EQ"
 dict_eq_sym:
 	.quad	1,dict_eq_str
 dict_eq_var:
@@ -110,7 +110,7 @@ dict_eq_cell:
 dict_eq_def:
 	.quad	0,dict_eq_cell,dict_funcall_def
 dict_disp_str:
-	.string	"disp"
+	.string	"DISP"
 dict_disp_sym:
 	.quad	1,dict_disp_str
 dict_disp_var:
@@ -120,7 +120,7 @@ dict_disp_cell:
 dict_disp_def:
 	.quad	0,dict_disp_cell,dict_eq_def
 dict_define_str:
-	.string	"define"
+	.string	"DEFINE"
 dict_define_sym:
 	.quad	1,dict_define_str
 dict_define_var:
@@ -130,7 +130,7 @@ dict_define_cell:
 dict_define_def:
 	.quad	0,dict_define_cell,dict_disp_def
 dict_copy_str:
-	.string	"copy"
+	.string	"COPY"
 dict_copy_sym:
 	.quad	1,dict_copy_str
 dict_copy_var:
@@ -140,7 +140,7 @@ dict_copy_cell:
 dict_copy_def:
 	.quad	0,dict_copy_cell,dict_define_def
 dict_cons_str:
-	.string	"cons"
+	.string	"CONS"
 dict_cons_sym:
 	.quad	1,dict_cons_str
 dict_cons_var:
@@ -149,8 +149,18 @@ dict_cons_cell:
 	.quad	0,dict_cons_sym,dict_cons_var
 dict_cons_def:
 	.quad	0,dict_cons_cell,dict_copy_def
+dict_cond_str:
+	.string	"COND"
+dict_cond_sym:
+	.quad	1,dict_cond_str
+dict_cond_var:
+	.quad	6,cond
+dict_cond_cell:
+	.quad	0,dict_cond_sym,dict_cond_var
+dict_cond_def:
+	.quad	0,dict_cond_cell,dict_cons_def
 dict_cdr_str:
-	.string	"cdr"
+	.string	"CDR"
 dict_cdr_sym:
 	.quad	1,dict_cdr_str
 dict_cdr_var:
@@ -158,9 +168,9 @@ dict_cdr_var:
 dict_cdr_cell:
 	.quad	0,dict_cdr_sym,dict_cdr_var
 dict_cdr_def:
-	.quad	0,dict_cdr_cell,dict_cons_def
+	.quad	0,dict_cdr_cell,dict_cond_def
 dict_car_str:
-	.string	"car"
+	.string	"CAR"
 dict_car_sym:
 	.quad	1,dict_car_str
 dict_car_var:
@@ -170,7 +180,7 @@ dict_car_cell:
 dict_car_def:
 	.quad	0,dict_car_cell,dict_cdr_def
 dict_atom_str:
-	.string	"atom"
+	.string	"ATOM"
 dict_atom_sym:
 	.quad	1,dict_atom_str
 dict_atom_var:
@@ -180,7 +190,7 @@ dict_atom_cell:
 dict_atom_def:
 	.quad	0,dict_atom_cell,dict_car_def
 dict_append_str:
-	.string	"append"
+	.string	"APPEND"
 dict_append_sym:
 	.quad	1,dict_append_str
 dict_append_var:

@@ -27,7 +27,7 @@ eq:
 	.eqsym:
 	movq	8(%rdi), %rdi
 	movq	8(%rsi), %rsi
-	call	strcmp@plt
+	call	strcasecmp@plt
 	cmp	$0, %rax
 	leaq	T(%rip), %rax
 	jz	.eqret

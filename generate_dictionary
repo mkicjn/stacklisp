@@ -6,8 +6,18 @@ my $last="";
 for (@ARGV) {
 	open(fh,"<",$_);
 	while (my $line=<fh>) {
-		$line=~/.type\t(.*), \@function/;
-		@funcs=(@funcs,$1) if ($1);
+		my $defn;
+		# Parse comments after type declaration
+		if ($line=~/.type\t(.*), \@function[ \t]*#([^\n \t]+)/) {
+# If the desired Lisp name is different from the assembly name
+# # or the desired datatype is not the usual 3 (for assembly functions)
+# # Add #|name|type| somewhere after @function on the same line
+			$defn=$1;
+			$defn.=$2 if ($2);
+		} elsif ($line=~/.type\t(.*), \@function/) {
+			$defn=$1;
+		}
+		@funcs=(@funcs,$defn) if ($defn);
 	}
 	close(fh);
 }
@@ -15,15 +25,28 @@ for (@ARGV) {
 print ".data\n";
 my $c=0;
 for (@funcs) { 
-	print "dict_${_}_str:\n\t.string\t\"${_}\"\n";
-	print "dict_${_}_sym:\n\t.quad\t1,dict_${_}_str\n";
-	print "dict_${_}_var:\n\t.quad\t3,$_\n";
-	print "dict_${_}_cell:\n\t.quad\t0,dict_${_}_sym,dict_${_}_var\n";
-	print ($c==@funcs-1?"DICT":"dict_${_}_def");
-	print ":\n\t.quad\t0,dict_${_}_cell,";
+	# Assembly name|Lisp name|Datatype
+	my $asmname;
+	my $lname;
+	my $type;
+	if ($_=~/(.*)\|(.*)\|(.*)\|/) {
+		$asmname=$1;
+		$lname=($2?$2:$1);
+		$type=($3?$3:'3');
+	} else {
+		$asmname=$_;
+		$lname=$_;
+		$type='3';
+	}
+	print "dict_${lname}_str:\n\t.string\t\"",uc $lname,"\"\n";
+	print "dict_${lname}_sym:\n\t.quad\t1,dict_${lname}_str\n";
+	print "dict_${lname}_var:\n\t.quad\t$type,$asmname\n";
+	print "dict_${lname}_cell:\n\t.quad\t0,dict_${lname}_sym,dict_${lname}_var\n";
+	print ($c==@funcs-1?"DICT":"dict_${lname}_def");
+	print ":\n\t.quad\t0,dict_${lname}_cell,";
 	print ($last?"dict_${last}_def":"NIL");
 	print "\n";
-	$last=$_;
+	$last=$lname;
 	$c++;
 }
 print ".text\n";
