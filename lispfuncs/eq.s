@@ -8,6 +8,11 @@ eq:
 	cmpq	%rdi, %rsi
 	je	.eqret
 	leaq	NIL(%rip), %rax
+	# Check if flag
+	cmpq	$0xff, %rdi
+	jle	.eqret
+	cmpq	$0xff, %rsi
+	jle	.eqret
 	# Check datatype
 	cmpq	$0, (%rdi) # Check if cell
 	je	.eqret

@@ -8,7 +8,7 @@ ENV:
 
 .type	env_assoc, @function
 env_assoc: # Standard calling convention
-	cmpq	$0xFF, %rsi # Catch bytecode flags
+	cmpq	$0xff, %rsi # Catch bytecode flags
 	jle	.env_assoc_err
 	cmpq	$1, (%rsi) # Catch invalid definitions
 	jne	.env_assoc_err
