@@ -1,7 +1,7 @@
 fnull: # 0x0
 	.string "{NULL}"
 fpushq: # 0xa1
-	.string	"{PUSH_ADDR}"
+	.string	"{PUSH}"
 fpusharg: # 0xaa
 	.string "{PUSH_ARG}"
 fcond: # 0xc0

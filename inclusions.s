@@ -25,6 +25,7 @@
 .include "lispfuncs/funcall.s"
 .include "lispfuncs/list.s"
 .include "lispfuncs/nconc.s"
+.include "lispfuncs/quote.s"
 .include "lispfuncs/read.s"
 .include "lispfuncs/reference.s"
 .include "lispfuncs/rplac.s"

@@ -4,6 +4,8 @@ fstr:
 	.string "%s"
 ffun:
 	.string	"{FUNCTION}"
+fspec:
+	.string	"{SPECIAL}"
 
 .type	disp, @function
 disp:
@@ -23,7 +25,7 @@ disp:
 	cmpq	$3, (%rdi)
 	je	.disp_func
 	cmpq	$4, (%rdi)
-	je	.disp_func
+	je	.disp_special
 	jmp	.disp_exit # Unknown datatype
 	.disp_flag:
 	call	disp_flag
@@ -47,6 +49,11 @@ disp:
 	jmp	.disp_exit
 	.disp_func:
 	leaq	ffun(%rip), %rdi
+	xorq	%rax, %rax
+	call	printf@plt
+	jmp	.disp_exit
+	.disp_special:
+	leaq	fspec(%rip), %rdi
 	xorq	%rax, %rax
 	call	printf@plt
 	jmp	.disp_exit

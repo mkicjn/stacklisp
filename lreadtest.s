@@ -11,10 +11,10 @@ main:
 	call	new_var
 	pushq	%rax
 	call	lread
-	call	dup
-	call	disp
-	call	drop
-	call	terpri
+	#call	dup
+	#call	disp
+	#call	drop
+	#call	terpri
 	call	rpn
 	call	disp
 	call	drop

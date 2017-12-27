@@ -69,6 +69,16 @@ dict_read_cell:
 	.quad	0,dict_read_sym,dict_read_var
 dict_read_def:
 	.quad	0,dict_read_cell,dict_reference_def
+dict_quote_str:
+	.string	"QUOTE"
+dict_quote_sym:
+	.quad	1,dict_quote_str
+dict_quote_var:
+	.quad	6,quote
+dict_quote_cell:
+	.quad	0,dict_quote_sym,dict_quote_var
+dict_quote_def:
+	.quad	0,dict_quote_cell,dict_read_def
 dict_nconc_str:
 	.string	"NCONC"
 dict_nconc_sym:
@@ -78,7 +88,7 @@ dict_nconc_var:
 dict_nconc_cell:
 	.quad	0,dict_nconc_sym,dict_nconc_var
 dict_nconc_def:
-	.quad	0,dict_nconc_cell,dict_read_def
+	.quad	0,dict_nconc_cell,dict_quote_def
 dict_list_str:
 	.string	"LIST"
 dict_list_sym:

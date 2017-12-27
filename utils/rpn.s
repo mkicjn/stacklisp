@@ -16,6 +16,15 @@ rpn:
 	cmpq	$1, %rax
 	jne	.rpn_cond
 	pushq	8(%rsp)
+	call	car
+	leaq	dict_quote_sym(%rip), %rax
+	pushq	%rax
+	call	eq
+	popq	%rdi
+	call	zornil
+	cmpq	$1, %rax
+	jne	.rpn_quote # Treat quoted lists as atoms
+	pushq	8(%rsp)
 	pushq	(%rsp)
 	pushq	(%rsp)
 	call	cdr
@@ -39,6 +48,10 @@ rpn:
 	pushq	8(%rsp)
 	call	prep_cond
 	call	rpn
+	jmp	.rpn_ret
+	.rpn_quote:
+	pushq	8(%rsp)
+	call	cdr
 	jmp	.rpn_ret
 	.rpn_atom:
 	pushq	8(%rsp)
