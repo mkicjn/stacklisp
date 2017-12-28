@@ -78,7 +78,7 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	jne	.funcall_loop # If the condition isn't nil, execute
 	decq	%rcx # decq to incq at start of loop
 	movq	$1, %rdi # Start with 1 for current present case
-	.funcall_case_skip: # Keep skipping instructions until {CASE_END}		### NOT BEING REACHED
+	.funcall_case_skip: # Keep skipping instructions until {CASE_END}
 	incq	%rcx # Go to next instruction
 	movq	(%rax,%rcx,8), %rdx # Load instruction
 	cmpq	$0xc1, %rdx

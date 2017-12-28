@@ -62,7 +62,6 @@ nip:
 	movq	%rax, 16(%rsp)
 	popq	(%rsp)
 	ret
-##########################################
 iform:
 	.string "%li\n"
 .type	printint, @function
@@ -71,6 +70,4 @@ printint:
 	movq	8(%rsp), %rsi
 	xorq	%rax, %rax
 	call	printf@plt
-	#popq	%rdi
-	#movq	%rdi, (%rsp)
 	ret
