@@ -24,7 +24,13 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	je	.funcall_call
 	cmpq	$0xee, %rdx
 	je	.funcall_exit
-	# It is assumed at this point that the instruction must be a function pointer
+	# It is assumed at this point that the instruction must be a variable to be referenced
+	pushq	%rdx
+	call	sspush_a_c
+	call	reference
+	call	sspop_a_c
+	incq	%rcx
+	jmp	.funcall_loop
 	.funcall_asmcall:
 	# Need to preserve function and counter.
 	# The new solution for this is good, but unnecessary unless a core function calls funcall
@@ -52,6 +58,14 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	.funcall_call:
 	incq	%rcx
 	movq	(%rax,%rcx,8), %rdx # Load the function to be called
+	cmpq	$1, (%rdx)
+	jne	.funcall_call_do
+	pushq	%rdx
+	call	sspush_a_c
+	call	reference
+	call	sspop_a_c
+	popq	%rdx
+	.funcall_call_do:
 	cmpq	$3, (%rdx)
 	jge	.funcall_asmfunc
 	pushq	%rdx

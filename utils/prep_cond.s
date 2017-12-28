@@ -45,6 +45,11 @@ prep_cond:
 	pushq	16(%rsp)
 	call	cdr
 	call	prep_cond_args
+	leaq	NIL(%rip), %rax
+	pushq	%rax
+	pushq	%rax
+	call	cons
+	call	nconc
 	call	nconc
 	popq	8(%rsp)
 	ret
