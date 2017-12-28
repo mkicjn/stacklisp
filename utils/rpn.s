@@ -51,7 +51,7 @@ rpn:
 	jmp	.rpn_ret
 	.rpn_quote:
 	pushq	8(%rsp)
-	call	cdr
+	#call	cdr # Leave quote in the form
 	jmp	.rpn_ret
 	.rpn_atom:
 	pushq	8(%rsp)
