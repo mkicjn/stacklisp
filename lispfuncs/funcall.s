@@ -1,5 +1,5 @@
 .type	funcall, @function
-funcall:
+funcall: # Stack-based. This is the bytecode interpreter.
 	pushq	%rax
 	pushq	%rcx
 	pushq	%rbp
@@ -12,6 +12,14 @@ funcall:
 	jz	.funcall_pushq
 	cmpq	$0xaa, %rdx
 	je	.funcall_pusharg
+	cmpq	$0xc0, %rdx
+	je	.funcall_cond
+	cmpq	$0xc1, %rdx
+	je	.funcall_case
+	cmpq	$0xc2, %rdx
+	je	.funcall_case_exit
+	cmpq	$0xc3, %rdx
+	je	.funcall_cond_exit
 	cmpq	$0xca, %rdx
 	je	.funcall_call
 	cmpq	$0xee, %rdx
@@ -53,6 +61,61 @@ funcall:
 	.funcall_asmfunc:
 	movq	8(%rdx), %rdx
 	jmp	.funcall_asmcall
+
+	.funcall_cond:
+	.funcall_cond_exit:
+	incq	%rcx
+	jmp	.funcall_loop
+
+	.funcall_case:
+	popq	%rdi # Check the top stack item as a condition
+	pushq	%rax # Back up the function
+	call	zornil
+	movq	%rax, %rdx
+	incq	%rcx # Go to next instruction
+	popq	%rax # Recall function
+	cmpq	$1, %rdx
+	jne	.funcall_loop # If the condition isn't nil, execute
+	decq	%rcx # decq to incq at start of loop
+	movq	$1, %rdi # Start with 1 for current present case
+	.funcall_case_skip: # Keep skipping instructions until {CASE_END}		### NOT BEING REACHED
+	incq	%rcx # Go to next instruction
+	movq	(%rax,%rcx,8), %rdx # Load instruction
+	cmpq	$0xc1, %rdx
+	je	.funcall_case_skip_c1 # Increment %rdi and continue looping
+	cmpq	$0xc2, %rdx
+	je	.funcall_case_skip_c2 # Decrement %rdi, exit if 0
+	jmp	.funcall_case_skip
+	.funcall_case_skip_c1:
+	incq	%rdi
+	jmp	.funcall_case_skip
+	.funcall_case_skip_c2:
+	decq	%rdi
+	cmpq	$0, %rdi
+	jnz	.funcall_case_skip
+	incq	%rcx
+	jmp	.funcall_loop
+
+	.funcall_case_exit:
+	movq	$1, %rdi
+	.funcall_case_exit_skip:
+	incq	%rcx
+	movq	(%rax,%rcx,8), %rdx
+	cmpq	$0xc0, %rdx
+	je	.funcall_case_exit_c0
+	cmpq	$0xc3, %rdx
+	je	.funcall_case_exit_c3
+	jmp	.funcall_case_exit_skip
+	.funcall_case_exit_c0:
+	incq	%rdi
+	jmp	.funcall_case_exit_skip
+	.funcall_case_exit_c3:
+	decq	%rdi
+	cmpq	$0, %rdi
+	jnz	.funcall_case_exit_skip
+	incq	%rcx
+	jmp	.funcall_loop
+	
 	.funcall_exit:
 	# At this point there must only be one thing on the stack
 	popq	%rdi # Take that thing off the stack
