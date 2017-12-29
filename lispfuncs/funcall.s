@@ -25,12 +25,19 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	cmpq	$0xee, %rdx
 	je	.funcall_exit
 	# It is assumed at this point that the instruction must be a variable to be referenced
+test:
 	pushq	%rdx
 	cmpq	$1, (%rdx)
-	je	.funcall_no_ref # If not a symbol, push to stack as-is.
+	jne	.funcall_no_ref # If not a symbol, push to stack as-is.
 	call	sspush_a_c
 	call	reference
 	call	sspop_a_c
+	popq	%rdx
+	cmpq	$3, (%rdx)
+	jge	.funcall_call_do
+	cmpq	$0, (%rdx)
+	jl	.funcall_call_do
+	pushq	%rdx
 	.funcall_no_ref:
 	incq	%rcx
 	jmp	.funcall_loop
