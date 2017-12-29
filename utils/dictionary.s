@@ -49,6 +49,16 @@ dict_rplaca_cell:
 	.quad	0,dict_rplaca_sym,dict_rplaca_var
 dict_rplaca_def:
 	.quad	0,dict_rplaca_cell,dict_rplacd_def
+dict_return_str:
+	.string	"RETURN"
+dict_return_sym:
+	.quad	1,dict_return_str
+dict_return_var:
+	.quad	6,return
+dict_return_cell:
+	.quad	0,dict_return_sym,dict_return_var
+dict_return_def:
+	.quad	0,dict_return_cell,dict_rplaca_def
 dict_reference_str:
 	.string	"REFERENCE"
 dict_reference_sym:
@@ -58,7 +68,7 @@ dict_reference_var:
 dict_reference_cell:
 	.quad	0,dict_reference_sym,dict_reference_var
 dict_reference_def:
-	.quad	0,dict_reference_cell,dict_rplaca_def
+	.quad	0,dict_reference_cell,dict_return_def
 dict_read_str:
 	.string	"READ"
 dict_read_sym:

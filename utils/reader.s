@@ -1,14 +1,18 @@
 .type	infer_type, @function
 infer_type: # Standard calling convention
+	cmpb	$'\'', (%rdi)
+	jne	.infer_type_no_quote
+	incq	%rdi
+	.infer_type_no_quote:
 	xorq	%rcx, %rcx
-	cmpb	$40, (%rdi)
+	cmpb	$'(', (%rdi)
 	je	.infer_type0
 	.infer_type_loop:
 	cmpb	$0, (%rdi)
 	jz	.infer_type2
-	cmpb	$48, (%rdi)
+	cmpb	$'0', (%rdi)
 	jnge	.infer_type1
-	cmpb	$57, (%rdi)
+	cmpb	$'9', (%rdi)
 	jnle	.infer_type1
 	incq	%rdi
 	jmp	.infer_type_loop
@@ -19,9 +23,9 @@ infer_type: # Standard calling convention
 	movq	$1, %rax
 	ret
 	.infer_type0:
-	cmpb	$40, (%rdi)
+	cmpb	$'(', (%rdi)
 	je	.infer_type0_lp
-	cmpb	$41, (%rdi)
+	cmpb	$')', (%rdi)
 	je	.infer_type0_rp
 	cmpb	$0, (%rdi)
 	jz	.infer_type0_ret
@@ -47,8 +51,27 @@ infer_type: # Standard calling convention
 scanl:
 	.string	"%li"
 
+.type	quote_var, @function
+quote_var:
+	leaq	dict_quote_sym(%rip), %rax
+	pushq	%rax
+	pushq	%rdi
+	leaq	NIL(%rip), %rax
+	pushq	%rax
+	call	cons
+	call	cons
+	popq	%rax
+	ret
+
 .type	to_var, @function
 to_var: # Standard calling convention
+	xorq	%r10, %r10
+	cmpb	$'\'', (%rdi)
+	jne	.to_var_nq
+	incq	%rdi
+	movq	$1, %r10
+	.to_var_nq:
+	call	sspush_10
 	pushq	%rdi
 	call	infer_type
 	cmpq	$2, %rax
@@ -60,6 +83,7 @@ to_var: # Standard calling convention
 	cmpq	$-1, %rax
 	je	.to_var_err
 	.to_var2:
+	call	sspop_10
 	movq	$24, %rdi
 	call	malloc@plt
 	movq	$2, (%rax)
@@ -75,10 +99,20 @@ to_var: # Standard calling convention
 	popq	%rdi
 	movq	$1, %rsi
 	call	new_var
+	call	sspop_10
+	cmpq	$1, %r10
+	je	.to_var_quote
 	ret
 	.to_var0:
 	popq	%rdi
 	call	read_str
+	call	sspop_10
+	cmpq	$1, %r10
+	je	.to_var_quote
+	ret
+	.to_var_quote:
+	movq	%rax, %rdi
+	call	quote_var
 	ret
 	.to_var_err:
 	addq	$8, %rsp # drop
@@ -93,15 +127,15 @@ captok: # Standard calling convention
 	incq	%rcx
 	cmpb	$0, (%rdi,%rcx,1) # Null
 	jz	.captok_break
-	cmpb	$32, (%rdi,%rcx,1) # Space
+	cmpb	$' ', (%rdi,%rcx,1) # Space
 	je	.captok_ret
-	cmpb	$41, (%rdi,%rcx,1) # Right parenthesis
+	cmpb	$')', (%rdi,%rcx,1) # Right parenthesis
 	je	.captok_ret
-	cmpb	$9, (%rdi,%rcx,1) # Horizontal tab
+	cmpb	$'\t', (%rdi,%rcx,1) # Horizontal tab
 	je	.captok_ret
-	cmpb	$10, (%rdi,%rcx,1) # Line feed (Newline)
+	cmpb	$'\n', (%rdi,%rcx,1) # Line feed (Newline)
 	je	.captok_ret
-	cmpb	$13, (%rdi,%rcx,1) # Carriage return
+	cmpb	$'\r', (%rdi,%rcx,1) # Carriage return
 	je	.captok_ret
 	jmp	.captok_loop
 	.captok_ret:
@@ -129,9 +163,9 @@ caplist: # Standard calling convention
 	incq	%rcx
 	cmpb	$0, (%rdi,%rcx,1)
 	jz	.caplist_break
-	cmpb	$40, (%rdi,%rcx,1)
+	cmpb	$'(', (%rdi,%rcx,1)
 	je	.caplist_lp
-	cmpb	$41, (%rdi,%rcx,1)
+	cmpb	$')', (%rdi,%rcx,1)
 	je	.caplist_rp
 	jmp	.caplist_loop
 	.caplist_lp:
@@ -144,7 +178,7 @@ caplist: # Standard calling convention
 	incq	%rcx
 	pushq	%rcx
 	movq	%rcx, %rdi
-	incq	%rdi ###
+	incq	%rdi
 	call	malloc@plt
 	movq	%rax, %rdi
 	popq	%rdx
@@ -157,7 +191,12 @@ caplist: # Standard calling convention
 
 .type	next_tok, @function
 next_tok: # Standard calling convention
-	cmpb	$40, (%rdi) # Left parenthesis
+	movq	(%rdi), %rax
+	cmpb	$'\'', %al
+	jne	.next_tok_no_quote
+	movq	1(%rdi), %rax
+	.next_tok_no_quote:
+	cmpb	$'(', %al # Left parenthesis
 	je	.next_tok_lp
 	call	captok
 	ret
@@ -181,9 +220,9 @@ read_str: # Standard calling convention
 	call	skip_white
 	movq	%rax, %rdi
 	movq	%rdi, 8(%rsp)
-	cmpb	$46, (%rdi) # Period
+	cmpb	$'.', (%rdi) # Period
 	je	.read_str_dot
-	cmpb	$41, (%rdi) # Right parenthesis
+	cmpb	$')', (%rdi) # Right parenthesis
 	je	.read_str_ret
 	call	next_tok
 	cmpq	$0, %rax
@@ -236,7 +275,7 @@ read_bytes: # Standard calling convention.
 	movq	(%rsp), %rdi
 	call	chomp
 	movq	(%rsp), %rdi
-	call	read_str
+	call	to_var
 	addq	$8, %rsp ############
 	# The following breaks things for some reason
 	#popq	%rdi

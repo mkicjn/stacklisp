@@ -4,7 +4,7 @@
 .data
 spare_stack:
 	.quad	1 # Offset for next open quadword
-	.space	64 # May need to be increased in the future
+	.space	128 # May need to be increased in the future
 .text
 
 .type	sspush_a_c, @function
@@ -46,4 +46,21 @@ sspop_di: # Unique calling convention. Return value in %rdi
 	decq	(%r8)
 	movq	(%r8), %r9
 	movq	(%r8,%r9,8), %rdi
+	ret
+
+.type	sspush_10, @function
+sspush_10: # Unique calling convention. Argument in %r10
+	# Preserves all registers except %r8 and %r9
+	leaq	spare_stack(%rip), %r8
+	movq	(%r8), %r9
+	movq	%r10, (%r8,%r9,8)
+	incq	(%r8)
+	ret
+
+.type	sspop_10, @function
+sspop_10: # Unique calling convention. Return value in %r10
+	leaq	spare_stack(%rip), %r8
+	decq	(%r8)
+	movq	(%r8), %r9
+	movq	(%r8,%r9,8), %r10
 	ret

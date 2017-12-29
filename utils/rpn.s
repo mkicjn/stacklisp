@@ -57,6 +57,19 @@ rpn:
 	jmp	.rpn_ret
 	.rpn_atom:
 	pushq	8(%rsp)
+	####################
+	call	dup
+	leaq	dict_return_sym(%rip), %rax
+	pushq	%rax
+	call	eq
+	popq	%rdi
+	call	zornil
+	cmpq	$1, %rax
+	je	.rpn_atom_no_return
+	addq	$8, %rsp
+	pushq	$0xee
+	.rpn_atom_no_return:
+	####################
 	leaq	NIL(%rip), %rax
 	pushq	%rax
 	call	cons

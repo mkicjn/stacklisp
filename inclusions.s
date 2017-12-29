@@ -28,6 +28,7 @@
 .include "lispfuncs/quote.s"
 .include "lispfuncs/read.s"
 .include "lispfuncs/reference.s"
+.include "lispfuncs/return.s"
 .include "lispfuncs/rplac.s"
 .include "lispfuncs/set.s"
 .include "lispfuncs/terpri.s"
