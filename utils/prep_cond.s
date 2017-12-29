@@ -2,7 +2,7 @@
 .type	prep_cond_args, @function
 prep_cond_args: # Stack-based
 	movq	8(%rsp), %rdi
-	call	zornil
+	call	eqnil
 	cmpq	$1, %rax
 	je	.prep_cond_args_nil
 	pushq	8(%rsp) # Push argument to stack

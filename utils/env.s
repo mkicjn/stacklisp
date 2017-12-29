@@ -21,12 +21,12 @@ env_assoc: # Standard calling convention
 	call	car # Get token for definition
 	call	eq
 	popq	%rdi
-	call	zornil
+	call	eqnil
 	cmpq	$1, %rax # Check definition match
 	jne	.env_assoc_ret
 	call	cdr
 	movq	(%rsp), %rdi
-	call	zornil
+	call	eqnil
 	cmpq	$1, %rax
 	je	.env_assoc_undef
 	jmp	.env_assoc_loop
@@ -52,7 +52,7 @@ env_def: # Standard calling convention, 3 args. No intended return value.
 	call	env_assoc
 	pushq	%rax
 	movq	%rax, %rdi
-	call	zornil
+	call	eqnil
 	cmpq	$1, %rax
 	popq	%rax # (sym . def)
 	je	.env_def_add

@@ -1,7 +1,7 @@
 .type	set, @function
 set: # Stack-based
 	movq	16(%rsp), %rdi
-	call	zornil
+	call	eqnil
 	cmpq	$1, %rax
 	je	.set_nil
 	movq	16(%rsp), %rdi

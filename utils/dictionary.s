@@ -109,6 +109,16 @@ dict_list_cell:
 	.quad	0,dict_list_sym,dict_list_var
 dict_list_def:
 	.quad	0,dict_list_cell,dict_nconc_def
+dict_length_str:
+	.string	"LENGTH"
+dict_length_sym:
+	.quad	1,dict_length_str
+dict_length_var:
+	.quad	3,length
+dict_length_cell:
+	.quad	0,dict_length_sym,dict_length_var
+dict_length_def:
+	.quad	0,dict_length_cell,dict_list_def
 dict_funcall_str:
 	.string	"FUNCALL"
 dict_funcall_sym:
@@ -118,7 +128,7 @@ dict_funcall_var:
 dict_funcall_cell:
 	.quad	0,dict_funcall_sym,dict_funcall_var
 dict_funcall_def:
-	.quad	0,dict_funcall_cell,dict_list_def
+	.quad	0,dict_funcall_cell,dict_length_def
 dict_eq_str:
 	.string	"EQ"
 dict_eq_sym:

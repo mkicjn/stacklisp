@@ -87,7 +87,7 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	.funcall_case:
 	popq	%rdi # Check the top stack item as a condition
 	pushq	%rax # Back up the function
-	call	zornil
+	call	eqnil
 	movq	%rax, %rdx
 	incq	%rcx # Go to next instruction
 	popq	%rax # Recall function

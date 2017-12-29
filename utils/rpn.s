@@ -12,7 +12,7 @@ rpn:
 	pushq	%rax
 	call	eq
 	popq	%rdi
-	call	zornil
+	call	eqnil
 	cmpq	$1, %rax
 	jne	.rpn_cond
 	pushq	8(%rsp)
@@ -21,7 +21,7 @@ rpn:
 	pushq	%rax
 	call	eq
 	popq	%rdi
-	call	zornil
+	call	eqnil
 	cmpq	$1, %rax
 	jne	.rpn_quote # Treat quoted lists as atoms
 	pushq	8(%rsp)
@@ -63,7 +63,7 @@ rpn:
 	pushq	%rax
 	call	eq
 	popq	%rdi
-	call	zornil
+	call	eqnil
 	cmpq	$1, %rax
 	je	.rpn_atom_no_return
 	addq	$8, %rsp

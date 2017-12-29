@@ -12,7 +12,7 @@ disp:
 	movq	8(%rsp), %rdi
 	cmpq	$0xff, %rdi
 	jle	.disp_flag
-	call	zornil
+	call	eqnil
 	cmpq	$1, %rdi
 	je	.disp_nil
 	cmpq	$0, (%rdi)
@@ -73,7 +73,7 @@ disp:
 
 	call	cdr # Get the cell's tail
 	movq	(%rsp), %rdi
-	call	zornil # Is it null?
+	call	eqnil # Is it null?
 	cmpq	$1, %rax
 	jz	.disp_cell_lx 
 	movq	(%rsp), %rdi

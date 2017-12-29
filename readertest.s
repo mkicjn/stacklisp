@@ -16,9 +16,22 @@ main:
 	call	drop
 	call	terpri
 	call	rpn
+	call	dup
 	call	disp
 	call	drop
 	call	terpri
+
+	call	dup
+	call	length
+	call	disp
+	call	drop
+	call	terpri
+
+	popq	%rdi
+	call	lambda_size
+	pushq	%rax
+	call	printint
+	call	drop
 
 	leave
 	ret
