@@ -89,6 +89,16 @@ dict_quote_cell:
 	.quad	0,dict_quote_sym,dict_quote_var
 dict_quote_def:
 	.quad	0,dict_quote_cell,dict_read_def
+dict_progn_str:
+	.string	"PROGN"
+dict_progn_sym:
+	.quad	1,dict_progn_str
+dict_progn_var:
+	.quad	6,progn
+dict_progn_cell:
+	.quad	0,dict_progn_sym,dict_progn_var
+dict_progn_def:
+	.quad	0,dict_progn_cell,dict_quote_def
 dict_nconc_str:
 	.string	"NCONC"
 dict_nconc_sym:
@@ -98,7 +108,7 @@ dict_nconc_var:
 dict_nconc_cell:
 	.quad	0,dict_nconc_sym,dict_nconc_var
 dict_nconc_def:
-	.quad	0,dict_nconc_cell,dict_quote_def
+	.quad	0,dict_nconc_cell,dict_progn_def
 dict_list_str:
 	.string	"LIST"
 dict_list_sym:

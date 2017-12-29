@@ -22,6 +22,8 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	je	.funcall_cond_exit
 	cmpq	$0xca, %rdx
 	je	.funcall_call
+	cmpq	$0xdd, %rdx
+	je	.funcall_drop
 	cmpq	$0xee, %rdx
 	je	.funcall_exit
 	# It is assumed at this point that the instruction must be a variable to be referenced
@@ -137,6 +139,10 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	cmpq	$0, %rdi
 	jnz	.funcall_case_exit_skip
 	incq	%rcx
+	jmp	.funcall_loop
+
+	.funcall_drop:
+	addq	$8, %rsp
 	jmp	.funcall_loop
 	
 	.funcall_exit:

@@ -11,7 +11,7 @@ main:
 	call	new_var
 	pushq	%rax
 	call	lread
-	call	rpn
+	call	prep_progn
 	call	disp
 	call	drop
 	call	terpri

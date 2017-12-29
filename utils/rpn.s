@@ -8,6 +8,15 @@ rpn:
 	jnz	.rpn_atom
 	pushq	8(%rsp)
 	call	car
+	leaq	dict_progn_sym(%rip), %rax
+	pushq	%rax
+	call	eq
+	popq	%rdi
+	call	eqnil
+	cmpq	$1, %rax
+	jne	.rpn_progn
+	pushq	8(%rsp)
+	call	car
 	leaq	dict_cond_sym(%rip), %rax
 	pushq	%rax
 	call	eq
@@ -44,6 +53,11 @@ rpn:
 	call	rpn
 	call	nconc
 	jmp	.rpn_ret
+	.rpn_progn:
+	pushq	8(%rsp)
+	call	prep_progn
+	call	maprpn # prep_progn removes `progn` symbol
+	jmp	.rpn_ret
 	.rpn_cond:
 	pushq	8(%rsp)
 	call	prep_cond
@@ -57,7 +71,6 @@ rpn:
 	jmp	.rpn_ret
 	.rpn_atom:
 	pushq	8(%rsp)
-	####################
 	call	dup
 	leaq	dict_return_sym(%rip), %rax
 	pushq	%rax
@@ -69,7 +82,6 @@ rpn:
 	addq	$8, %rsp
 	pushq	$0xee
 	.rpn_atom_no_return:
-	####################
 	leaq	NIL(%rip), %rax
 	pushq	%rax
 	call	cons

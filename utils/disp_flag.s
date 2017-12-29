@@ -14,6 +14,8 @@ fcond_end: # 0xc3
 	.string "{COND_END}"
 fcall: # 0xca
 	.string "{CALL}"
+fdrop: # 0xdd
+	.string "{DROP}"
 freturn: # 0xee
 	.string "{RETURN}"
 fother:
@@ -38,6 +40,8 @@ disp_flag: # Standard calling convention
 	je	.disp_flag_cond_end
 	cmpq	$0xca, %rdi
 	je	.disp_flag_call
+	cmpq	$0xdd, %rdi
+	je	.disp_flag_drop
 	cmpq	$0xee, %rdi
 	je	.disp_flag_return
 	movq	%rdi, %rsi
@@ -66,6 +70,9 @@ disp_flag: # Standard calling convention
 	jmp	.disp_flag_printf
 	.disp_flag_call:
 	leaq	fcall(%rip), %rdi
+	jmp	.disp_flag_printf
+	.disp_flag_drop:
+	leaq	fdrop(%rip), %rdi
 	jmp	.disp_flag_printf
 	.disp_flag_return:
 	leaq	freturn(%rip), %rdi
