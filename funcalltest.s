@@ -43,7 +43,7 @@ cadr:	# (lambda (x) (car (cdr x))) -> (x cdr car)
 	.quad	-2,0xaa,1,0xca,dict_cdr_var,0xca,dict_car_var,0xee
 stest:	# (lambda () (list x y)) => ({NULL} x y list)
 	.quad	-2,0xa1,0x0,0xa1,x,0xa1,y,0xca,dict_list_var,0xee
-condt:	# (lambda (x) (cond ((eq x 3) 1))) => ({COND} x 3 eq {CASE} 1 {CASE_END} t {CASE} 0 {CASE_END} NIL {COND_END})
+condt:	# (lambda (x) (cond ((eq x 3) 1) (t 2))) => ({COND} {PUSH_ARG} 1 3 eq {CASE} 1 {CASE_END} t {CASE} 2 {CASE_END} NIL {COND_END})
 	.quad	-2,0xc0,0xaa,1,0xa1,x,dict_eq_sym,0xc1,one,0xc2,NIL,0xc3,0xee
 	
 .macro	peaq	mem

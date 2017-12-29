@@ -32,7 +32,15 @@ main:
 
 	call	rpn
 	call	subst_args
+	call	dup
 	call	disp
+	call	drop
+	call	terpri
+
+	popq	%rdi
+	call	lambda_size
+	pushq	%rax
+	call	printint
 	call	drop
 	call	terpri
 

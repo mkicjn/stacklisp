@@ -21,12 +21,6 @@ main:
 	call	drop
 	call	terpri
 
-	call	dup
-	call	length
-	call	disp
-	call	drop
-	call	terpri
-
 	popq	%rdi
 	call	lambda_size
 	pushq	%rax

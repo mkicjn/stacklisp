@@ -1,3 +1,5 @@
+# These functions are guaranteed to preserve all registers except %rax
+
 .type	car, @function
 car:
 	movq	8(%rsp), %rax
