@@ -22,7 +22,7 @@
 	call	exit@plt
 .endm
 
-.macro	debug_disp
+.macro	dddt
 	call	dup
 	call	disp
 	call	drop

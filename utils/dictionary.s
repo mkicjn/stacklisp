@@ -129,6 +129,16 @@ dict_length_cell:
 	.quad	0,dict_length_sym,dict_length_var
 dict_length_def:
 	.quad	0,dict_length_cell,dict_list_def
+dict_lambda_str:
+	.string	"LAMBDA"
+dict_lambda_sym:
+	.quad	1,dict_lambda_str
+dict_lambda_var:
+	.quad	3,lambda
+dict_lambda_cell:
+	.quad	0,dict_lambda_sym,dict_lambda_var
+dict_lambda_def:
+	.quad	0,dict_lambda_cell,dict_length_def
 dict_funcall_str:
 	.string	"FUNCALL"
 dict_funcall_sym:
@@ -138,7 +148,7 @@ dict_funcall_var:
 dict_funcall_cell:
 	.quad	0,dict_funcall_sym,dict_funcall_var
 dict_funcall_def:
-	.quad	0,dict_funcall_cell,dict_length_def
+	.quad	0,dict_funcall_cell,dict_lambda_def
 dict_eq_str:
 	.string	"EQ"
 dict_eq_sym:

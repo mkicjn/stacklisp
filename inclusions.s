@@ -27,6 +27,7 @@
 .include "lispfuncs/disp.s"
 .include "lispfuncs/eq.s"
 .include "lispfuncs/funcall.s"
+.include "lispfuncs/lambda.s"
 .include "lispfuncs/length.s"
 .include "lispfuncs/list.s"
 .include "lispfuncs/nconc.s"

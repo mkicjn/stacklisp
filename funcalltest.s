@@ -57,7 +57,7 @@ main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 
-	peaq	y
+	peaq	x
 	peaq	condt
 	call	funcall
 	call	disp

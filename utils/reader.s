@@ -96,6 +96,11 @@ to_var: # Standard calling convention
 	popq	%rax
 	ret
 	.to_var1:
+	movq	(%rsp), %rdi
+	leaq	NILstr(%rip), %rsi
+	call	strcasecmp@plt
+	cmpq	$0, %rax
+	jz	.to_var_err
 	popq	%rdi
 	movq	$1, %rsi
 	call	new_var

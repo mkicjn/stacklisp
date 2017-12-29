@@ -10,9 +10,10 @@ arg_dict_seed:
 .type	subst_args, @function
 subst_args: # Stack-based. Substitutes argument symbols for bytecode flags
 	# Takes two args: An argument list and function body
+	pushq	ENV(%rip)
 	pushq	%rbx
-	pushq	24(%rsp)
-	pushq	24(%rsp)
+	pushq	32(%rsp)
+	pushq	32(%rsp)
 	leaq	ENV(%rip), %rax
 	leaq	arg_dict_seed(%rip), %rdx
 	movq	%rdx, (%rax)
@@ -33,6 +34,9 @@ subst_args: # Stack-based. Substitutes argument symbols for bytecode flags
 	call	drop # nil
 	call	dup # body
 	jmp	.subst_args_loop
+	.subst_args_skip:
+	addq	$8, %rsp
+	call	cdr
 	.subst_args_continue:
 	call	cdr
 	.subst_args_loop:
@@ -42,6 +46,8 @@ subst_args: # Stack-based. Substitutes argument symbols for bytecode flags
 	je	.subst_args_ret
 	call	dup
 	call	car
+	cmpq	$0xa1, (%rsp)
+	je	.subst_args_skip
 	call	reference
 	popq	%rdi
 	call	eqnil
@@ -63,6 +69,9 @@ subst_args: # Stack-based. Substitutes argument symbols for bytecode flags
 	jmp	.subst_args_continue
 	.subst_args_ret:
 	call	drop
-	popq	16(%rsp)
+	popq	32(%rsp)
 	popq	%rbx
+	leaq	ENV(%rip), %rax
+	popq	(%rax)
+	popq	(%rsp)
 	ret

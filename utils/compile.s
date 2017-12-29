@@ -15,7 +15,8 @@ compile: # Standard calling convention. Places every pointer in a list (%rsi) in
 	call	eqnil
 	cmpq	$1, %rax
 	jne	.compile_loop
-	movq	$0xfe, (%rbx)
+	movq	$0xee, (%rbx)
+	movq	$0xfe, 8(%rbx)
 	addq	$8, %rsp
 	popq	%rbx
 	popq	%rax
