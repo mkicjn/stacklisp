@@ -73,13 +73,16 @@ disp:
 
 	call	cdr # Get the cell's tail
 	movq	(%rsp), %rdi
-	call	eqnil # Is it null?
+	call	eqnil # Is it nil?
 	cmpq	$1, %rax
 	jz	.disp_cell_lx 
 	movq	(%rsp), %rdi
+	cmpq	$0xff, %rdi # Is the tail a flag?
+	jle	.disp_cell_pd # Don't check type
 	cmpq	$0, (%rdi) # Is tail another list?
 	jz	.disp_cell_l
 
+	.disp_cell_pd:
 	# Tail must be a non-nil atom
 	movq	$46, %rdi # .
 	call	putchar@plt

@@ -16,8 +16,8 @@ fcall: # 0xca
 	.string "{CALL}"
 freturn: # 0xee
 	.string "{RETURN}"
-fbad:
-	.string "{BAD}"
+fother:
+	.string "{0x%X}"
 
 .type	disp_flag, @function
 disp_flag: # Standard calling convention
@@ -40,7 +40,8 @@ disp_flag: # Standard calling convention
 	je	.disp_flag_call
 	cmpq	$0xee, %rdi
 	je	.disp_flag_return
-	leaq	fbad(%rip), %rdi
+	movq	%rdi, %rsi
+	leaq	fother(%rip), %rdi
 	jmp	.disp_flag_printf
 	.disp_flag_null:
 	leaq	fnull(%rip), %rdi

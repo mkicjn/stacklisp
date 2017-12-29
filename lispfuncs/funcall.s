@@ -25,7 +25,6 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	cmpq	$0xee, %rdx
 	je	.funcall_exit
 	# It is assumed at this point that the instruction must be a variable to be referenced
-test:
 	pushq	%rdx
 	cmpq	$1, (%rdx)
 	jne	.funcall_no_ref # If not a symbol, push to stack as-is.
