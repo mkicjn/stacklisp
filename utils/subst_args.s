@@ -12,8 +12,9 @@ subst_args: # Stack-based. Substitutes argument symbols for bytecode flags
 	# Takes two args: An argument list and function body
 	pushq	ENV(%rip)
 	pushq	%rbx
-	pushq	32(%rsp)
-	pushq	32(%rsp)
+	pushq	%r15
+	pushq	40(%rsp)
+	pushq	40(%rsp)
 	leaq	ENV(%rip), %rax
 	leaq	arg_dict_seed(%rip), %rdx
 	movq	%rdx, (%rax)
@@ -54,6 +55,7 @@ subst_args: # Stack-based. Substitutes argument symbols for bytecode flags
 	cmpq	$1, %rax
 	je	.subst_args_continue
 	pushq	%rdi
+	movq	%rdi, %r15
 	call	over
 	pushq	$0xaa
 	call	rplaca
@@ -66,10 +68,22 @@ subst_args: # Stack-based. Substitutes argument symbols for bytecode flags
 	call	rplacd
 	call	drop
 	call	cdr
+	cmpq	$0, %r15
+	jnz	.subst_args_continue
+	.subst_args_funcall:
+	# Add funcall if "self" (@) was referenced
+	leaq	dict_funcall_sym(%rip), %rax
+	pushq	%rax
+	call	over
+	call	cdr
+	call	cons
+	call	rplacd
+	call	cdr
 	jmp	.subst_args_continue
 	.subst_args_ret:
 	call	drop
-	popq	32(%rsp)
+	popq	40(%rsp)
+	popq	%r15
 	popq	%rbx
 	leaq	ENV(%rip), %rax
 	popq	(%rax)
