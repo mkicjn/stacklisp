@@ -65,17 +65,14 @@ sspop_10: # Unique calling convention. Return value in %r10
 	movq	(%r8,%r9,8), %r10
 	ret
 
-.type	new_env, @function
-new_env:
+.type	sspush_env, @function
+sspush_env:
 	movq	ENV(%rip), %rdi
 	call	sspush_di
-	leaq	ENV(%rip), %rdi
-	leaq	NIL(%rip), %rax
-	movq	%rax, (%rdi)
 	ret
 
-.type	old_env, @function
-old_env:
+.type	sspop_env, @function
+sspop_env:
 	call	sspop_di
 	leaq	ENV(%rip), %rax
 	movq	%rdi, (%rax)

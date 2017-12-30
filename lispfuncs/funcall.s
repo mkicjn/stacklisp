@@ -1,6 +1,6 @@
 .type	funcall, @function
 funcall: # Stack-based. This is the bytecode interpreter.
-	call	new_env
+	call	sspush_env
 	pushq	%rax
 	pushq	%rcx
 	pushq	%rbp
@@ -167,9 +167,9 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	addq	%rdx, %rsp
 	pushq	%rdi
 	pushq	%rsi
-	call	old_env
+	call	sspop_env
 	ret
 	.funcall_ret:
 	movq	%rdx, 8(%rsp) # Replace final arg with return value
-	call	old_env
+	call	sspop_env
 	ret
