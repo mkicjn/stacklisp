@@ -281,10 +281,10 @@ read_bytes: # Standard calling convention.
 	call	chomp
 	movq	(%rsp), %rdi
 	call	to_var
-	addq	$8, %rsp ############
+	#addq	$8, %rsp ############
 	# The following breaks things for some reason
-	#popq	%rdi
-	#pushq	%rax
-	#call	free@plt
-	#popq	%rax
+	popq	%rdi
+	pushq	%rax
+	call	free@plt
+	popq	%rax
 	ret
