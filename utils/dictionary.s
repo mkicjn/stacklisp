@@ -169,6 +169,16 @@ dict_disp_cell:
 	.quad	0,dict_disp_sym,dict_disp_var
 dict_disp_def:
 	.quad	0,dict_disp_cell,dict_eq_def
+dict_defglobal_str:
+	.string	"DEFGLOBAL"
+dict_defglobal_sym:
+	.quad	1,dict_defglobal_str
+dict_defglobal_var:
+	.quad	3,defglobal
+dict_defglobal_cell:
+	.quad	0,dict_defglobal_sym,dict_defglobal_var
+dict_defglobal_def:
+	.quad	0,dict_defglobal_cell,dict_disp_def
 dict_define_str:
 	.string	"DEFINE"
 dict_define_sym:
@@ -178,7 +188,7 @@ dict_define_var:
 dict_define_cell:
 	.quad	0,dict_define_sym,dict_define_var
 dict_define_def:
-	.quad	0,dict_define_cell,dict_disp_def
+	.quad	0,dict_define_cell,dict_defglobal_def
 dict_copy_str:
 	.string	"COPY"
 dict_copy_sym:
