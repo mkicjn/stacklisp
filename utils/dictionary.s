@@ -19,6 +19,16 @@ dict_terpri_cell:
 	.quad	0,dict_terpri_sym,dict_terpri_var
 dict_terpri_def:
 	.quad	0,dict_terpri_cell,dict_type_def
+dict_symbol_value_str:
+	.string	"SYMBOL_VALUE"
+dict_symbol_value_sym:
+	.quad	1,dict_symbol_value_str
+dict_symbol_value_var:
+	.quad	3,symbol_value
+dict_symbol_value_cell:
+	.quad	0,dict_symbol_value_sym,dict_symbol_value_var
+dict_symbol_value_def:
+	.quad	0,dict_symbol_value_cell,dict_terpri_def
 dict_set_str:
 	.string	"SET"
 dict_set_sym:
@@ -28,7 +38,7 @@ dict_set_var:
 dict_set_cell:
 	.quad	0,dict_set_sym,dict_set_var
 dict_set_def:
-	.quad	0,dict_set_cell,dict_terpri_def
+	.quad	0,dict_set_cell,dict_symbol_value_def
 dict_rplacd_str:
 	.string	"RPLACD"
 dict_rplacd_sym:
@@ -59,16 +69,6 @@ dict_return_cell:
 	.quad	0,dict_return_sym,dict_return_var
 dict_return_def:
 	.quad	0,dict_return_cell,dict_rplaca_def
-dict_reference_str:
-	.string	"REFERENCE"
-dict_reference_sym:
-	.quad	1,dict_reference_str
-dict_reference_var:
-	.quad	3,reference
-dict_reference_cell:
-	.quad	0,dict_reference_sym,dict_reference_var
-dict_reference_def:
-	.quad	0,dict_reference_cell,dict_return_def
 dict_read_str:
 	.string	"READ"
 dict_read_sym:
@@ -78,7 +78,7 @@ dict_read_var:
 dict_read_cell:
 	.quad	0,dict_read_sym,dict_read_var
 dict_read_def:
-	.quad	0,dict_read_cell,dict_reference_def
+	.quad	0,dict_read_cell,dict_return_def
 dict_quote_str:
 	.string	"QUOTE"
 dict_quote_sym:

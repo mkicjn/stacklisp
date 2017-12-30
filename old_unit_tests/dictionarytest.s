@@ -6,7 +6,7 @@ main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 
-	leaq	DICT(%rip), %rdi
+	movq	GLOBAL_ENV(%rip), %rdi
 	pushq	%rdi
 	call	disp
 	call	drop

@@ -48,7 +48,7 @@ subst_args: # Stack-based. Substitutes argument symbols for bytecode flags
 	call	car
 	cmpq	$0xa1, (%rsp)
 	je	.subst_args_skip
-	call	reference
+	call	local_binding
 	popq	%rdi
 	call	eqnil
 	cmpq	$1, %rax

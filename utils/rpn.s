@@ -39,7 +39,7 @@ rpn:
 	call	cdr
 	call	swap
 	call	car
-	call	reference
+	call	symbol_value
 	popq	%rax
 	cmpq	$4, (%rax)
 	jne	.rpn_unspecial

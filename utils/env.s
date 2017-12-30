@@ -3,7 +3,7 @@
 GLOBAL_ENV:
 	.quad	DICT
 ENV:
-	.quad	DICT
+	.quad	NIL
 .text
 
 .type	env_assoc, @function

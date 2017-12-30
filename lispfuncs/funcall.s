@@ -1,5 +1,6 @@
 .type	funcall, @function
 funcall: # Stack-based. This is the bytecode interpreter.
+	call	new_env
 	pushq	%rax
 	pushq	%rcx
 	pushq	%rbp
@@ -33,7 +34,7 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	cmpq	$1, (%rdx)
 	jne	.funcall_no_ref # If not a symbol, push to stack as-is.
 	call	sspush_a_c
-	call	reference
+	call	symbol_value
 	call	sspop_a_c
 	popq	%rdx
 	cmpq	$3, (%rdx)
@@ -75,7 +76,7 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	jne	.funcall_call_do
 	pushq	%rdx
 	call	sspush_a_c
-	call	reference
+	call	symbol_value
 	call	sspop_a_c
 	popq	%rdx
 	.funcall_call_do:
@@ -166,7 +167,9 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	addq	%rdx, %rsp
 	pushq	%rdi
 	pushq	%rsi
+	call	old_env
 	ret
 	.funcall_ret:
 	movq	%rdx, 8(%rsp) # Replace final arg with return value
+	call	old_env
 	ret
