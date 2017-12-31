@@ -6,19 +6,12 @@ main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 
+	leaq	NIL(%rip), %rax
+	pushq	%rax
 	movq	$200, %rdi
 	call	read_bytes
 	pushq	%rax
-	dddt
-	call	dup
-	call	car
-	call	swap
-	call	cdr
-	call	car
-	call	lambda
-	popq	%rdi
-	call	decompile
-	pushq	%rax
+	call	eval
 	call	disp
 	call	drop
 	call	terpri

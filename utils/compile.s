@@ -23,8 +23,9 @@ compile: # Standard calling convention. Places every pointer in a list (%rsi) in
 	ret # Return block
 
 .type	decompile, @function
-decompile: # Standard calling convention. Places every quadword in a block of memory (%rdi) until 0xfe into a list (%rax)
-	pushq	$-1
+decompile: # Standard calling convention. Places every quadword in a block of memory (%rdi+8) until 0xfe into a list (%rax)
+	pushq	$0xfe
+	addq	$8, %rdi
 	.decompile_loop:
 	pushq	(%rdi)
 	addq	$8, %rdi
@@ -34,7 +35,7 @@ decompile: # Standard calling convention. Places every quadword in a block of me
 	pushq	%rax
 	.decompile_cons_loop:
 	call	cons
-	cmpq	$-1, 8(%rsp)
+	cmpq	$0xfe, 8(%rsp)
 	jnz	.decompile_cons_loop
 	popq	%rax
 	addq	$8, %rsp

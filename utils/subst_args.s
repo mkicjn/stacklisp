@@ -21,6 +21,10 @@ subst_args: # Stack-based. Substitutes argument symbols for bytecode flags
 	call	swap
 	movq	$1, %rbx
 	.subst_args_def_loop:
+	movq	(%rsp), %rdi
+	call	eqnil
+	cmpq	$1, %rax
+	je	.subst_args_loop
 	call	dup # argument list
 	call	car # argument
 	pushq	%rbx # number
@@ -28,13 +32,9 @@ subst_args: # Stack-based. Substitutes argument symbols for bytecode flags
 	call	drop # nil
 	call	cdr # next arg
 	incq	%rbx
-	movq	(%rsp), %rdi
-	call	eqnil
-	cmpq	$1, %rax
-	jne	.subst_args_def_loop
 	call	drop # nil
 	call	dup # body
-	jmp	.subst_args_loop
+	jmp	.subst_args_def_loop
 	.subst_args_skip:
 	addq	$8, %rsp
 	call	cdr

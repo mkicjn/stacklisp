@@ -72,6 +72,8 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	.funcall_call:
 	incq	%rcx
 	movq	(%rax,%rcx,8), %rdx # Load the function to be called
+	cmpq	$0xff, %rdx
+	jle	.funcall_call_skip
 	cmpq	$1, (%rdx)
 	jne	.funcall_call_do
 	pushq	%rdx
@@ -84,6 +86,7 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	jge	.funcall_asmfunc
 	pushq	%rdx
 	call	funcall
+	.funcall_call_skip:
 	incq	%rcx
 	jmp	.funcall_loop
 	.funcall_asmfunc:
@@ -146,6 +149,7 @@ funcall: # Stack-based. This is the bytecode interpreter.
 
 	.funcall_drop:
 	addq	$8, %rsp
+	incq	%rcx
 	jmp	.funcall_loop
 	
 	.funcall_exit:
@@ -158,9 +162,10 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	movq	(%rax), %rdx # Store the number of variables
 	negq	%rdx # (see above)
 	decq	%rdx # (see above)
-	movq	$8, %rax
-	mulq	%rdx
-	movq	%rax, %rdx  # Store number of bytes worth of variables
+#	movq	$8, %rax
+#	mulq	%rdx
+#	movq	%rax, %rdx  # Store number of bytes worth of variables
+	leaq	(,%rdx,8), %rdx
 	popq	%rcx # Pick up backed up registers
 	popq	%rax # (see above)
 	popq	%rsi # Preserve return address

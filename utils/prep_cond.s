@@ -33,21 +33,22 @@ prep_cond_args: # Stack-based
 	.prep_cond_args_nil:
 	ret
 
-# (defun prep_cond (f) (append '(0xc3 0xc0) (prep_cond_args f)))
+# (defun prep_cond (f) (nconc (cons 0xc0 nil) (prep_cond_args (cdr f)) (cons 0xc3 nil)))
 .type	prep_cond, @function
 prep_cond:
-	pushq	$0xc3
 	pushq	$0xc0
 	leaq	NIL(%rip), %rax
 	pushq	%rax
 	call	cons
-	call	cons
 	pushq	16(%rsp)
 	call	cdr
 	call	prep_cond_args
+
 	leaq	NIL(%rip), %rax
 	pushq	%rax
+	pushq	$0xc3
 	pushq	%rax
+	call	cons
 	call	cons
 	call	nconc
 	call	nconc

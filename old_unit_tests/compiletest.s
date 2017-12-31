@@ -16,13 +16,6 @@ condt:	# (lambda (x) (cond ((eq x 3) 1) (t 2))) => ({COND} {PUSH_ARG} 1 3 eq {CA
 	pushq	%rax
 .endm
 
-.macro	dddt
-	call	dup
-	call	disp
-	call	drop
-	call	terpri
-.endm
-
 .globl	main
 .type	main, @function
 main:
@@ -32,12 +25,6 @@ main:
 	movq	$200, %rdi
 	call	read_bytes
 	pushq	%rax
-	movq	%rax, %rdi
-	call	scc_length
-	incq	%rax
-	negq	%rax
-	pushq	%rax
-	call	swap
 	movq	$200, %rdi
 	call	read_bytes
 	pushq	%rax
@@ -47,8 +34,7 @@ main:
 	dddt
 	movq	(%rsp), %rdi
 	call	scc_length
-	movq	%rax, %rdi
-	leaq	24(,%rdi,8), %rdi
+	leaq	24(,%rax,8), %rdi
 	call	malloc@plt
 	movq	%rax, %rdi
 	popq	%rsi
@@ -56,7 +42,6 @@ main:
 	call	compile
 ########
 	movq	%rax, %rdi
-	addq	$8, %rdi
 	call	decompile
 	pushq	%rax
 	call	disp

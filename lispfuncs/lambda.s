@@ -2,8 +2,8 @@
 lambda: # Stack-based
 	movq	16(%rsp), %rdi
 	call	scc_length
-	incq	%rax
 	negq	%rax
+	decq	%rax
 	pushq	%rax
 	pushq	24(%rsp) # Arguments
 	pushq	24(%rsp) # Body
@@ -11,8 +11,7 @@ lambda: # Stack-based
 	call	subst_args
 	movq	(%rsp), %rdi
 	call	scc_length
-	movq	%rax, %rdi
-	leaq	24(,%rdi,8), %rdi
+	leaq	32(,%rax,8), %rdi
 	call	malloc@plt
 	movq	%rax, %rdi
 	popq	%rsi

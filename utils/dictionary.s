@@ -149,6 +149,16 @@ dict_funcall_cell:
 	.quad	0,dict_funcall_sym,dict_funcall_var
 dict_funcall_def:
 	.quad	0,dict_funcall_cell,dict_lambda_def
+dict_eval_str:
+	.string	"EVAL"
+dict_eval_sym:
+	.quad	1,dict_eval_str
+dict_eval_var:
+	.quad	3,eval
+dict_eval_cell:
+	.quad	0,dict_eval_sym,dict_eval_var
+dict_eval_def:
+	.quad	0,dict_eval_cell,dict_funcall_def
 dict_eq_str:
 	.string	"EQ"
 dict_eq_sym:
@@ -158,7 +168,7 @@ dict_eq_var:
 dict_eq_cell:
 	.quad	0,dict_eq_sym,dict_eq_var
 dict_eq_def:
-	.quad	0,dict_eq_cell,dict_funcall_def
+	.quad	0,dict_eq_cell,dict_eval_def
 dict_disp_str:
 	.string	"DISP"
 dict_disp_sym:
@@ -189,6 +199,16 @@ dict_define_cell:
 	.quad	0,dict_define_sym,dict_define_var
 dict_define_def:
 	.quad	0,dict_define_cell,dict_defglobal_def
+dict_decompile_str:
+	.string	"DECOMPILE"
+dict_decompile_sym:
+	.quad	1,dict_decompile_str
+dict_decompile_var:
+	.quad	3,decompile_disp
+dict_decompile_cell:
+	.quad	0,dict_decompile_sym,dict_decompile_var
+dict_decompile_def:
+	.quad	0,dict_decompile_cell,dict_define_def
 dict_copy_str:
 	.string	"COPY"
 dict_copy_sym:
@@ -198,7 +218,7 @@ dict_copy_var:
 dict_copy_cell:
 	.quad	0,dict_copy_sym,dict_copy_var
 dict_copy_def:
-	.quad	0,dict_copy_cell,dict_define_def
+	.quad	0,dict_copy_cell,dict_decompile_def
 dict_cons_str:
 	.string	"CONS"
 dict_cons_sym:

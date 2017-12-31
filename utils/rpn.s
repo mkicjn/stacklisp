@@ -32,13 +32,16 @@ rpn:
 	popq	%rdi
 	call	eqnil
 	cmpq	$1, %rax
-	jne	.rpn_quote # Treat quoted lists as atoms
+	jne	.rpn_quote
+	# Finished checking for special cases. Begin reconstructing the input.
 	pushq	8(%rsp)
 	pushq	(%rsp)
 	pushq	(%rsp)
 	call	cdr
 	call	swap
 	call	car
+	cmpq	$0xff, (%rsp)
+	jle	.rpn_flag
 	call	symbol_value
 	popq	%rax
 	cmpq	$4, (%rax)
@@ -53,15 +56,23 @@ rpn:
 	call	rpn
 	call	nconc
 	jmp	.rpn_ret
+	.rpn_flag:
+	call	drop
+	call	maprpn_no_call
+	call	swap
+	call	car
+	call	rpn
+	call	nconc
+	jmp	.rpn_ret
 	.rpn_progn:
 	pushq	8(%rsp)
 	call	prep_progn
-	call	maprpn # prep_progn removes `progn` symbol
+	call	maprpn_no_call # prep_progn removes `progn` symbol
 	jmp	.rpn_ret
 	.rpn_cond:
 	pushq	8(%rsp)
 	call	prep_cond
-	call	rpn
+	call	maprpn_no_call
 	jmp	.rpn_ret
 	.rpn_quote:
 	pushq	$0xa1
@@ -89,16 +100,17 @@ rpn:
 	popq	8(%rsp)
 	ret
 
+
 # Original: (defun maprpn (l) (if (atom l) l (nconc (rpn (car l)) (maprpn (cdr l)))))
 .type	maprpn, @function
 maprpn:
-	movq	8(%rsp), %rax
-	cmpq	$0, %rax
-	jz	.maprpn_atom
-	cmpq	$0, (%rax)
+	movq	8(%rsp), %rdi
+	cmpq	$0xff, %rdi
+	jle	.maprpn_atom # Treat flags as atoms
+	cmpq	$0, (%rdi)
 	jnz	.maprpn_atom
-	pushq	%rax
-	pushq	%rax
+	pushq	%rdi
+	pushq	%rdi
 	call	car
 	call	rpn
 	call	swap
@@ -107,4 +119,33 @@ maprpn:
 	call	nconc
 	popq	8(%rsp)
 	.maprpn_atom:
+	call	eqnil
+	cmpq	$1, %rax
+	je	.maprpn_nil
+	ret
+	.maprpn_nil:
+	pushq	$0xca
+	leaq	NIL(%rip), %rax
+	pushq	%rax
+	call	cons
+	popq	8(%rsp)
+	ret
+
+.type	maprpn_no_call, @function
+maprpn_no_call:
+	movq	8(%rsp), %rdi
+	cmpq	$0xff, %rdi
+	jle	.maprpn_no_call_atom # Treat flags as atoms
+	cmpq	$0, (%rdi)
+	jnz	.maprpn_no_call_atom
+	pushq	%rdi
+	pushq	%rdi
+	call	car
+	call	rpn
+	call	swap
+	call	cdr
+	call	maprpn_no_call
+	call	nconc
+	popq	8(%rsp)
+	.maprpn_no_call_atom:
 	ret

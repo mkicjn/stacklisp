@@ -1,10 +1,7 @@
-# The data section here is intended to be used only for backing up registers in situations where there is nowhere to save register values.
-# I'm not proud of having to stray from the calling conventions, but it would be impractical otherwise.
-
 .data
 spare_stack:
 	.quad	1 # Offset for next open quadword
-	.space	128 # May need to be increased in the future
+	.space	256 # May need to be increased in the future
 .text
 
 .type	sspush_a_c, @function

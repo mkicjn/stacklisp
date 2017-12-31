@@ -81,7 +81,7 @@ to_var: # Standard calling convention
 	cmpq	$0, %rax
 	je	.to_var0
 	cmpq	$-1, %rax
-	je	.to_var_err
+	je	.to_var_nil
 	.to_var2:
 	call	sspop_10
 	movq	$24, %rdi
@@ -96,11 +96,19 @@ to_var: # Standard calling convention
 	popq	%rax
 	ret
 	.to_var1:
+	# Check if NIL
 	movq	(%rsp), %rdi
 	leaq	NILstr(%rip), %rsi
 	call	strcasecmp@plt
 	cmpq	$0, %rax
-	jz	.to_var_err
+	movq	(%rsp), %rdi
+	jz	.to_var_nil
+	# Check if T
+	leaq	Tstr(%rip), %rsi
+	call	strcasecmp@plt
+	cmpq	$0, %rax
+	jz	.to_var_t
+	# Convert to var and quote if quoted
 	popq	%rdi
 	movq	$1, %rsi
 	call	new_var
@@ -119,7 +127,11 @@ to_var: # Standard calling convention
 	movq	%rax, %rdi
 	call	quote_var
 	ret
-	.to_var_err:
+	.to_var_t:
+	addq	$8, %rsp # drop
+	leaq	T(%rip), %rax
+	ret
+	.to_var_nil:
 	addq	$8, %rsp # drop
 	leaq	NIL(%rip), %rax
 	ret
@@ -147,7 +159,6 @@ captok: # Standard calling convention
 	pushq	%rdi
 	pushq	%rcx
 	movq	%rcx, %rdi
-	incq	%rdi ###
 	call	malloc@plt
 	movq	%rax, %rdi
 	popq	%rdx
