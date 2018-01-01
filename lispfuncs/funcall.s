@@ -36,12 +36,6 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	call	sspush_a_c
 	call	symbol_value
 	call	sspop_a_c
-	popq	%rdx
-	cmpq	$3, (%rdx)
-	jge	.funcall_call_do
-	cmpq	$0, (%rdx)
-	jl	.funcall_call_do
-	pushq	%rdx
 	.funcall_no_ref:
 	incq	%rcx
 	jmp	.funcall_loop
@@ -70,12 +64,11 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	incq	%rcx
 	jmp	.funcall_loop
 	.funcall_call:
-	incq	%rcx
-	movq	(%rax,%rcx,8), %rdx # Load the function to be called
+	popq	%rdx # Load the function to be called
 	cmpq	$0xff, %rdx
-	jle	.funcall_call_skip
+	jle	.funcall_call_skip # Don't call flags
 	cmpq	$1, (%rdx)
-	jne	.funcall_call_do
+	jne	.funcall_call_do # (i.e. get binding if symbol)
 	pushq	%rdx
 	call	sspush_a_c
 	call	symbol_value

@@ -55,10 +55,15 @@ rpn:
 	call	car
 	call	rpn
 	call	nconc
+	pushq	$0xca
+	leaq	NIL(%rip), %rax
+	pushq	%rax
+	call	cons
+	call	nconc
 	jmp	.rpn_ret
 	.rpn_flag:
 	call	drop
-	call	maprpn_no_call
+	call	maprpn
 	call	swap
 	call	car
 	call	rpn
@@ -67,12 +72,12 @@ rpn:
 	.rpn_progn:
 	pushq	8(%rsp)
 	call	prep_progn
-	call	maprpn_no_call # prep_progn removes `progn` symbol
+	call	maprpn # prep_progn removes `progn` symbol
 	jmp	.rpn_ret
 	.rpn_cond:
 	pushq	8(%rsp)
 	call	prep_cond
-	call	maprpn_no_call
+	call	maprpn
 	jmp	.rpn_ret
 	.rpn_quote:
 	pushq	$0xa1
@@ -119,33 +124,4 @@ maprpn:
 	call	nconc
 	popq	8(%rsp)
 	.maprpn_atom:
-	call	eqnil
-	cmpq	$1, %rax
-	je	.maprpn_nil
-	ret
-	.maprpn_nil:
-	pushq	$0xca
-	leaq	NIL(%rip), %rax
-	pushq	%rax
-	call	cons
-	popq	8(%rsp)
-	ret
-
-.type	maprpn_no_call, @function
-maprpn_no_call:
-	movq	8(%rsp), %rdi
-	cmpq	$0xff, %rdi
-	jle	.maprpn_no_call_atom # Treat flags as atoms
-	cmpq	$0, (%rdi)
-	jnz	.maprpn_no_call_atom
-	pushq	%rdi
-	pushq	%rdi
-	call	car
-	call	rpn
-	call	swap
-	call	cdr
-	call	maprpn_no_call
-	call	nconc
-	popq	8(%rsp)
-	.maprpn_no_call_atom:
 	ret

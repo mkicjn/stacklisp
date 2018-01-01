@@ -22,11 +22,15 @@
 	call	exit@plt
 .endm
 
-.macro	dddt
-	call	dup
+.macro	ddt
 	call	disp
 	call	drop
 	call	terpri
+.endm
+
+.macro	dddt
+	call	dup
+	ddt
 .endm
 
 .macro	debug_disp_rdi

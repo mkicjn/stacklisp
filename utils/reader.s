@@ -127,13 +127,13 @@ to_var: # Standard calling convention
 	movq	%rax, %rdi
 	call	quote_var
 	ret
-	.to_var_t:
-	addq	$8, %rsp # drop
-	leaq	T(%rip), %rax
-	ret
 	.to_var_nil:
 	addq	$8, %rsp # drop
 	leaq	NIL(%rip), %rax
+	ret
+	.to_var_t:
+	addq	$8, %rsp # drop
+	leaq	T(%rip), %rax
 	ret
 
 .type	captok, @function
