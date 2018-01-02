@@ -41,3 +41,19 @@
 	popq	%rdi
 	call	terpri
 .endm
+
+.macro	pushregs
+	pushq	%rax
+	pushq	%rcx
+	pushq	%rdx
+	pushq	%rdi
+	pushq	%rsi
+.endm
+
+.macro	popregs
+	popq	%rsi
+	popq	%rdi
+	popq	%rdx
+	popq	%rcx
+	popq	%rax
+.endm

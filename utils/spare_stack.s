@@ -45,6 +45,11 @@ sspop_di: # Unique calling convention. Return value in %rdi
 	movq	(%r8,%r9,8), %rdi
 	ret
 
+dpushstr:
+	.string	"PUSH10"
+dpopstr:
+	.string	"POP10"
+
 .type	sspush_10, @function
 sspush_10: # Unique calling convention. Argument in %r10
 	# Preserves all registers except %r8 and %r9

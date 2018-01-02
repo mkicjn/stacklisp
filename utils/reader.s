@@ -52,7 +52,7 @@ scanl:
 	.string	"%li"
 
 .type	quote_var, @function
-quote_var:
+quote_var: # Standard calling convention
 	leaq	dict_quote_sym(%rip), %rax
 	pushq	%rax
 	pushq	%rdi
@@ -128,10 +128,12 @@ to_var: # Standard calling convention
 	call	quote_var
 	ret
 	.to_var_nil:
+	call	sspop_10
 	addq	$8, %rsp # drop
 	leaq	NIL(%rip), %rax
 	ret
 	.to_var_t:
+	call	sspop_10
 	addq	$8, %rsp # drop
 	leaq	T(%rip), %rax
 	ret
