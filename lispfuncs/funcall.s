@@ -58,7 +58,6 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	negq	%rdx
 	subq	(%rax,%rcx,8), %rdx # Get argument offset
 	addq	$2, %rdx # Skip return address and base pointer
-test:
 	pushq	(%rbp,%rdx,8)
 	incq	%rcx
 	jmp	.funcall_loop
