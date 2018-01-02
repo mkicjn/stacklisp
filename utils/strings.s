@@ -47,3 +47,15 @@ skip_white:
 	je	.read_list_white
 	movq	%rdi, %rax
 	ret
+
+.type	strclone, @function
+strclone:
+	pushq	%rdi
+	call	strlen@plt
+	movq	%rax, %rdi
+	incq	%rdi
+	call	malloc@plt
+	movq	%rax, %rdi
+	popq	%rsi
+	call	strcpy@plt
+	ret

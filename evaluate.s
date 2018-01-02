@@ -6,7 +6,7 @@ main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 
-	movq	$200, %rdi
+	movq	$1024, %rdi
 	call	read_bytes
 	pushq	%rax
 	call	eval
