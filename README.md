@@ -5,4 +5,6 @@ At the time of this writing, I am a college freshman going into computer enginee
 
 This compiler translates Lisp's nested list structure into Forth style reverse Polish notation, and then compiles that structure into bytecode for easy interpretation.
 
-Currently, `lambda` and `funcall` appear to be working. It seems a REPL should be coming soon!
+For a simple REPL, compile and run evaluate.s and enter the following: `((lambda nil '(progn (disp (eval (read 200))) (terpri) (terpri) (@))))`
+
+This will read 200 bytes of input each time. Notes on dialectical quirks coming soon, probably.

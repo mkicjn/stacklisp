@@ -6,8 +6,6 @@ main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 
-	leaq	NIL(%rip), %rax
-	pushq	%rax
 	movq	$200, %rdi
 	call	read_bytes
 	pushq	%rax
