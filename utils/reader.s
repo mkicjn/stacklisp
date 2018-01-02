@@ -7,6 +7,8 @@ infer_type: # Standard calling convention
 	xorq	%rcx, %rcx
 	cmpb	$'(', (%rdi)
 	je	.infer_type0
+	cmpb	$0, (%rdi)
+	jz	.infer_type1
 	.infer_type_loop:
 	cmpb	$0, (%rdi)
 	jz	.infer_type2
@@ -96,6 +98,9 @@ to_var: # Standard calling convention
 	popq	%rax
 	ret
 	.to_var1:
+	movq	(%rsp), %rdi
+	cmpb	$0, (%rdi)
+	jz	.to_var_nil
 	# Check if NIL
 	movq	(%rsp), %rdi
 	leaq	NILstr(%rip), %rsi
