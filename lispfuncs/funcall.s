@@ -1,11 +1,9 @@
 .type	funcall, @function
 funcall: # Stack-based. This is the bytecode interpreter.
 	call	sspush_env
-	pushq	%rax
-	pushq	%rcx
 	pushq	%rbp
 	movq	%rsp, %rbp
-	movq	32(%rsp), %rax # Load pointer to function (past return addr/backups)
+	movq	16(%rsp), %rax # Load pointer to function (past return addr/backups)
 	movq	$1, %rcx # Set the counter to 1 (At 0 would be # of args)
 	.funcall_loop:
 	movq	(%rax,%rcx,8), %rdx # Load the next instruction
@@ -59,10 +57,11 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	movq	(%rax), %rdx # -(# of args + 1)
 	negq	%rdx
 	subq	(%rax,%rcx,8), %rdx # Get argument offset
-	addq	$4, %rdx # Skip return address, base pointer, and rax/rcx backups
+	addq	$2, %rdx # Skip return address, base pointer, and rax/rcx backups
 	pushq	(%rbp,%rdx,8)
 	incq	%rcx
 	jmp	.funcall_loop
+
 	.funcall_call:
 	popq	%rdx # Load the function to be called
 	cmpq	$0xff, %rdx
@@ -78,7 +77,9 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	cmpq	$3, (%rdx)
 	jge	.funcall_asmfunc
 	pushq	%rdx
+	call	sspush_a_c
 	call	funcall
+	call	sspop_a_c
 	.funcall_call_skip:
 	incq	%rcx
 	jmp	.funcall_loop
@@ -155,12 +156,7 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	movq	(%rax), %rdx # Store the number of variables
 	negq	%rdx # (see above)
 	decq	%rdx # (see above)
-#	movq	$8, %rax
-#	mulq	%rdx
-#	movq	%rax, %rdx  # Store number of bytes worth of variables
-	leaq	(,%rdx,8), %rdx
-	popq	%rcx # Pick up backed up registers
-	popq	%rax # (see above)
+	leaq	(,%rdx,8), %rdx # Store number of bytes worth of variables
 	popq	%rsi # Preserve return address
 	addq	%rdx, %rsp
 	pushq	%rdi

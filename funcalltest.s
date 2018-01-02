@@ -30,9 +30,9 @@ zero:
 one:
 	.quad	2,1
 f:
-	# (lambda (x) (cons 0 (cond ((eq x 1) 0) (t 1))))
-	# (0 {COND} {PUSH_ARG} {0x1} 1 eq {CALL} {CASE} 0 {CASE_END} T {CASE} 1 {CASE_END} NIL {COND_END} cons {CALL})
-	.quad	-2,zero,0xc0,0xaa,0x1,one,dict_eq_sym,0xca,0xc1,zero,0xc2,T,0xc1,one,0xc2,NIL,0xc3,dict_cons_sym,0xca,0xee,0xfe
+	# (lambda '(x) '(cons x (cons 0 nil)))
+	# ({PUSH_ARG} {0x1} {PUSH} x NIL cons {CALL} cons {CALL} {RETURN})
+	.quad	-2,0xaa,1,zero,NIL,dict_cons_sym,0xca,dict_cons_sym,0xca,0xee,0xfe
 
 .macro	peaq	mem
 	leaq	\mem(%rip), %rax
