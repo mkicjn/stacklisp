@@ -2,17 +2,13 @@ self_op_str:
 	.string	"@"
 self_op_sym:
 	.quad	1,self_op_str,0
-self_op_cell:
-	.quad	0,self_op_sym,0
-arg_dict_seed:
-	.quad	0,self_op_cell,NIL
 
 .type	subst_args, @function
 subst_args: # Stack-based. Substitutes argument symbols for bytecode flags
 	# Takes two args: An argument list and function body
 	call	sspush_env
 	leaq	ENV(%rip), %rax
-	leaq	arg_dict_seed(%rip), %rdx
+	leaq	NIL(%rip), %rdx
 	movq	%rdx, (%rax)
 	# 0 stack items
 	pushq	%rbx
@@ -25,7 +21,7 @@ subst_args: # Stack-based. Substitutes argument symbols for bytecode flags
 	popq	%rdi
 	call	eqnil
 	cmpq	$1, %rax
-	je	.subst_args_loop
+	je	.subst_args_def_self
 	pushq	%rdi
 	pushq	%rdi
 	call	car
@@ -35,6 +31,13 @@ subst_args: # Stack-based. Substitutes argument symbols for bytecode flags
 	call	cdr
 	incq	%rbx
 	jmp	.subst_args_def_loop
+	.subst_args_def_self:
+	leaq	self_op_sym(%rip), %rax
+	pushq	%rax
+	pushq	%rbx
+	call	define
+	addq	$8, %rsp
+	jmp	.subst_args_loop
 
 	.subst_args_undef:
 	addq	$8, %rsp

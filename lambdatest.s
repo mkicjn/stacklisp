@@ -9,7 +9,6 @@ main:
 	movq	$200, %rdi
 	call	read_bytes
 	pushq	%rax
-	dddt
 	call	dup
 	call	car
 	call	swap

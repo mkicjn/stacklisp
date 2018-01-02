@@ -3,7 +3,7 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	call	sspush_env
 	pushq	%rbp
 	movq	%rsp, %rbp
-	movq	16(%rsp), %rax # Load pointer to function (past return addr/backups)
+	movq	16(%rsp), %rax # Load pointer to function (past return addr/bp)
 	movq	$1, %rcx # Set the counter to 1 (At 0 would be # of args)
 	.funcall_loop:
 	movq	(%rax,%rcx,8), %rdx # Load the next instruction
@@ -57,7 +57,8 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	movq	(%rax), %rdx # -(# of args + 1)
 	negq	%rdx
 	subq	(%rax,%rcx,8), %rdx # Get argument offset
-	addq	$2, %rdx # Skip return address, base pointer, and rax/rcx backups
+	addq	$2, %rdx # Skip return address and base pointer
+test:
 	pushq	(%rbp,%rdx,8)
 	incq	%rcx
 	jmp	.funcall_loop
@@ -158,12 +159,8 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	decq	%rdx # (see above)
 	leaq	(,%rdx,8), %rdx # Store number of bytes worth of variables
 	popq	%rsi # Preserve return address
-	addq	%rdx, %rsp
+	addq	%rdx, %rsp # Destroy variables
 	pushq	%rdi
 	pushq	%rsi
-	call	sspop_env
-	ret
-	.funcall_ret:
-	movq	%rdx, 8(%rsp) # Replace final arg with return value
 	call	sspop_env
 	ret
