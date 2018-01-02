@@ -108,7 +108,7 @@ to_var: # Standard calling convention
 	call	strcasecmp@plt
 	cmpq	$0, %rax
 	jz	.to_var_t
-	# Convert to var and quote if quoted
+	# Convert to var, quote if quoted
 	popq	%rdi
 	movq	$1, %rsi
 	call	new_var

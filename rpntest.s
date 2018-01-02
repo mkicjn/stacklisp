@@ -8,7 +8,6 @@ argstr:
 main:
 	pushq	%rbp
 	movq	%rsp, %rbp
-	movq	$0x06281999, %rbx
 
 	leaq	argstr(%rip), %rdi
 	call	to_var
@@ -17,6 +16,7 @@ main:
 	movq	$200, %rdi
 	call	read_bytes
 	pushq	%rax
+	dddt
 
 	call	rpn
 	call	subst_args

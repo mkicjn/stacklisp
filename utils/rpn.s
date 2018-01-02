@@ -33,6 +33,15 @@ rpn:
 	call	eqnil
 	cmpq	$1, %rax
 	jne	.rpn_quote
+	pushq	8(%rsp)
+	call	car
+	leaq	dict_funcall_sym(%rip), %rax
+	pushq	%rax
+	call	eq
+	popq	%rdi
+	call	eqnil
+	cmpq	$1, %rax
+	jne	.rpn_funcall
 	# Finished checking for special cases. Begin reconstructing the input.
 	pushq	8(%rsp)
 	pushq	(%rsp)
@@ -84,6 +93,11 @@ rpn:
 	pushq	16(%rsp)
 	call	cdr
 	call	cons
+	jmp	.rpn_ret
+	.rpn_funcall: # {CALL} eliminates need for manually calling funcall
+	pushq	8(%rsp)
+	call	cdr
+	call	rpn
 	jmp	.rpn_ret
 	.rpn_atom:
 	pushq	8(%rsp)
