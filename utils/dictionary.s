@@ -69,16 +69,16 @@ dict_return_cell:
 	.quad	0,dict_return_sym,dict_return_var
 dict_return_def:
 	.quad	0,dict_return_cell,dict_rplaca_def
-dict_read_str:
+dict_lread_str:
 	.string	"READ"
-dict_read_sym:
-	.quad	1,dict_read_str
-dict_read_var:
+dict_lread_sym:
+	.quad	1,dict_lread_str
+dict_lread_var:
 	.quad	3,lread
-dict_read_cell:
-	.quad	0,dict_read_sym,dict_read_var
-dict_read_def:
-	.quad	0,dict_read_cell,dict_return_def
+dict_lread_cell:
+	.quad	0,dict_lread_sym,dict_lread_var
+dict_lread_def:
+	.quad	0,dict_lread_cell,dict_return_def
 dict_quote_str:
 	.string	"QUOTE"
 dict_quote_sym:
@@ -88,7 +88,7 @@ dict_quote_var:
 dict_quote_cell:
 	.quad	0,dict_quote_sym,dict_quote_var
 dict_quote_def:
-	.quad	0,dict_quote_cell,dict_read_def
+	.quad	0,dict_quote_cell,dict_lread_def
 dict_progn_str:
 	.string	"PROGN"
 dict_progn_sym:
@@ -219,16 +219,16 @@ dict_define_cell:
 	.quad	0,dict_define_sym,dict_define_var
 dict_define_def:
 	.quad	0,dict_define_cell,dict_declare_def
-dict_decompile_str:
+dict_decompile_disp_str:
 	.string	"DECOMPILE"
-dict_decompile_sym:
-	.quad	1,dict_decompile_str
-dict_decompile_var:
+dict_decompile_disp_sym:
+	.quad	1,dict_decompile_disp_str
+dict_decompile_disp_var:
 	.quad	3,decompile_disp
-dict_decompile_cell:
-	.quad	0,dict_decompile_sym,dict_decompile_var
-dict_decompile_def:
-	.quad	0,dict_decompile_cell,dict_define_def
+dict_decompile_disp_cell:
+	.quad	0,dict_decompile_disp_sym,dict_decompile_disp_var
+dict_decompile_disp_def:
+	.quad	0,dict_decompile_disp_cell,dict_define_def
 dict_copy_str:
 	.string	"COPY"
 dict_copy_sym:
@@ -238,7 +238,7 @@ dict_copy_var:
 dict_copy_cell:
 	.quad	0,dict_copy_sym,dict_copy_var
 dict_copy_def:
-	.quad	0,dict_copy_cell,dict_decompile_def
+	.quad	0,dict_copy_cell,dict_decompile_disp_def
 dict_cons_str:
 	.string	"CONS"
 dict_cons_sym:
@@ -289,6 +289,16 @@ dict_atom_cell:
 	.quad	0,dict_atom_sym,dict_atom_var
 dict_atom_def:
 	.quad	0,dict_atom_cell,dict_car_def
+dict_add_str:
+	.string	"+"
+dict_add_sym:
+	.quad	1,dict_add_str
+dict_add_var:
+	.quad	4,add
+dict_add_cell:
+	.quad	0,dict_add_sym,dict_add_var
+dict_add_def:
+	.quad	0,dict_add_cell,dict_atom_def
 dict_append_str:
 	.string	"APPEND"
 dict_append_sym:
@@ -298,5 +308,5 @@ dict_append_var:
 dict_append_cell:
 	.quad	0,dict_append_sym,dict_append_var
 DICT:
-	.quad	0,dict_append_cell,dict_atom_def
+	.quad	0,dict_append_cell,dict_add_def
 .text

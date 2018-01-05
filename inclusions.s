@@ -21,6 +21,7 @@
 .include "utils/var_copy.s"
 .include "utils/zornil.s"
 .include "lispfuncs/append.s"
+.include "lispfuncs/arith.s"
 .include "lispfuncs/atom.s"
 .include "lispfuncs/car_cdr.s"
 .include "lispfuncs/cond.s"
