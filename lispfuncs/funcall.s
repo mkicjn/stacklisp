@@ -67,7 +67,7 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	cmpq	$0xff, %rdx
 	jle	.funcall_call_skip # Don't call flags
 	cmpq	$1, (%rdx)
-	jne	.funcall_call_do # (i.e. get binding if symbol)
+	jne	.funcall_call_do # (i.e. don't get binding unless symbol)
 	pushq	%rdx
 	call	sspush_a_c
 	call	symbol_value
@@ -156,7 +156,7 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	movq	(%rax), %rdx # Store the number of variables
 	negq	%rdx # (see above)
 	decq	%rdx # (see above)
-	leaq	(,%rdx,8), %rdx # Store number of bytes worth of variables
+	leaq	8(,%rdx,8), %rdx # Store number of bytes worth of arguments (+ function)
 	popq	%rsi # Preserve return address
 	addq	%rdx, %rsp # Destroy variables
 	pushq	%rdi

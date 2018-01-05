@@ -22,15 +22,24 @@
 	call	exit@plt
 .endm
 
-.macro	ddt
+.macro	dd
 	call	disp
 	call	drop
-	call	terpri
+.endm
+
+.macro	ddd
+	call	dup
+	dd
+.endm
+
+.macro	ddt
+	dd
+	call	scc_terpri
 .endm
 
 .macro	dddt
-	call	dup
-	ddt
+	ddd
+	call	scc_terpri
 .endm
 
 .macro	debug_disp_rdi
@@ -39,7 +48,7 @@
 	call	disp
 	call	drop
 	popq	%rdi
-	call	terpri
+	call	scc_terpri
 .endm
 
 .macro	pushregs
@@ -56,4 +65,11 @@
 	popq	%rdx
 	popq	%rcx
 	popq	%rax
+.endm
+
+.macro	tab
+	pushregs
+	movq	$'\t', %rdi
+	call	putchar@plt
+	popregs
 .endm

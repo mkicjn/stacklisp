@@ -45,12 +45,20 @@ main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 
-	peaq	one
-	peaq	f
+	movq	$200, %rdi
+	call	read_bytes
+	pushq	%rax
+	call	eval
+
+	movq	$200, %rdi
+	call	read_bytes
+	pushq	%rax
+	call	eval
+
+	call	swap
 	call	funcall
-	call	disp
-	call	drop
-	call	terpri
+	ddt
+	ddt
 
 	leave
 	ret

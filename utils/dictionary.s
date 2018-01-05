@@ -99,6 +99,16 @@ dict_progn_cell:
 	.quad	0,dict_progn_sym,dict_progn_var
 dict_progn_def:
 	.quad	0,dict_progn_cell,dict_quote_def
+dict_null_str:
+	.string	"NULL"
+dict_null_sym:
+	.quad	1,dict_null_str
+dict_null_var:
+	.quad	3,null
+dict_null_cell:
+	.quad	0,dict_null_sym,dict_null_var
+dict_null_def:
+	.quad	0,dict_null_cell,dict_progn_def
 dict_nconc_str:
 	.string	"NCONC"
 dict_nconc_sym:
@@ -108,7 +118,7 @@ dict_nconc_var:
 dict_nconc_cell:
 	.quad	0,dict_nconc_sym,dict_nconc_var
 dict_nconc_def:
-	.quad	0,dict_nconc_cell,dict_progn_def
+	.quad	0,dict_nconc_cell,dict_null_def
 dict_list_str:
 	.string	"LIST"
 dict_list_sym:
@@ -179,16 +189,16 @@ dict_disp_cell:
 	.quad	0,dict_disp_sym,dict_disp_var
 dict_disp_def:
 	.quad	0,dict_disp_cell,dict_eq_def
-dict_defglobal_str:
-	.string	"DEFGLOBAL"
-dict_defglobal_sym:
-	.quad	1,dict_defglobal_str
-dict_defglobal_var:
-	.quad	3,defglobal
-dict_defglobal_cell:
-	.quad	0,dict_defglobal_sym,dict_defglobal_var
-dict_defglobal_def:
-	.quad	0,dict_defglobal_cell,dict_disp_def
+dict_declare_str:
+	.string	"DECLARE"
+dict_declare_sym:
+	.quad	1,dict_declare_str
+dict_declare_var:
+	.quad	3,declare
+dict_declare_cell:
+	.quad	0,dict_declare_sym,dict_declare_var
+dict_declare_def:
+	.quad	0,dict_declare_cell,dict_disp_def
 dict_define_str:
 	.string	"DEFINE"
 dict_define_sym:
@@ -198,7 +208,7 @@ dict_define_var:
 dict_define_cell:
 	.quad	0,dict_define_sym,dict_define_var
 dict_define_def:
-	.quad	0,dict_define_cell,dict_defglobal_def
+	.quad	0,dict_define_cell,dict_declare_def
 dict_decompile_str:
 	.string	"DECOMPILE"
 dict_decompile_sym:

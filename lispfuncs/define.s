@@ -16,8 +16,8 @@ define:
 	popq	(%rsp) # nip
 	ret
 
-.type	defglobal, @function
-defglobal:
+.type	declare, @function
+declare:
 	movq	16(%rsp), %rsi # sym (arg2)
 	leaq	NIL(%rip), %rax
 	cmpq	%rax, %rsi
