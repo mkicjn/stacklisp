@@ -119,6 +119,16 @@ dict_nconc_cell:
 	.quad	0,dict_nconc_sym,dict_nconc_var
 dict_nconc_def:
 	.quad	0,dict_nconc_cell,dict_null_def
+dict_load_str:
+	.string	"LOAD"
+dict_load_sym:
+	.quad	1,dict_load_str
+dict_load_var:
+	.quad	3,load
+dict_load_cell:
+	.quad	0,dict_load_sym,dict_load_var
+dict_load_def:
+	.quad	0,dict_load_cell,dict_nconc_def
 dict_list_str:
 	.string	"LIST"
 dict_list_sym:
@@ -128,7 +138,7 @@ dict_list_var:
 dict_list_cell:
 	.quad	0,dict_list_sym,dict_list_var
 dict_list_def:
-	.quad	0,dict_list_cell,dict_nconc_def
+	.quad	0,dict_list_cell,dict_load_def
 dict_length_str:
 	.string	"LENGTH"
 dict_length_sym:
