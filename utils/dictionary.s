@@ -289,6 +289,16 @@ dict_atom_cell:
 	.quad	0,dict_atom_sym,dict_atom_var
 dict_atom_def:
 	.quad	0,dict_atom_cell,dict_car_def
+dict_subt_str:
+	.string	"-"
+dict_subt_sym:
+	.quad	1,dict_subt_str
+dict_subt_var:
+	.quad	4,subt
+dict_subt_cell:
+	.quad	0,dict_subt_sym,dict_subt_var
+dict_subt_def:
+	.quad	0,dict_subt_cell,dict_atom_def
 dict_add_str:
 	.string	"+"
 dict_add_sym:
@@ -298,7 +308,7 @@ dict_add_var:
 dict_add_cell:
 	.quad	0,dict_add_sym,dict_add_var
 dict_add_def:
-	.quad	0,dict_add_cell,dict_atom_def
+	.quad	0,dict_add_cell,dict_subt_def
 dict_append_str:
 	.string	"APPEND"
 dict_append_sym:
