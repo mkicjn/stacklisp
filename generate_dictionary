@@ -8,10 +8,7 @@ for (@ARGV) {
 	while (my $line=<fh>) {
 		my $defn;
 		# Parse comments after type declaration
-		if ($line=~/.type\t(.*), \@function[ \t]*#([^\n \t]+)/) {
-# If the desired Lisp name is different from the assembly name
-# # or the desired datatype is not the usual 3 (for assembly functions)
-# # Add #|name|type| somewhere after @function on the same line
+		if ($line=~/.type\t(.*), \@function[ \t]*#([^\n \t]+)/) { #|name|type|
 			$defn=$1;
 			$defn.=$2 if ($2);
 		} elsif ($line=~/.type\t(.*), \@function/) {
@@ -26,17 +23,11 @@ print ".data\n";
 my $c=0;
 for (@funcs) { 
 	# Assembly name|Lisp name|Datatype
-	my $asmname;
-	my $lname;
-	my $type;
+	my ($asmname,$lname,$type);
 	if ($_=~/(.*)\|(.*)\|(.*)\|/) {
-		$asmname=$1;
-		$lname=($2?$2:$1);
-		$type=($3?$3:'3');
+		($asmname,$lname,$type)=($1,($2?$2:$1),($3?$3:'3'));
 	} else {
-		$asmname=$_;
-		$lname=$_;
-		$type='3';
+		($asmname,$lname,$type)=($_,$_,'3');
 	}
 	print "dict_${asmname}_str:\n\t.string\t\"",uc $lname,"\"\n";
 	print "dict_${asmname}_sym:\n\t.quad\t1,dict_${asmname}_str\n";
