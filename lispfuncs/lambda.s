@@ -1,22 +1,26 @@
 .type	lambda, @function
 lambda: # Stack-based
-	movq	16(%rsp), %rdi
-	call	scc_length
-	negq	%rax
-	decq	%rax
-	pushq	%rax
-	pushq	24(%rsp) # Arguments
-	pushq	24(%rsp) # Body
+	pushq	ENV(%rip)
+	call	copy
+	pushq	24(%rsp) # Recall arg1
+	pushq	24(%rsp) # Recall arg2
 	call	rpn
 	call	subst_args
 	movq	(%rsp), %rdi
 	call	scc_length
-	leaq	32(,%rax,8), %rdi
+	leaq	16(,%rax,8), %rdi
 	call	malloc@plt
 	movq	%rax, %rdi
 	popq	%rsi
-	popq	(%rdi)
 	call	compile
-	popq	(%rsp) # Drop second argument
-	movq	%rax, 8(%rsp) # Replace first
+	pushq	%rax
+	call	cons
+	movq	24(%rsp), %rdi
+	call	scc_length
+	negq	%rax
+	decq	%rax
+	popq	%rdi
+	movq	%rax, (%rdi)
+	popq	(%rsp)
+	movq	%rdi, 8(%rsp)
 	ret

@@ -3,8 +3,11 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	call	sspush_env
 	pushq	%rbp
 	movq	%rsp, %rbp
-	movq	16(%rsp), %rax # Load pointer to function (past return addr/bp)
-	movq	$1, %rcx # Set the counter to 1 (At 0 would be # of args)
+	movq	16(%rsp), %rax # Load pointer to function var (past return addr/bp)
+	movq	8(%rax), %rcx
+	movq	%rcx, ENV(%rip) # Reload environment from function's creation
+	movq	16(%rax), %rax # Load pointer to function block
+	xorq	%rcx, %rcx # Set the counter to the function's beginning
 	.funcall_loop:
 	movq	(%rax,%rcx,8), %rdx # Load the next instruction
 	cmpq	$0xa1, %rdx
@@ -54,7 +57,8 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	jmp	.funcall_loop
 	.funcall_pusharg:
 	incq	%rcx
-	movq	(%rax), %rdx # -(# of args + 1)
+	movq	16(%rbp), %rdx
+	movq	(%rdx), %rdx # -(# of args + 1)
 	negq	%rdx
 	subq	(%rax,%rcx,8), %rdx # Get argument offset
 	addq	$2, %rdx # Skip return address and base pointer

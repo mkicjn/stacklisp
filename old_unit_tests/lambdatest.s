@@ -15,38 +15,12 @@ main:
 	call	swap
 	call	cdr
 	call	car
-#####
-#	call	lambda
-#/*
-	movq	8(%rsp), %rdi
-	call	scc_length
-	negq	%rax
-	decq	%rax
-	pushq	%rax
-	pushq	16(%rsp) # Arguments
-	pushq	16(%rsp) # Body
-	call	rpn
-	dddt
-	call	subst_args
-	dddt
-	movq	(%rsp), %rdi
-	call	scc_length
-	leaq	24(,%rax,8), %rdi
-	call	malloc@plt
-	movq	%rax, %rdi
-	popq	%rsi
-	popq	(%rdi)
-	call	compile
-	popq	(%rsp) # Drop second argument
-	movq	%rax, (%rsp) # Replace first
-#*/
-#######
+	call	lambda
 	popq	%rdi
+	movq	16(%rdi), %rdi
 	call	decompile
 	pushq	%rax
-	call	disp
-	call	drop
-	call	terpri
+	ddt
 
 	leave
 	ret
