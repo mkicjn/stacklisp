@@ -219,16 +219,16 @@ dict_define_cell:
 	.quad	0,dict_define_sym,dict_define_var
 dict_define_def:
 	.quad	0,dict_define_cell,dict_declare_def
-dict_decompile_disp_str:
+dict_decompile_var_str:
 	.string	"DECOMPILE"
-dict_decompile_disp_sym:
-	.quad	1,dict_decompile_disp_str
-dict_decompile_disp_var:
-	.quad	3,decompile_disp
-dict_decompile_disp_cell:
-	.quad	0,dict_decompile_disp_sym,dict_decompile_disp_var
-dict_decompile_disp_def:
-	.quad	0,dict_decompile_disp_cell,dict_define_def
+dict_decompile_var_sym:
+	.quad	1,dict_decompile_var_str
+dict_decompile_var_var:
+	.quad	3,decompile_var
+dict_decompile_var_cell:
+	.quad	0,dict_decompile_var_sym,dict_decompile_var_var
+dict_decompile_var_def:
+	.quad	0,dict_decompile_var_cell,dict_define_def
 dict_copy_str:
 	.string	"COPY"
 dict_copy_sym:
@@ -238,7 +238,7 @@ dict_copy_var:
 dict_copy_cell:
 	.quad	0,dict_copy_sym,dict_copy_var
 dict_copy_def:
-	.quad	0,dict_copy_cell,dict_decompile_disp_def
+	.quad	0,dict_copy_cell,dict_decompile_var_def
 dict_cons_str:
 	.string	"CONS"
 dict_cons_sym:

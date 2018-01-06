@@ -27,7 +27,7 @@
 .include "lispfuncs/cond.s"
 .include "lispfuncs/cons.s"
 .include "lispfuncs/copy.s"
-.include "lispfuncs/decompile_disp.s"
+.include "lispfuncs/decompile_var.s"
 .include "lispfuncs/define.s"
 .include "lispfuncs/disp.s"
 .include "lispfuncs/eq.s"

@@ -1,7 +1,7 @@
 .type	lambda, @function
 lambda: # Stack-based
 	pushq	ENV(%rip)
-	call	copy
+#	call	copy
 	pushq	24(%rsp) # Recall arg1
 	pushq	24(%rsp) # Recall arg2
 	call	rpn

@@ -1,5 +1,5 @@
 .type	compile, @function
-compile: # Standard calling convention. Places every pointer in a list (%rsi) into a memory block %rdi and appends 0xee and 0xfe
+compile: # Standard calling convention. Places every pointer in a list at %rsi into a memory block at %rdi and appends 0xee and 0xfe
 	pushq	%rdi
 	pushq	%rbx
 	movq	%rdi, %rbx
@@ -23,7 +23,7 @@ compile: # Standard calling convention. Places every pointer in a list (%rsi) in
 	ret # Return block
 
 .type	decompile, @function
-decompile: # Standard calling convention. Places every quadword in a block of memory %rdi until 0xfe into a list (%rax)
+decompile: # Standard calling convention. Places every pointer in a block of memory at %rdi until 0xfe into a list at %rax
 	pushq	$0xfe
 	.decompile_loop:
 	pushq	(%rdi)
