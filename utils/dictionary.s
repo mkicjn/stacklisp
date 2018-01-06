@@ -79,6 +79,16 @@ dict_lread_cell:
 	.quad	0,dict_lread_sym,dict_lread_var
 dict_lread_def:
 	.quad	0,dict_lread_cell,dict_return_def
+dict_random_str:
+	.string	"RANDOM"
+dict_random_sym:
+	.quad	1,dict_random_str
+dict_random_var:
+	.quad	3,random
+dict_random_cell:
+	.quad	0,dict_random_sym,dict_random_var
+dict_random_def:
+	.quad	0,dict_random_cell,dict_lread_def
 dict_quote_str:
 	.string	"QUOTE"
 dict_quote_sym:
@@ -88,7 +98,7 @@ dict_quote_var:
 dict_quote_cell:
 	.quad	0,dict_quote_sym,dict_quote_var
 dict_quote_def:
-	.quad	0,dict_quote_cell,dict_lread_def
+	.quad	0,dict_quote_cell,dict_random_def
 dict_progn_str:
 	.string	"PROGN"
 dict_progn_sym:
@@ -289,6 +299,16 @@ dict_atom_cell:
 	.quad	0,dict_atom_sym,dict_atom_var
 dict_atom_def:
 	.quad	0,dict_atom_cell,dict_car_def
+dict_mult_str:
+	.string	"*"
+dict_mult_sym:
+	.quad	1,dict_mult_str
+dict_mult_var:
+	.quad	4,mult
+dict_mult_cell:
+	.quad	0,dict_mult_sym,dict_mult_var
+dict_mult_def:
+	.quad	0,dict_mult_cell,dict_atom_def
 dict_subt_str:
 	.string	"-"
 dict_subt_sym:
@@ -298,7 +318,7 @@ dict_subt_var:
 dict_subt_cell:
 	.quad	0,dict_subt_sym,dict_subt_var
 dict_subt_def:
-	.quad	0,dict_subt_cell,dict_atom_def
+	.quad	0,dict_subt_cell,dict_mult_def
 dict_add_str:
 	.string	"+"
 dict_add_sym:
