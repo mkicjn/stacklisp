@@ -1,5 +1,16 @@
+.data
+seed:
+	.quad	-1
+.text
+
 .type	random, @function
 random:
+	cmpq	$0, seed(%rip)
+	jnl	.random_no_seed
+	xorq	%rdi, %rdi
+	call	time@plt
+	movq	%rax, seed(%rip)
+	.random_no_seed:
 	movq	seed(%rip), %rax
 	movq	$1103515243, %rcx
 	mulq	%rcx

@@ -14,7 +14,6 @@
 .include "utils/rpn.s"
 .include "utils/scc_length.s"
 .include "utils/scc_terpri.s"
-.include "utils/seed_rng.s"
 .include "utils/spare_stack.s"
 .include "utils/stack.s"
 .include "utils/strings.s"

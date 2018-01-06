@@ -6,7 +6,15 @@ main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 
-	call	seed_rng
+	cmpq	$1, %rdi
+	jng	.repl # No arguments
+	movq	8(%rsi), %rdi
+	call	read_file
+	pushq	%rax
+	call	eval
+	call	drop
+	jmp	.main_ret
+
 	.repl:
 	movq	$1024, %rdi
 	call	read_bytes
@@ -18,5 +26,6 @@ main:
 	call	scc_terpri
 	jmp	.repl
 
+	.main_ret:
 	leave
 	ret

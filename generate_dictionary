@@ -38,15 +38,15 @@ for (@funcs) {
 		$lname=$_;
 		$type='3';
 	}
-	print "dict_${lname}_str:\n\t.string\t\"",uc $lname,"\"\n";
-	print "dict_${lname}_sym:\n\t.quad\t1,dict_${lname}_str\n";
-	print "dict_${lname}_var:\n\t.quad\t$type,$asmname\n";
-	print "dict_${lname}_cell:\n\t.quad\t0,dict_${lname}_sym,dict_${lname}_var\n";
-	print ($c==@funcs-1?"DICT":"dict_${lname}_def");
-	print ":\n\t.quad\t0,dict_${lname}_cell,";
+	print "dict_${asmname}_str:\n\t.string\t\"",uc $lname,"\"\n";
+	print "dict_${asmname}_sym:\n\t.quad\t1,dict_${asmname}_str\n";
+	print "dict_${asmname}_var:\n\t.quad\t$type,$asmname\n";
+	print "dict_${asmname}_cell:\n\t.quad\t0,dict_${asmname}_sym,dict_${asmname}_var\n";
+	print ($c==@funcs-1?"DICT":"dict_${asmname}_def");
+	print ":\n\t.quad\t0,dict_${asmname}_cell,";
 	print ($last?"dict_${last}_def":"NIL");
 	print "\n";
-	$last=$lname;
+	$last=$asmname;
 	$c++;
 }
 print ".text\n";
