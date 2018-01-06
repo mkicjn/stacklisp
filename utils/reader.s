@@ -149,24 +149,26 @@ captok: # Standard calling convention
 	movq	$-1, %rcx
 	.captok_loop:
 	incq	%rcx
-	cmpb	$0, (%rdi,%rcx,1) # Null
+	cmpb	$0, (%rdi,%rcx) # Null
 	jz	.captok_break
-	cmpb	$' ', (%rdi,%rcx,1) # Space
+	cmpb	$' ', (%rdi,%rcx) # Space
 	je	.captok_ret
-	cmpb	$')', (%rdi,%rcx,1) # Right parenthesis
+	cmpb	$')', (%rdi,%rcx) # Right parenthesis
 	je	.captok_ret
-	cmpb	$'\t', (%rdi,%rcx,1) # Horizontal tab
+	cmpb	$'\t', (%rdi,%rcx) # Horizontal tab
 	je	.captok_ret
-	cmpb	$'\n', (%rdi,%rcx,1) # Line feed (Newline)
+	cmpb	$'\n', (%rdi,%rcx) # Line feed (Newline)
 	je	.captok_ret
-	cmpb	$'\r', (%rdi,%rcx,1) # Carriage return
+	cmpb	$'\r', (%rdi,%rcx) # Carriage return
 	je	.captok_ret
 	jmp	.captok_loop
 	.captok_ret:
 	pushq	%rdi
 	pushq	%rcx
 	movq	%rcx, %rdi
-	call	malloc@plt
+	incq	%rdi
+	movq	$1, %rsi
+	call	calloc@plt
 	movq	%rax, %rdi
 	popq	%rdx
 	popq	%rsi
@@ -184,11 +186,11 @@ caplist: # Standard calling convention
 	movq	$-1, %rcx
 	.caplist_loop:
 	incq	%rcx
-	cmpb	$0, (%rdi,%rcx,1)
+	cmpb	$0, (%rdi,%rcx)
 	jz	.caplist_break
-	cmpb	$'(', (%rdi,%rcx,1)
+	cmpb	$'(', (%rdi,%rcx)
 	je	.caplist_lp
-	cmpb	$')', (%rdi,%rcx,1)
+	cmpb	$')', (%rdi,%rcx)
 	je	.caplist_rp
 	jmp	.caplist_loop
 	.caplist_lp:
@@ -202,7 +204,8 @@ caplist: # Standard calling convention
 	pushq	%rcx
 	movq	%rcx, %rdi
 	incq	%rdi
-	call	malloc@plt
+	movq	$1, %rsi
+	call	calloc@plt
 	movq	%rax, %rdi
 	popq	%rdx
 	popq	%rsi
@@ -214,10 +217,10 @@ caplist: # Standard calling convention
 
 .type	next_tok, @function
 next_tok: # Standard calling convention
-	movq	(%rdi), %rax
+	movzxb	(%rdi), %rax
 	cmpb	$'\'', %al
 	jne	.next_tok_no_quote
-	movq	1(%rdi), %rax
+	movzxb	1(%rdi), %rax
 	.next_tok_no_quote:
 	cmpb	$'(', %al # Left parenthesis
 	je	.next_tok_lp
@@ -289,7 +292,8 @@ read_str: # Standard calling convention
 read_bytes: # Standard calling convention.
 	pushq	%rdi
 	incq	%rdi
-	call	malloc@plt
+	movq	$1, %rsi
+	call	calloc@plt
 	popq	%rdx
 	pushq	%rax
 	xorq	%rdi, %rdi
@@ -299,9 +303,8 @@ read_bytes: # Standard calling convention.
 	call	chomp
 	movq	(%rsp), %rdi
 	call	to_var
-	addq	$8, %rsp
-#	popq	%rdi
-#	pushq	%rax
-#	call	free@plt
-#	popq	%rax
+	popq	%rdi
+	pushq	%rax
+	call	free@plt
+	popq	%rax
 	ret
