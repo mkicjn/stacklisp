@@ -1,25 +1,9 @@
-# Stack-oriented functions meant to be called in succession, Forth-style
+# Stack-oriented functions to be called in succession, Forth-style
 .type	dup, @function
 dup:
 	popq	%rax
 	pushq	(%rsp)
 	pushq	%rax
-	ret
-.type	inc, @function
-inc:				# : inc 1 + ;
-	incq	8(%rsp)
-	ret
-.type	dub, @function
-dub:				# : dub dup + ;
-	movq	8(%rsp), %rax
-	addq	%rax, 8(%rsp)
-	ret
-.type	sub, @function
-sub:				# : sub - ;
-	popq	%rdi
-	popq	%rax
-	subq	%rax, (%rsp)
-	pushq	%rdi
 	ret
 .type	swap, @function
 swap:
@@ -39,7 +23,7 @@ emit:
 	popq	(%rsp)
 	ret
 .type	cr, @function
-cr:				# Identical to terpri
+cr:
 	movq	$10, %rdi
 	call	putchar@plt
 	ret
@@ -62,12 +46,40 @@ nip:
 	movq	%rax, 16(%rsp)
 	popq	(%rsp)
 	ret
+.type	tuck, @function
+tuck:
+	movq	16(%rsp), %rax
+	movq	8(%rsp), %rcx
+	pushq	(%rsp)
+	movq	%rcx, 24(%rsp)
+	movq	%rax, 16(%rsp)
+	movq	%rcx, 8(%rsp)
+	ret
+.type	rot, @function
+rot:
+	movq	8(%rsp), %rax
+	movq	16(%rsp), %rcx
+	movq	24(%rsp), %rdx
+	movq	%rcx, 24(%rsp)
+	movq	%rax, 16(%rsp)
+	movq	%rdx, 8(%rsp)
+	ret
+.type	unrot, @function
+unrot:
+	movq	8(%rsp), %rax
+	movq	16(%rsp), %rcx
+	movq	24(%rsp), %rdx
+	movq	%rax, 24(%rsp)
+	movq	%rdx, 16(%rsp)
+	movq	%rcx, 8(%rsp)
+	ret
 iform:
-	.string "%li\n"
-.type	printint, @function
-printint:
+	.string "%li "
+.type	dot, @function
+dot:
 	leaq	iform(%rip), %rdi
 	movq	8(%rsp), %rsi
 	xorq	%rax, %rax
 	call	printf@plt
+	popq	(%rsp)
 	ret

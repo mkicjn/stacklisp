@@ -6,6 +6,8 @@ eval:
 	pushq	%rax
 	call	swap
 	call	lambda	
+	pushq	$0
+	call	swap
 	call	funcall
 	call	sspop_10
 	pushq	%r10

@@ -10,8 +10,10 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	xorq	%rcx, %rcx # Set the counter to the function's beginning
 	.funcall_loop:
 	movq	(%rax,%rcx,8), %rdx # Load the next instruction
+	cmpq	$0, %rdx
+	jz	.funcall_null
 	cmpq	$0xa1, %rdx
-	jz	.funcall_pushq
+	je	.funcall_pushq
 	cmpq	$0xaa, %rdx
 	je	.funcall_pusharg
 	cmpq	$0xc0, %rdx
@@ -42,17 +44,20 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	jmp	.funcall_loop
 	.funcall_asmcall:
 	# Need to preserve function and counter.
-	# The new solution for this is good, but unnecessary unless a core function calls funcall
-	# As a result, this might change in the future.
 	call	sspush_a_c
 	call	*%rdx
 	call	sspop_a_c
+	popq	(%rsp)
 	incq	%rcx
 	jmp	.funcall_loop
 	.funcall_pushq:
 	incq	%rcx
 	movq	(%rax,%rcx,8), %rdx # Load the literal to be pushed
 	pushq	%rdx
+	incq	%rcx
+	jmp	.funcall_loop
+	.funcall_null:
+	pushq	$0
 	incq	%rcx
 	jmp	.funcall_loop
 	.funcall_pusharg:
@@ -160,7 +165,7 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	movq	(%rax), %rdx # Store the number of variables
 	negq	%rdx # (see above)
 	decq	%rdx # (see above)
-	leaq	8(,%rdx,8), %rdx # Store number of bytes worth of arguments (+ function)
+	leaq	16(,%rdx,8), %rdx # Store number of bytes worth of arguments (+ function)
 	popq	%rsi # Preserve return address
 	addq	%rdx, %rsp # Destroy variables
 	pushq	%rdi

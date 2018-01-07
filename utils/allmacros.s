@@ -73,3 +73,24 @@
 	call	putchar@plt
 	popregs
 .endm
+
+pushstr:
+	.string	"\tPUSH"
+popstr:
+	.string	"\tPOP"
+
+.macro	dpushq	reg
+	pushregs
+	pushq	\reg
+	leaq	pushstr(%rip), %rdi
+	call	puts@plt
+	popregs
+.endm
+
+.macro	dpopq	reg
+	pushregs
+	popq	\reg
+	leaq	popstr(%rip), %rdi
+	call	puts@plt
+	popregs
+.endm

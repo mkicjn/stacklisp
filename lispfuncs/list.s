@@ -11,7 +11,6 @@ list: # Stack-oriented. Expects null on stack under all args
 	call	cons
 	jmp	.list_loop
 	.list_ret:
-	popq	(%rsp)
 	call	sspop_di
 	pushq	%rdi
 	ret

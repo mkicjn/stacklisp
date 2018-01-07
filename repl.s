@@ -20,9 +20,9 @@ main:
 	call	read_bytes
 	pushq	%rax
 	call	eval
+	call	scc_terpri
 	call	disp
 	call	drop
-	call	scc_terpri
 	call	scc_terpri
 	jmp	.repl
 

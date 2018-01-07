@@ -53,12 +53,9 @@ rpn:
 	jle	.rpn_flag
 	call	symbol_value
 	popq	%rax
-	cmpq	$4, (%rax)
-	jne	.rpn_unspecial
 	pushq	$0
 	call	swap
 	call	cons
-	.rpn_unspecial:
 	call	maprpn
 	call	swap
 	call	car
