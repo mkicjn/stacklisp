@@ -1,4 +1,4 @@
-.type	add, @function #|+|4|
+.type	add, @function #|+|
 add:
 	xorq	%r8, %r8
 	.add_loop:
@@ -18,7 +18,7 @@ add:
 	pushq	%rdi
 	ret
 
-.type	subt, @function #|-|4|
+.type	subt, @function #|-|
 subt: # n1-n2-n3-...-ni = n1-(n2+n3+...+ni)
 	xorq	%r8, %r8
 	cmpq	$0, 16(%rsp)
@@ -46,7 +46,7 @@ subt: # n1-n2-n3-...-ni = n1-(n2+n3+...+ni)
 	negq	%rdi
 	jmp	.subt_ret
 
-.type	mult, @function #|*|4|
+.type	mult, @function #|*|
 mult:
 	movq	$1, %rax
 	.mult_loop:

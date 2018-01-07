@@ -1,4 +1,4 @@
-.type	lread, @function #|read|3|
+.type	lread, @function #|read|
 lread: # Stack-oriented. Expects number of bytes to read from stdin as var on stack.
 	movq	8(%rsp), %rax
 	movq	8(%rax), %rdi

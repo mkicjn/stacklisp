@@ -59,16 +59,6 @@ dict_rplaca_cell:
 	.quad	0,dict_rplaca_sym,dict_rplaca_var
 dict_rplaca_def:
 	.quad	0,dict_rplaca_cell,dict_rplacd_def
-dict_return_str:
-	.string	"RETURN"
-dict_return_sym:
-	.quad	1,dict_return_str
-dict_return_var:
-	.quad	6,return
-dict_return_cell:
-	.quad	0,dict_return_sym,dict_return_var
-dict_return_def:
-	.quad	0,dict_return_cell,dict_rplaca_def
 dict_lread_str:
 	.string	"READ"
 dict_lread_sym:
@@ -78,7 +68,7 @@ dict_lread_var:
 dict_lread_cell:
 	.quad	0,dict_lread_sym,dict_lread_var
 dict_lread_def:
-	.quad	0,dict_lread_cell,dict_return_def
+	.quad	0,dict_lread_cell,dict_rplaca_def
 dict_random_str:
 	.string	"RANDOM"
 dict_random_sym:
@@ -89,26 +79,46 @@ dict_random_cell:
 	.quad	0,dict_random_sym,dict_random_var
 dict_random_def:
 	.quad	0,dict_random_cell,dict_lread_def
+dict_return_str:
+	.string	"RETURN"
+dict_return_sym:
+	.quad	1,dict_return_str
+dict_return_var:
+	.quad	3,return
+dict_return_cell:
+	.quad	0,dict_return_sym,dict_return_var
+dict_return_def:
+	.quad	0,dict_return_cell,dict_random_def
 dict_quote_str:
 	.string	"QUOTE"
 dict_quote_sym:
 	.quad	1,dict_quote_str
 dict_quote_var:
-	.quad	6,quote
+	.quad	3,quote
 dict_quote_cell:
 	.quad	0,dict_quote_sym,dict_quote_var
 dict_quote_def:
-	.quad	0,dict_quote_cell,dict_random_def
+	.quad	0,dict_quote_cell,dict_return_def
 dict_progn_str:
 	.string	"PROGN"
 dict_progn_sym:
 	.quad	1,dict_progn_str
 dict_progn_var:
-	.quad	6,progn
+	.quad	3,progn
 dict_progn_cell:
 	.quad	0,dict_progn_sym,dict_progn_var
 dict_progn_def:
 	.quad	0,dict_progn_cell,dict_quote_def
+dict_cond_str:
+	.string	"COND"
+dict_cond_sym:
+	.quad	1,dict_cond_str
+dict_cond_var:
+	.quad	3,cond
+dict_cond_cell:
+	.quad	0,dict_cond_sym,dict_cond_var
+dict_cond_def:
+	.quad	0,dict_cond_cell,dict_progn_def
 dict_null_str:
 	.string	"NULL"
 dict_null_sym:
@@ -118,7 +128,7 @@ dict_null_var:
 dict_null_cell:
 	.quad	0,dict_null_sym,dict_null_var
 dict_null_def:
-	.quad	0,dict_null_cell,dict_progn_def
+	.quad	0,dict_null_cell,dict_cond_def
 dict_nconc_str:
 	.string	"NCONC"
 dict_nconc_sym:
@@ -144,7 +154,7 @@ dict_list_str:
 dict_list_sym:
 	.quad	1,dict_list_str
 dict_list_var:
-	.quad	4,list
+	.quad	3,list
 dict_list_cell:
 	.quad	0,dict_list_sym,dict_list_var
 dict_list_def:
@@ -259,16 +269,6 @@ dict_cons_cell:
 	.quad	0,dict_cons_sym,dict_cons_var
 dict_cons_def:
 	.quad	0,dict_cons_cell,dict_copy_def
-dict_cond_str:
-	.string	"COND"
-dict_cond_sym:
-	.quad	1,dict_cond_str
-dict_cond_var:
-	.quad	6,cond
-dict_cond_cell:
-	.quad	0,dict_cond_sym,dict_cond_var
-dict_cond_def:
-	.quad	0,dict_cond_cell,dict_cons_def
 dict_cdr_str:
 	.string	"CDR"
 dict_cdr_sym:
@@ -278,7 +278,7 @@ dict_cdr_var:
 dict_cdr_cell:
 	.quad	0,dict_cdr_sym,dict_cdr_var
 dict_cdr_def:
-	.quad	0,dict_cdr_cell,dict_cond_def
+	.quad	0,dict_cdr_cell,dict_cons_def
 dict_car_str:
 	.string	"CAR"
 dict_car_sym:
@@ -304,7 +304,7 @@ dict_mult_str:
 dict_mult_sym:
 	.quad	1,dict_mult_str
 dict_mult_var:
-	.quad	4,mult
+	.quad	3,mult
 dict_mult_cell:
 	.quad	0,dict_mult_sym,dict_mult_var
 dict_mult_def:
@@ -314,7 +314,7 @@ dict_subt_str:
 dict_subt_sym:
 	.quad	1,dict_subt_str
 dict_subt_var:
-	.quad	4,subt
+	.quad	3,subt
 dict_subt_cell:
 	.quad	0,dict_subt_sym,dict_subt_var
 dict_subt_def:
@@ -324,7 +324,7 @@ dict_add_str:
 dict_add_sym:
 	.quad	1,dict_add_str
 dict_add_var:
-	.quad	4,add
+	.quad	3,add
 dict_add_cell:
 	.quad	0,dict_add_sym,dict_add_var
 dict_add_def:
