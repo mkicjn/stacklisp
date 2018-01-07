@@ -6,9 +6,9 @@ main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 
-	cmpq	$1, %rdi
+	cmpq	$1, %rdi # argc
 	jng	.repl # No arguments
-	movq	8(%rsi), %rdi
+	movq	8(%rsi), %rdi # argv[1]
 	call	read_file
 	pushq	%rax
 	call	eval

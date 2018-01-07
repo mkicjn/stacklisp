@@ -16,8 +16,8 @@ type: # Stack-based
 	jz	.type_number
 	cmpq	$3, (%rax) # Assembly function
 	jz	.type_function
-	cmpq	$4, (%rax) # Special form
-	jz	.type_function
+	cmpq	$4, (%rax) # Double
+	jz	.type_number
 	cmpq	$0, (%rax)
 	jz	.type_cell # List
 	jl	.type_function # Bytecode function

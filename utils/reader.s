@@ -13,16 +13,29 @@ infer_type: # Standard calling convention
 	jne	.infer_type_loop
 	incq	%rdi
 	.infer_type_loop:
-	cmpb	$0, (%rdi)
-	jz	.infer_type2
+	cmpb	$'.', (%rdi)
+	jne	.infer_type_not_period
+	incq	%rcx
+	cmpq	$1, %rcx
+	jg	.infer_type1
+	jmp	.infer_type_loop_skip
+	.infer_type_not_period:
 	cmpb	$'0', (%rdi)
 	jnge	.infer_type1
 	cmpb	$'9', (%rdi)
 	jnle	.infer_type1
+	.infer_type_loop_skip:
 	incq	%rdi
+	cmpb	$0, (%rdi)
+	jz	.infer_type2
 	jmp	.infer_type_loop
 	.infer_type2:
+	cmpq	$1, %rcx
+	jge	.infer_type4
 	movq	$2, %rax
+	ret
+	.infer_type4:
+	movq	$4, %rax
 	ret
 	.infer_type1:
 	movq	$1, %rax
@@ -55,6 +68,8 @@ infer_type: # Standard calling convention
 
 scanl:
 	.string	"%li"
+scand:
+	.string	"%lf"
 
 .type	quote_var, @function
 quote_var: # Standard calling convention
@@ -79,12 +94,14 @@ to_var: # Standard calling convention
 	call	sspush_10
 	pushq	%rdi
 	call	infer_type
-	cmpq	$2, %rax
-	je	.to_var2
-	cmpq	$1, %rax
-	je	.to_var1
 	cmpq	$0, %rax
 	je	.to_var0
+	cmpq	$1, %rax
+	je	.to_var1
+	cmpq	$2, %rax
+	je	.to_var2
+	cmpq	$4, %rax
+	je	.to_var4
 	cmpq	$-1, %rax
 	je	.to_var_nil
 	.to_var2:
@@ -96,7 +113,20 @@ to_var: # Standard calling convention
 	pushq	%rax
 	leaq	scanl(%rip), %rsi	# format
 	leaq	8(%rax), %rdx		# &long
-	xorq	%rax, %rax		# No floating point arguments
+	xorq	%rax, %rax		# No floating point arguments to sscanf
+	call	sscanf@plt
+	popq	%rax
+	ret
+	.to_var4:
+	call	sspop_10
+	movq	$24, %rdi
+	call	malloc@plt
+	movq	$4, (%rax)
+	popq	%rdi			# string
+	pushq	%rax
+	leaq	scand(%rip), %rsi	# format
+	leaq	16(%rax), %rdx		# &double
+	xorq	%rax, %rax		# No floating point arguments to sscanf
 	call	sscanf@plt
 	popq	%rax
 	ret
@@ -220,10 +250,10 @@ caplist: # Standard calling convention
 
 .type	next_tok, @function
 next_tok: # Standard calling convention
-	movzxb	(%rdi), %rax
+	movzb	(%rdi), %rax
 	cmpb	$'\'', %al
 	jne	.next_tok_no_quote
-	movzxb	1(%rdi), %rax
+	movzb	1(%rdi), %rax
 	.next_tok_no_quote:
 	cmpb	$'(', %al # Left parenthesis
 	je	.next_tok_lp

@@ -2,6 +2,8 @@ fnum:
 	.string "%li"
 fstr:
 	.string "%s"
+fdub:
+	.string "%lf"
 ffun:
 	.string	"{FUNCTION}"
 fspec:
@@ -25,7 +27,7 @@ disp:
 	cmpq	$3, (%rdi)
 	je	.disp_func
 	cmpq	$4, (%rdi)
-	je	.disp_special
+	je	.disp_dub
 	jmp	.disp_exit # Unknown datatype
 	.disp_flag:
 	call	disp_flag
@@ -52,9 +54,10 @@ disp:
 	xorq	%rax, %rax
 	call	printf@plt
 	jmp	.disp_exit
-	.disp_special:
-	leaq	fspec(%rip), %rdi
-	xorq	%rax, %rax
+	.disp_dub:
+	movsd	16(%rdi), %xmm0
+	leaq	fdub(%rip), %rdi
+	movq	$1, %rax
 	call	printf@plt
 	jmp	.disp_exit
 	.disp_cell:
