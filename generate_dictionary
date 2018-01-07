@@ -8,7 +8,7 @@ for (@ARGV) {
 	while (my $line=<fh>) {
 		my $defn;
 		# Parse comments after type declaration
-		if ($line=~/.type\t(.*), \@function[ \t]*#([^\n \t]+)/) { #|name|type|
+		if ($line=~/.type\t(.*), \@function[ \t]*#([^\n \t]+)/) { #|name|
 			$defn=$1;
 			$defn.=$2 if ($2);
 		} elsif ($line=~/.type\t(.*), \@function/) {
@@ -22,16 +22,16 @@ for (@ARGV) {
 print ".data\n";
 my $c=0;
 for (@funcs) { 
-	# Assembly name|Lisp name|Datatype
-	my ($asmname,$lname,$type);
-	if ($_=~/(.*)\|(.*)\|(.*)\|/) {
-		($asmname,$lname,$type)=($1,($2?$2:$1),($3?$3:'3'));
+	# Assembly name|Lisp name|
+	my ($asmname,$lname);
+	if ($_=~/(.*)\|(.*)\|/) {
+		($asmname,$lname)=($1,($2?$2:$1));
 	} else {
-		($asmname,$lname,$type)=($_,$_,'3');
+		($asmname,$lname)=($_,$_);
 	}
 	print "dict_${asmname}_str:\n\t.string\t\"",uc $lname,"\"\n";
 	print "dict_${asmname}_sym:\n\t.quad\t1,dict_${asmname}_str\n";
-	print "dict_${asmname}_var:\n\t.quad\t$type,$asmname\n";
+	print "dict_${asmname}_var:\n\t.quad\t3,$asmname\n";
 	print "dict_${asmname}_cell:\n\t.quad\t0,dict_${asmname}_sym,dict_${asmname}_var\n";
 	print ($c==@funcs-1?"DICT":"dict_${asmname}_def");
 	print ":\n\t.quad\t0,dict_${asmname}_cell,";

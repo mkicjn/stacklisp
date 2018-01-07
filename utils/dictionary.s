@@ -129,6 +129,16 @@ dict_null_cell:
 	.quad	0,dict_null_sym,dict_null_var
 dict_null_def:
 	.quad	0,dict_null_cell,dict_cond_def
+dict_not_str:
+	.string	"NOT"
+dict_not_sym:
+	.quad	1,dict_not_str
+dict_not_var:
+	.quad	3,not
+dict_not_cell:
+	.quad	0,dict_not_sym,dict_not_var
+dict_not_def:
+	.quad	0,dict_not_cell,dict_null_def
 dict_nconc_str:
 	.string	"NCONC"
 dict_nconc_sym:
@@ -138,7 +148,7 @@ dict_nconc_var:
 dict_nconc_cell:
 	.quad	0,dict_nconc_sym,dict_nconc_var
 dict_nconc_def:
-	.quad	0,dict_nconc_cell,dict_null_def
+	.quad	0,dict_nconc_cell,dict_not_def
 dict_load_str:
 	.string	"LOAD"
 dict_load_sym:

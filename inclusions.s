@@ -37,7 +37,7 @@
 .include "lispfuncs/list.s"
 .include "lispfuncs/load.s"
 .include "lispfuncs/nconc.s"
-.include "lispfuncs/not.s"
+.include "lispfuncs/null.s"
 .include "lispfuncs/pseudofunctions.s"
 .include "lispfuncs/random.s"
 .include "lispfuncs/read.s"
