@@ -6,19 +6,15 @@ seed:
 .type	random, @function
 random:
 	cmpq	$0, seed(%rip)
-	jnl	.random_no_seed
+	jnl	.random_has_seed
 	xorq	%rdi, %rdi
 	call	time@plt
 	movq	%rax, seed(%rip)
-	.random_no_seed:
-	movq	seed(%rip), %rax
-	movq	$1103515243, %rcx
-	mulq	%rcx
-	addq	$12345, %rax
-	movq	$0xffffffff, %rcx
-	xorq	%rdx, %rdx
-	divq	%rcx
-	movq	%rdx, seed(%rip)
+	movq	%rax, %rdi
+	call	srand@plt
+	.random_has_seed:
+	call	rand@plt
+	movq	%rax, %rdx
 	leaq	NIL(%rip), %rax
 	movq	8(%rsp), %rdi
 	cmpq	$2, (%rdi)
