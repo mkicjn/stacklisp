@@ -9,6 +9,9 @@ infer_type: # Standard calling convention
 	je	.infer_type0
 	cmpb	$0, (%rdi)
 	jz	.infer_type1
+	cmpb	$'-', (%rdi)
+	jne	.infer_type_loop
+	incq	%rdi
 	.infer_type_loop:
 	cmpb	$0, (%rdi)
 	jz	.infer_type2
