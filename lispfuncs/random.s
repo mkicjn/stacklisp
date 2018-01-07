@@ -1,12 +1,12 @@
 .data
 seed:
-	.quad	-1
+	.quad	0
 .text
 
 .type	random, @function
 random:
 	cmpq	$0, seed(%rip)
-	jnl	.random_has_seed
+	jnz	.random_has_seed
 	xorq	%rdi, %rdi
 	call	time@plt
 	movq	%rax, seed(%rip)
