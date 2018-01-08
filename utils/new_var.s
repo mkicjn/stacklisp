@@ -17,3 +17,10 @@ new_svar:
 	movq	$1, %rsi
 	call	new_var
 	ret
+
+new_dvar:
+	movq	$24, %rdi
+	call	malloc@plt
+	movq	$4, (%rax)
+	movsd	%xmm0, 16(%rax)
+	ret

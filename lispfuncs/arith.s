@@ -1,67 +1,51 @@
 .type	add, @function #|+|
 add:
-	xorq	%r8, %r8
-	.add_loop:
+	xorq	%rcx, %rcx
+	.add2_loop:
+	cmpq	$0, 8(%rsp)
+	jz	.add2_ret
 	movq	8(%rsp), %rdi
 	cmpq	$2, (%rdi)
-	jne	.add_skip
-	addq	8(%rdi), %r8
-	.add_skip:
+	je	.add2_do
+	cmpq	$4, (%rdi)
+	je	.add4
 	popq	(%rsp)
-	cmpq	$0, 8(%rsp)
-	jne	.add_loop
-	movq	%r8, %rdi
+	jmp	.add2_loop
+	.add2_do:
+	addq	8(%rdi), %rcx
+	popq	(%rsp)
+	jmp	.add2_loop
+	.add2_ret:
+	movq	%rcx, %rdi
 	movq	$2, %rsi
 	call	new_var
 	popq	%rdi
 	pushq	%rax
 	pushq	%rdi
 	ret
-
-.type	subt, @function #|-|
-subt: # n1-n2-n3-...-ni = n1-(n2+n3+...+ni)
-	xorq	%r8, %r8
-	cmpq	$0, 16(%rsp)
-	je	.subt_neg
-	.subt_add_loop:
-	movq	8(%rsp), %rdi
-	cmpq	$2, (%rdi)
-	jne	.subt_add_skip
-	addq	8(%rdi), %r8
-	.subt_add_skip:
-	popq	(%rsp)
-	cmpq	$0, 16(%rsp)
-	jne	.subt_add_loop
-	movq	8(%rsp), %rdi
-	movq	8(%rdi), %rdi
-	subq	%r8, %rdi
-	.subt_ret:
-	movq	$2, %rsi
-	call	new_var
-	movq	%rax, 8(%rsp)
-	ret
-	.subt_neg:
-	movq	8(%rsp), %rdi
-	movq	8(%rdi), %rdi
-	negq	%rdi
-	jmp	.subt_ret
-
-.type	mult, @function #|*|
-mult:
-	movq	$1, %rax
-	.mult_loop:
-	movq	8(%rsp), %rdi
-	cmpq	$2, (%rdi)
-	jne	.mult_skip
-	mulq	8(%rdi)
-	.mult_skip:
-	popq	(%rsp)
+	.add4:
+	cvtsi2sd %rcx, %xmm0
+	.add4_loop:
 	cmpq	$0, 8(%rsp)
-	jne	.mult_loop
-	.mult_ret:
-	movq	%rax, %rdi
-	movq	$2, %rsi
-	call	new_var
+	je	.add4_ret
+	movq	8(%rsp), %rdi
+	cmpq	$4, (%rdi)
+	je	.add4_4
+	cmpq	$2, (%rdi)
+	je	.add4_2
+	popq	(%rsp)
+	jmp	.add4_loop
+	.add4_2:
+	cvtsi2sd 8(%rdi), %xmm1
+	addsd	%xmm1, %xmm0
+	popq	(%rsp)
+	jmp	.add4_loop
+	.add4_4:
+	addsd	16(%rdi), %xmm0
+	popq	(%rsp)
+	jmp	.add4_loop
+	.add4_ret:
+	call	new_dvar
 	popq	%rdi
 	pushq	%rax
 	pushq	%rdi
