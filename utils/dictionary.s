@@ -309,6 +309,36 @@ dict_atom_cell:
 	.quad	0,dict_atom_sym,dict_atom_var
 dict_atom_def:
 	.quad	0,dict_atom_cell,dict_car_def
+dict_div_str:
+	.string	"/"
+dict_div_sym:
+	.quad	1,dict_div_str
+dict_div_var:
+	.quad	3,div
+dict_div_cell:
+	.quad	0,dict_div_sym,dict_div_var
+dict_div_def:
+	.quad	0,dict_div_cell,dict_atom_def
+dict_subt_str:
+	.string	"-"
+dict_subt_sym:
+	.quad	1,dict_subt_str
+dict_subt_var:
+	.quad	3,subt
+dict_subt_cell:
+	.quad	0,dict_subt_sym,dict_subt_var
+dict_subt_def:
+	.quad	0,dict_subt_cell,dict_div_def
+dict_mult_str:
+	.string	"*"
+dict_mult_sym:
+	.quad	1,dict_mult_str
+dict_mult_var:
+	.quad	3,mult
+dict_mult_cell:
+	.quad	0,dict_mult_sym,dict_mult_var
+dict_mult_def:
+	.quad	0,dict_mult_cell,dict_subt_def
 dict_add_str:
 	.string	"+"
 dict_add_sym:
@@ -318,7 +348,7 @@ dict_add_var:
 dict_add_cell:
 	.quad	0,dict_add_sym,dict_add_var
 dict_add_def:
-	.quad	0,dict_add_cell,dict_atom_def
+	.quad	0,dict_add_cell,dict_mult_def
 dict_append_str:
 	.string	"APPEND"
 dict_append_sym:
