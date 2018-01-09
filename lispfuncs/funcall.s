@@ -1,8 +1,8 @@
 .type	funcall, @function #|funcall|
 funcall: # Stack-based. This is the bytecode interpreter.
-	pushq	ENV(%rip)
 	pushq	%rax
 	pushq	%rcx
+	pushq	ENV(%rip)
 	pushq	%rbp
 	movq	%rsp, %rbp
 	movq	40(%rsp), %rax # Load pointer to function var (past return addr/bp)
@@ -95,9 +95,7 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	cmpq	$3, (%rdx)
 	jge	.funcall_asmfunc
 	pushq	%rdx
-	call	sspush_a_c
 	call	funcall
-	call	sspop_a_c
 	.funcall_call_skip:
 	incq	%rcx
 	jmp	.funcall_loop
@@ -170,11 +168,11 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	# Now the stack should be the way it was before .funcall_loop
 	movq	%rbp, %rsp # Reset the stack
 	popq	%rbp # (see above)
+	popq	ENV(%rip)
 	popq	%rcx
 	popq	%rax
-	popq	ENV(%rip)
-	movq	8(%rsp), %rax # Recall function
-	movq	(%rax), %rdx # Store the number of variables
+	movq	8(%rsp), %rdx # Recall function
+	movq	(%rdx), %rdx # Store the number of variables
 	negq	%rdx # (see above)
 	decq	%rdx # (see above)
 	leaq	16(,%rdx,8), %rdx # Store number of bytes worth of arguments (+ function)
