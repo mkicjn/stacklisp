@@ -1,16 +1,16 @@
 .type	list, @function #|list|
-list: # Stack-oriented. Expects null on stack under all args
-	popq	%rdi
-	call	sspush_di
+list: # Stack-oriented; Variadic
 	leaq	NIL(%rip), %rax
-	pushq	%rax
 	.list_loop:
-	movq	8(%rsp), %rax
-	cmpq	$0, %rax
+	cmpq	$0, 8(%rsp)
 	jz	.list_ret
+	pushq	8(%rsp)
+	pushq	%rax
 	call	cons
+	popq	%rax
+	popq	(%rsp)
 	jmp	.list_loop
 	.list_ret:
-	call	sspop_di
-	pushq	%rdi
+	pushq	%rax
+	call	swap
 	ret
