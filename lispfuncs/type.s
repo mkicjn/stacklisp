@@ -7,7 +7,7 @@ number_str:
 function_str:
 	.string	"FUNCTION"
 
-.type	type, @function
+.type	type, @function #|type|
 type: # Stack-based
 	movq	8(%rsp), %rax
 	cmpq	$1, (%rax) # Symbol

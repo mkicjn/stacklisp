@@ -1,4 +1,4 @@
-.type	nconc, @function
+.type	nconc, @function #|nconc|
 nconc:
 	pushq	16(%rsp) # Fetch the list
 	movq	(%rsp), %rdi

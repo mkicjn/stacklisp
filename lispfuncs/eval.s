@@ -1,4 +1,4 @@
-.type	eval, @function
+.type	eval, @function #|eval|
 eval:
 	popq	%r10
 	call	sspush_10

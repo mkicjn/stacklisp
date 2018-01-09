@@ -1,6 +1,6 @@
 # not and null are synonyms
-.type	not, @function
-.type	null, @function
+.type	not, @function #|not|
+.type	null, @function #|null|
 not:
 null:
 	leaq	NIL(%rip), %rax

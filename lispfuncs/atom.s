@@ -1,4 +1,4 @@
-.type	atom, @function
+.type	atom, @function #|atom|
 atom:
 	popq	%rdi
 	popq	%rax

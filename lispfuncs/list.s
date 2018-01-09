@@ -1,4 +1,4 @@
-.type	list, @function
+.type	list, @function #|list|
 list: # Stack-oriented. Expects null on stack under all args
 	popq	%rdi
 	call	sspush_di

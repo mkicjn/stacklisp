@@ -1,4 +1,4 @@
-.type	load, @function
+.type	load, @function #|load|
 load:
 	movq	8(%rsp), %rdi
 	movq	8(%rdi), %rdi

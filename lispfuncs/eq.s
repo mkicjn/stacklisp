@@ -1,4 +1,4 @@
-.type	eq, @function
+.type	eq, @function #|eq|
 eq:
 	# LAZY HACK: Get arguments from stack
 	movq	16(%rsp), %rdi

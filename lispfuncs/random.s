@@ -3,7 +3,7 @@ seed:
 	.quad	0
 .text
 
-.type	random, @function
+.type	random, @function #|random|
 random:
 	cmpq	$0, seed(%rip)
 	jnz	.random_has_seed

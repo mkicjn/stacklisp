@@ -1,4 +1,4 @@
-.type	append, @function
+.type	append, @function #|append|
 append:
 	pushq	16(%rsp)
 	call	copy

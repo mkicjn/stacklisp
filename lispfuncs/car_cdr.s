@@ -1,6 +1,6 @@
 # These functions are guaranteed to preserve all registers except %rax
 
-.type	car, @function
+.type	car, @function #|car|
 car:
 	movq	8(%rsp), %rax
 	cmpq	$0, (%rax)
@@ -9,7 +9,7 @@ car:
 	movq	%rax, 8(%rsp)
 	ret
 
-.type	cdr, @function
+.type	cdr, @function #|cdr|
 cdr:
 	movq	8(%rsp), %rax
 	cmp	$0, (%rax)

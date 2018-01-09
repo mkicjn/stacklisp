@@ -1,4 +1,4 @@
-.type	set, @function
+.type	set, @function #|set|
 set: # Stack-based
 	movq	16(%rsp), %rdi
 	call	eqnil

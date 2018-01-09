@@ -9,7 +9,7 @@ ffun:
 fspec:
 	.string	"{SPECIAL}"
 
-.type	disp, @function
+.type	disp, @function #|disp|
 disp:
 	movq	8(%rsp), %rdi
 	cmpq	$0xff, %rdi

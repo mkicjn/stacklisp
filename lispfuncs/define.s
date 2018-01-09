@@ -1,4 +1,4 @@
-.type	define, @function
+.type	define, @function #|define|
 define:
 	movq	16(%rsp), %rsi # sym (arg2)
 	leaq	NIL(%rip), %rax
@@ -16,7 +16,7 @@ define:
 	popq	(%rsp) # nip
 	ret
 
-.type	declare, @function
+.type	declare, @function #|declare|
 declare:
 	movq	16(%rsp), %rsi # sym (arg2)
 	leaq	NIL(%rip), %rax

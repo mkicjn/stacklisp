@@ -1,4 +1,4 @@
-.type	funcall, @function
+.type	funcall, @function #|funcall|
 funcall: # Stack-based. This is the bytecode interpreter.
 	call	sspush_env
 	pushq	%rbp

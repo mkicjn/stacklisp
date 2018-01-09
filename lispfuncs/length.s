@@ -1,4 +1,4 @@
-.type	length, @function
+.type	length, @function #|length|
 length:
 	movq	8(%rsp), %rdi
 	call	scc_length

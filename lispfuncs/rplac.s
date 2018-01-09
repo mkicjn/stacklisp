@@ -1,4 +1,4 @@
-.type	rplaca, @function
+.type	rplaca, @function #|rplaca|
 rplaca: # Stack based
 	movq	16(%rsp), %rdi
 	cmpq	$0, (%rdi)
@@ -9,7 +9,7 @@ rplaca: # Stack based
 	popq	(%rsp)
 	ret
 
-.type	rplacd, @function
+.type	rplacd, @function #|rplacd|
 rplacd: # Stack based
 	movq	16(%rsp), %rdi
 	cmpq	$0, (%rdi)

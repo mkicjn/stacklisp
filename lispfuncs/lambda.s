@@ -1,4 +1,4 @@
-.type	lambda, @function
+.type	lambda, @function #|lambda|
 lambda: # Stack-based
 	pushq	ENV(%rip)
 #	call	copy

@@ -1,4 +1,4 @@
-.type	symbol_value, @function
+.type	symbol_value, @function #|symbol_value|
 symbol_value: # Stack-based
 	pushq	8(%rsp)
 	movq	(%rsp), %rdi

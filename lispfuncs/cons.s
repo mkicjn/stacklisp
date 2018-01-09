@@ -1,4 +1,4 @@
-.type	cons, @function
+.type	cons, @function #|cons|
 cons:
 	movq	$24, %rdi
 	call	malloc@plt

@@ -1,4 +1,4 @@
-.type	terpri, @function
+.type	terpri, @function #|terpri|
 terpri:
 	movq	$'\n', %rdi
 	call	putchar@plt
