@@ -1,9 +1,11 @@
 .type	funcall, @function #|funcall|
 funcall: # Stack-based. This is the bytecode interpreter.
-	call	sspush_env
+	pushq	ENV(%rip)
+	pushq	%rax
+	pushq	%rcx
 	pushq	%rbp
 	movq	%rsp, %rbp
-	movq	16(%rsp), %rax # Load pointer to function var (past return addr/bp)
+	movq	40(%rsp), %rax # Load pointer to function var (past return addr/bp)
 	movq	8(%rax), %rcx
 	movq	%rcx, ENV(%rip) # Reload environment from function's creation
 	movq	16(%rax), %rax # Load pointer to function block
@@ -36,9 +38,13 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	jle	.funcall_no_ref # If a flag, push as-is
 	cmpq	$1, (%rdx)
 	jne	.funcall_no_ref # If not a symbol, push to stack as-is.
-	call	sspush_a_c
+	pushq	%rax
+	pushq	%rcx
+	pushq	%rdx
 	call	symbol_value
-	call	sspop_a_c
+	popq	16(%rsp)
+	popq	%rcx
+	popq	%rax
 	.funcall_no_ref:
 	incq	%rcx
 	jmp	.funcall_loop
@@ -60,14 +66,14 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	pushq	$0
 	incq	%rcx
 	jmp	.funcall_loop
+
 	.funcall_pusharg:
 	incq	%rcx
-	movq	16(%rbp), %rdx
+	movq	40(%rbp), %rdx # Recall function
 	movq	(%rdx), %rdx # -(# of args + 1)
 	negq	%rdx
 	subq	(%rax,%rcx,8), %rdx # Get argument offset
-	addq	$2, %rdx # Skip return address and base pointer
-	pushq	(%rbp,%rdx,8)
+	pushq	40(%rbp,%rdx,8) # Skip return address and backups
 	incq	%rcx
 	jmp	.funcall_loop
 
@@ -77,11 +83,14 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	jle	.funcall_call_skip # Don't call flags
 	cmpq	$1, (%rdx)
 	jne	.funcall_call_do # (i.e. don't get binding unless symbol)
+	pushq	$0
+	pushq	%rax
+	pushq	%rcx
 	pushq	%rdx
-	call	sspush_a_c
 	call	symbol_value
-	call	sspop_a_c
-	popq	%rdx
+	popq	16(%rsp)
+	popq	%rcx
+	popq	%rax
 	.funcall_call_do:
 	cmpq	$3, (%rdx)
 	jge	.funcall_asmfunc
@@ -161,6 +170,9 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	# Now the stack should be the way it was before .funcall_loop
 	movq	%rbp, %rsp # Reset the stack
 	popq	%rbp # (see above)
+	popq	%rcx
+	popq	%rax
+	popq	ENV(%rip)
 	movq	8(%rsp), %rax # Recall function
 	movq	(%rax), %rdx # Store the number of variables
 	negq	%rdx # (see above)
@@ -170,5 +182,4 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	addq	%rdx, %rsp # Destroy variables
 	pushq	%rdi
 	pushq	%rsi
-	call	sspop_env
 	ret
