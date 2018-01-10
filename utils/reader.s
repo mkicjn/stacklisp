@@ -91,7 +91,7 @@ to_var: # Standard calling convention
 	incq	%rdi
 	movq	$1, %r10
 	.to_var_nq:
-	call	sspush_10
+	pushq	%r10
 	pushq	%rdi
 	call	infer_type
 	cmpq	$0, %rax
@@ -105,7 +105,7 @@ to_var: # Standard calling convention
 	cmpq	$-1, %rax
 	je	.to_var_nil
 	.to_var2:
-	call	sspop_10
+	popq	(%rsp)
 	movq	$24, %rdi
 	call	malloc@plt
 	movq	$2, (%rax)
@@ -118,7 +118,7 @@ to_var: # Standard calling convention
 	popq	%rax
 	ret
 	.to_var4:
-	call	sspop_10
+	popq	(%rsp)
 	movq	$24, %rdi
 	call	malloc@plt
 	movq	$4, (%rax)
@@ -135,7 +135,6 @@ to_var: # Standard calling convention
 	cmpb	$0, (%rdi)
 	jz	.to_var_nil
 	# Check if NIL
-	movq	(%rsp), %rdi
 	leaq	NILstr(%rip), %rsi
 	call	strcasecmp@plt
 	cmpq	$0, %rax
@@ -150,14 +149,14 @@ to_var: # Standard calling convention
 	popq	%rdi
 	movq	$1, %rsi
 	call	new_var
-	call	sspop_10
+	popq	%r10
 	cmpq	$1, %r10
 	je	.to_var_quote
 	ret
 	.to_var0:
 	popq	%rdi
 	call	read_str
-	call	sspop_10
+	popq	%r10
 	cmpq	$1, %r10
 	je	.to_var_quote
 	ret
@@ -166,12 +165,12 @@ to_var: # Standard calling convention
 	call	quote_var
 	ret
 	.to_var_nil:
-	call	sspop_10
+	popq	(%rsp)
 	addq	$8, %rsp # drop
 	leaq	NIL(%rip), %rax
 	ret
 	.to_var_t:
-	call	sspop_10
+	popq	(%rsp)
 	addq	$8, %rsp # drop
 	leaq	T(%rip), %rax
 	ret

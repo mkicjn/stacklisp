@@ -6,14 +6,13 @@ self_op_sym:
 .type	subst_args, @function
 subst_args: # Stack-based. Substitutes argument symbols for bytecode flags
 	# Takes two args: An argument list and function body
-	call	sspush_env
 	leaq	ENV(%rip), %rax
 	leaq	NIL(%rip), %rdx
 	movq	%rdx, (%rax)
-	# 0 stack items
+	pushq	ENV(%rip)
 	pushq	%rbx
-	pushq	24(%rsp) # Recall args
-	pushq	24(%rsp)
+	pushq	32(%rsp) # Recall args
+	pushq	32(%rsp)
 	call	swap # Arguments on top
 	movq	$1, %rbx
 	# 2 stack items (body | args) + %rbx
@@ -82,8 +81,8 @@ subst_args: # Stack-based. Substitutes argument symbols for bytecode flags
 	.subst_args_ret:
 	addq	$8, %rsp
 	popq	%rbx
+	popq	ENV(%rip)
 	movq	8(%rsp), %rax
 	movq	%rax, 16(%rsp)
 	popq	(%rsp)
-	call	sspop_env
 	ret
