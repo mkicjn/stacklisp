@@ -21,7 +21,6 @@ To list all LISP functions, do `cat lispfuncs/*.s | grep @function | sed 's/^.ty
 
 ### Upcoming features, in order of priority:
 * More mathematics
-	- Inequalities (greater/less than)
 	- Complex mathematical functions (expt, exp, sin, etc.)
 * Better memory management (resizeable spare stack / garbage collection)
 	- Complete elimination of the spare stack if possible
