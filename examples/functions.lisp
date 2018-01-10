@@ -7,5 +7,7 @@
   (declare 'decf (lambda '(n) '(set n (- n 1))))
   (declare 'nth (lambda '(n l) '(cond ((null l) nil) ((eq n 0) (car l)) (t (@ (- n 1) (cdr l))))))
   (declare 'randelt (lambda '(l) '(nth (random (length l)) l)))
-  (declare 'iota (lambda '(m) '(progn (define 'm m) ((lambda '(n) '(cond ((eq n m) nil) (t (cons n (@ (+ n 1)))))) 0))))
+  (declare 'range (lambda '(stt stp end) '(cond (((cond ((> stp 0) <) ((< stp 0) >)) stt end) (cons stt (@ (+ stt stp) stp end))) (t nil))))
+  (declare 'iota (lambda '(n) '(range 1 1 n)))
+  (declare '! (lambda '(n) '(reduce * (iota n))))
   t)
