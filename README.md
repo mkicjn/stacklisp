@@ -25,6 +25,7 @@ To list all LISP functions, do `cat lispfuncs/*.s | grep @function | sed 's/^.ty
 	- Complex mathematical functions (expt, exp, sin, etc.)
 * Better memory management (resizeable spare stack / garbage collection)
 	- Complete elimination of the spare stack if possible
+	- Preferably reclaim memory by reference counting
 * A tagbody or prog equivalent (to allow for avoiding recursion)
 * A Forth-like embedded syntax (with a faster and simpler bytecode interpreter)
   - Lower-level stack manipulations and facilities to implement new variadic functions without `list`
