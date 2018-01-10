@@ -309,6 +309,26 @@ dict_atom_cell:
 	.quad	0,dict_atom_sym,dict_atom_var
 dict_atom_def:
 	.quad	0,dict_atom_cell,dict_car_def
+dict_n_equal_str:
+	.string	"="
+dict_n_equal_sym:
+	.quad	1,dict_n_equal_str
+dict_n_equal_var:
+	.quad	3,n_equal
+dict_n_equal_cell:
+	.quad	0,dict_n_equal_sym,dict_n_equal_var
+dict_n_equal_def:
+	.quad	0,dict_n_equal_cell,dict_atom_def
+dict_less_than_str:
+	.string	"<"
+dict_less_than_sym:
+	.quad	1,dict_less_than_str
+dict_less_than_var:
+	.quad	3,less_than
+dict_less_than_cell:
+	.quad	0,dict_less_than_sym,dict_less_than_var
+dict_less_than_def:
+	.quad	0,dict_less_than_cell,dict_n_equal_def
 dict_greater_than_str:
 	.string	">"
 dict_greater_than_sym:
@@ -318,7 +338,7 @@ dict_greater_than_var:
 dict_greater_than_cell:
 	.quad	0,dict_greater_than_sym,dict_greater_than_var
 dict_greater_than_def:
-	.quad	0,dict_greater_than_cell,dict_atom_def
+	.quad	0,dict_greater_than_cell,dict_less_than_def
 dict_div_str:
 	.string	"/"
 dict_div_sym:

@@ -346,3 +346,101 @@ greater_than:
 	pushq	%rax
 	call	swap
 	ret
+
+.type	less_than, @function #|<|
+less_than:
+	movq	8(%rsp), %rax
+	cmpq	$2, (%rax)
+	je	.less_than_2
+	cmpq	$4, (%rax)
+	je	.less_than_4
+	.less_than_2:
+	cvtsi2sd 8(%rax), %xmm0
+	jmp	.less_than_loop
+	.less_than_4:
+	movsd	16(%rax), %xmm0
+	.less_than_loop:
+	cmpq	$0, 8(%rsp)
+	jz	.less_than_ret_t
+	movq	8(%rsp), %rax
+	cmpq	$2, (%rax)
+	je	.less_than_loop_2
+	cmpq	$4, (%rax)
+	je	.less_than_loop_4
+	popq	(%rsp)
+	jmp	.less_than_loop
+	.less_than_loop_2:
+	cvtsi2sd 8(%rax), %xmm1
+	jmp	.less_than_loop_comp
+	.less_than_loop_4:
+	movsd	16(%rax), %xmm1
+	.less_than_loop_comp:
+	comisd	%xmm1, %xmm0
+	jnae	.less_than_nil
+	popq	(%rsp)
+	movsd	%xmm1, %xmm0
+	jmp	.less_than_loop
+	.less_than_nil:
+	cmpq	$0, 8(%rsp)
+	jz	.less_than_ret_nil
+	popq	(%rsp)
+	jmp	.less_than_nil
+	.less_than_ret_nil:
+	leaq	NIL(%rip), %rax
+	pushq	%rax
+	call	swap
+	ret
+	.less_than_ret_t:
+	leaq	T(%rip), %rax
+	pushq	%rax
+	call	swap
+	ret
+
+.type	n_equal, @function #|=|
+n_equal:
+	movq	8(%rsp), %rax
+	cmpq	$2, (%rax)
+	je	.n_equal_2
+	cmpq	$4, (%rax)
+	je	.n_equal_4
+	.n_equal_2:
+	cvtsi2sd 8(%rax), %xmm0
+	jmp	.n_equal_loop
+	.n_equal_4:
+	movsd	16(%rax), %xmm0
+	.n_equal_loop:
+	cmpq	$0, 8(%rsp)
+	jz	.n_equal_ret_t
+	movq	8(%rsp), %rax
+	cmpq	$2, (%rax)
+	je	.n_equal_loop_2
+	cmpq	$4, (%rax)
+	je	.n_equal_loop_4
+	popq	(%rsp)
+	jmp	.n_equal_loop
+	.n_equal_loop_2:
+	cvtsi2sd 8(%rax), %xmm1
+	jmp	.n_equal_loop_comp
+	.n_equal_loop_4:
+	movsd	16(%rax), %xmm1
+	.n_equal_loop_comp:
+	comisd	%xmm1, %xmm0
+	jne	.n_equal_nil
+	popq	(%rsp)
+	movsd	%xmm1, %xmm0
+	jmp	.n_equal_loop
+	.n_equal_nil:
+	cmpq	$0, 8(%rsp)
+	jz	.n_equal_ret_nil
+	popq	(%rsp)
+	jmp	.n_equal_nil
+	.n_equal_ret_nil:
+	leaq	NIL(%rip), %rax
+	pushq	%rax
+	call	swap
+	ret
+	.n_equal_ret_t:
+	leaq	T(%rip), %rax
+	pushq	%rax
+	call	swap
+	ret
