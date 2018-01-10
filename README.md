@@ -15,12 +15,14 @@ Nevertheless, this project is under active development and will see many more fe
 * The function `funcall` is of limited availability to the programmer. Indirect calls to `funcall` will likely segfault. Direct calls to it are internally ignored by the translator, which will act as though `funcall` is not present at the head of the list. Objects at the beginning of evaluated forms are always called as functions. If you absolutely must have an equivalent for some reason, you could do something along the lines of `(lambda '(f x y) '(f x y))`. The actual funcall, implemented in assembly, may become nonexistent to the environment as a whole in the future. That, or it will become internal and a new `funcall` will appear as a variadic function.
 * `@` is what I like to call the "self" operator. During the translation process, occurrences of `@` are replaced by bytecode flags that (during runtime) will recall the currently executing function.
 * There are two functions available when binding a symbol to a value. To define a local variable, use `define`. To define a global variable, use `declare`.
+* Before trying to use a function's argument inside an internal function, be sure to add it to the environment with `define` first. Arguments' symbols are not bound during execution; they are instead used as markers for flag placement by subst_args. This affords more flexibility with creating closures, but has the cost of needing calls to `define` first or using list construction functions to generate the function's body using the argument as a constant reference.
 * Fun fact: `eval` is functionally equivalent to `(lambda '(f) '((lambda nil f)))`.
 
 To list all LISP functions, do `cat lispfuncs/*.s | grep @function | sed 's/^.type.*@function #|\(.*\)|$/\1/'`
 
 ### Upcoming features, in order of priority:
 * More mathematics
+	- Variadic implementations of logical functions `and` and `or`
 	- Complex mathematical functions (expt, exp, sin, etc.)
 * Better memory management (resizeable spare stack / garbage collection)
 	- Complete elimination of the spare stack if possible
