@@ -309,6 +309,16 @@ dict_atom_cell:
 	.quad	0,dict_atom_sym,dict_atom_var
 dict_atom_def:
 	.quad	0,dict_atom_cell,dict_car_def
+dict_mod_str:
+	.string	"MOD"
+dict_mod_sym:
+	.quad	1,dict_mod_str
+dict_mod_var:
+	.quad	3,mod
+dict_mod_cell:
+	.quad	0,dict_mod_sym,dict_mod_var
+dict_mod_def:
+	.quad	0,dict_mod_cell,dict_atom_def
 dict_n_equal_str:
 	.string	"="
 dict_n_equal_sym:
@@ -318,7 +328,7 @@ dict_n_equal_var:
 dict_n_equal_cell:
 	.quad	0,dict_n_equal_sym,dict_n_equal_var
 dict_n_equal_def:
-	.quad	0,dict_n_equal_cell,dict_atom_def
+	.quad	0,dict_n_equal_cell,dict_mod_def
 dict_less_than_str:
 	.string	"<"
 dict_less_than_sym:
