@@ -11,9 +11,11 @@ Nevertheless, this project is under active development and will see many more fe
 * The compiled executable from repl.s will (obviously) act as a REPL when executed with no arguments, but can execute a source code file as a script if provided as an argument. The script's return value will not be displayed by the executable.
 * Errors are not handled consistently, but are most often ignored. This can be considered a flaw. Most erroneous forms will return NIL, or have invalid arguments ignored in the case of arithmetic functions. (For `+` and `-`, non-numbers are 0. For `*` and `/`, non-numbers are 1.) Complete forms with unbalanced parentheses will be identified by infer_type as an error and the reader will ultimately return NIL. Calling NIL as a function (directly or by calling an undefined variable's definition) has no error handling (i.e. causes a segfault) to avoid conflicting with real functions that are supposed to return NIL.
 * The only "special forms" are `cond`, `progn`, and `quote`. The RPN translator translates them differently. Every other function is treated identically.
-* Nothing is implicit. There are no implicit `quote`s or `progn`s. This allows for code generation possibilities that I think may make macros unnecessary. **Example(s) to come.**
+* Nothing is implicit. There are no implicit `quote`s or `progn`s. This allows for code generation possibilities that I think may make macros unnecessary.
 * The function `funcall` is of limited availability to the programmer. Indirect calls to `funcall` will likely segfault. Direct calls to it are internally ignored by the translator, which will act as though `funcall` is not present at the head of the list. Objects at the beginning of evaluated forms are always called as functions. If you absolutely must have an equivalent for some reason, you could do something along the lines of `(lambda '(f x y) '(f x y))`. The actual funcall, implemented in assembly, may become nonexistent to the environment as a whole in the future. That, or it will become internal and a new `funcall` will appear as a variadic function.
-* The assembly function eval is functionally equivalent to `(lambda '(f) '((lambda nil f)))`.
+* `@` is what I like to call the "self" operator. During the translation process, occurrences of `@` are replaced by bytecode flags that (during runtime) will recall the currently executing function.
+* There are two functions available when binding a symbol to a value. To define a local variable, use `define`. To define a global variable, use `declare`.
+* Fun fact: `eval` is functionally equivalent to `(lambda '(f) '((lambda nil f)))`.
 
 To list all LISP functions, do `cat lispfuncs/*.s | grep @function | sed 's/^.type.*@function #|\(.*\)|$/\1/'`
 
