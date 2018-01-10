@@ -444,3 +444,53 @@ n_equal:
 	pushq	%rax
 	call	swap
 	ret
+
+.type	mod, @function #|mod|
+mod:
+	movq	16(%rsp), %rax
+	movq	8(%rsp), %rcx
+	cmpq	$2, (%rax)
+	je	.mod_2__
+	cmpq	$4, (%rax)
+	je	.mod_4__
+	leaq	NIL(%rip), %rax
+	jmp	.mod_ret
+	.mod_2__:
+	movq	8(%rax), %rax
+	cmpq	$2, (%rcx)
+	je	.mod_2
+	cmpq	$4, (%rcx)
+	je	.mod_2_4
+	leaq	NIL(%rip), %rax
+	jmp	.mod_ret
+	.mod_4__:
+	movsd	16(%rax), %xmm0
+	cmpq	$4, (%rcx)
+	je	.mod_4_4
+	cmpq	$2, (%rcx)
+	je	.mod_4_2
+	leaq	NIL(%rip), %rax
+	jmp	.mod_ret
+	.mod_2:
+	xorq	%rdx, %rdx
+	divq	8(%rcx)
+	movq	%rdx, %rdi
+	movq	$2, %rsi
+	call	new_var
+	jmp	.mod_ret
+	.mod_2_4:
+	cvtsi2sd %rax, %xmm0
+	movsd	16(%rcx), %xmm1
+	jmp	.mod4
+	.mod_4_4:
+	movsd	16(%rcx), %xmm1
+	jmp	.mod4
+	.mod_4_2:
+	cvtsi2sd 16(%rcx), %xmm1
+	.mod4:
+	call	fmod@plt
+	call	new_dvar
+	.mod_ret:
+	popq	(%rsp)
+	movq	%rax, 8(%rsp)
+	ret
