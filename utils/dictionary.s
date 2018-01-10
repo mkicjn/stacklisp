@@ -20,7 +20,7 @@ dict_terpri_cell:
 dict_terpri_def:
 	.quad	0,dict_terpri_cell,dict_type_def
 dict_symbol_value_str:
-	.string	"SYMBOL_VALUE"
+	.string	"VALUE"
 dict_symbol_value_sym:
 	.quad	1,dict_symbol_value_str
 dict_symbol_value_var:
@@ -309,6 +309,16 @@ dict_atom_cell:
 	.quad	0,dict_atom_sym,dict_atom_var
 dict_atom_def:
 	.quad	0,dict_atom_cell,dict_car_def
+dict_greater_than_str:
+	.string	">"
+dict_greater_than_sym:
+	.quad	1,dict_greater_than_str
+dict_greater_than_var:
+	.quad	3,greater_than
+dict_greater_than_cell:
+	.quad	0,dict_greater_than_sym,dict_greater_than_var
+dict_greater_than_def:
+	.quad	0,dict_greater_than_cell,dict_atom_def
 dict_div_str:
 	.string	"/"
 dict_div_sym:
@@ -318,7 +328,7 @@ dict_div_var:
 dict_div_cell:
 	.quad	0,dict_div_sym,dict_div_var
 dict_div_def:
-	.quad	0,dict_div_cell,dict_atom_def
+	.quad	0,dict_div_cell,dict_greater_than_def
 dict_subt_str:
 	.string	"-"
 dict_subt_sym:

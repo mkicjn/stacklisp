@@ -297,3 +297,52 @@ div:
 	.div_fp_reciprocal:
 	divsd	%xmm1, %xmm0
 	jmp	.div4_ret_do
+
+.type	greater_than, @function #|>|
+greater_than:
+	movq	8(%rsp), %rax
+	cmpq	$2, (%rax)
+	je	.greater_than_2
+	cmpq	$4, (%rax)
+	je	.greater_than_4
+	.greater_than_2:
+	cvtsi2sd 8(%rax), %xmm0
+	jmp	.greater_than_loop
+	.greater_than_4:
+	movsd	16(%rax), %xmm0
+	.greater_than_loop:
+	cmpq	$0, 8(%rsp)
+	jz	.greater_than_ret_t
+	movq	8(%rsp), %rax
+	cmpq	$2, (%rax)
+	je	.greater_than_loop_2
+	cmpq	$4, (%rax)
+	je	.greater_than_loop_4
+	popq	(%rsp)
+	jmp	.greater_than_loop
+	.greater_than_loop_2:
+	cvtsi2sd 8(%rax), %xmm1
+	jmp	.greater_than_loop_comp
+	.greater_than_loop_4:
+	movsd	16(%rax), %xmm1
+	.greater_than_loop_comp:
+	comisd	%xmm1, %xmm0
+	jnbe	.greater_than_nil
+	popq	(%rsp)
+	movsd	%xmm1, %xmm0
+	jmp	.greater_than_loop
+	.greater_than_nil:
+	cmpq	$0, 8(%rsp)
+	jz	.greater_than_ret_nil
+	popq	(%rsp)
+	jmp	.greater_than_nil
+	.greater_than_ret_nil:
+	leaq	NIL(%rip), %rax
+	pushq	%rax
+	call	swap
+	ret
+	.greater_than_ret_t:
+	leaq	T(%rip), %rax
+	pushq	%rax
+	call	swap
+	ret
