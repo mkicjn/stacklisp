@@ -52,19 +52,19 @@ main:
 	pushq	%rax
 ######################################
 	call	eq
-	call	disp # NIL
+	call	print # NIL
 	call	drop
 	call	terpri
 	call	eq
-	call	disp # T
+	call	print # T
 	call	drop
 	call	terpri
 	call	eq
-	call	disp # NIL
+	call	print # NIL
 	call	drop
 	call	terpri
 	call	eq
-	call	disp # T
+	call	print # T
 	call	drop
 	call	terpri
 

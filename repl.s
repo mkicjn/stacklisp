@@ -21,7 +21,7 @@ main:
 	pushq	%rax
 	call	eval
 	call	scc_terpri
-	call	disp
+	call	print
 	call	drop
 	call	scc_terpri
 	jmp	.repl

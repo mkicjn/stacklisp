@@ -9,65 +9,65 @@ ffun:
 fspec:
 	.string	"{SPECIAL}"
 
-.type	disp, @function #|disp|
-disp:
+.type	print, @function #|print|
+print:
 	movq	8(%rsp), %rdi
 	cmpq	$0xff, %rdi
-	jle	.disp_flag
+	jle	.print_flag
 	cmpq	NILptr(%rip), %rdi
-	je	.disp_nil
+	je	.print_nil
 	cmpq	$0, (%rdi)
-	jz	.disp_cell
-	jl	.disp_func
+	jz	.print_cell
+	jl	.print_func
 	cmpq	$1, (%rdi)
-	je	.disp_sym
+	je	.print_sym
 	cmpq	$2, (%rdi)
-	je	.disp_num
+	je	.print_num
 	cmpq	$3, (%rdi)
-	je	.disp_func
+	je	.print_func
 	cmpq	$4, (%rdi)
-	je	.disp_dub
-	jmp	.disp_exit # Unknown datatype
-	.disp_flag:
-	call	disp_flag
-	jmp	.disp_exit
-	.disp_nil:
+	je	.print_dub
+	jmp	.print_exit # Unknown datatype
+	.print_flag:
+	call	print_flag
+	jmp	.print_exit
+	.print_nil:
 	leaq	NILstr(%rip), %rdi
 	xorq	%rax, %rax
 	call	printf@plt
-	jmp	.disp_exit
-	.disp_sym:
+	jmp	.print_exit
+	.print_sym:
 	movq	8(%rdi), %rsi
 	leaq	fstr(%rip), %rdi
 	xorq	%rax, %rax
 	call	printf@plt
-	jmp	.disp_exit
-	.disp_num:
+	jmp	.print_exit
+	.print_num:
 	movq	8(%rdi), %rsi
 	leaq	fnum(%rip), %rdi
 	xorq	%rax, %rax
 	call	printf@plt
-	jmp	.disp_exit
-	.disp_func:
+	jmp	.print_exit
+	.print_func:
 	leaq	ffun(%rip), %rdi
 	xorq	%rax, %rax
 	call	printf@plt
-	jmp	.disp_exit
-	.disp_dub:
+	jmp	.print_exit
+	.print_dub:
 	movsd	16(%rdi), %xmm0
 	leaq	fdub(%rip), %rdi
 	movl	$1, %eax
 	call	printf@plt
-	jmp	.disp_exit
-	.disp_cell:
+	jmp	.print_exit
+	.print_cell:
 	movl	$40, %edi
 	call	putchar@plt # (
 
 	pushq	8(%rsp) # Push the cell to the stack
-	.disp_cell_l:
+	.print_cell_l:
 	call	dup # Duplicate the list
 	call	car # Replace duplicate with head
-	call	disp # Print the head (and drop from stack)
+	call	print # Print the head (and drop from stack)
 	call	drop
 
 	movl	$32, %edi
@@ -76,34 +76,34 @@ disp:
 	call	cdr # Get the cell's tail
 	movq	(%rsp), %rdi
 	cmpq	NILptr(%rip), %rdi
-	jz	.disp_cell_lx 
+	jz	.print_cell_lx 
 	movq	(%rsp), %rdi
 	cmpq	$0xff, %rdi # Is the tail a flag?
-	jle	.disp_cell_pd # Don't check type
+	jle	.print_cell_pd # Don't check type
 	cmpq	$0, (%rdi) # Is tail another list?
-	jz	.disp_cell_l
+	jz	.print_cell_l
 
-	.disp_cell_pd:
+	.print_cell_pd:
 	# Tail must be a non-nil atom
 	movq	$46, %rdi # .
 	call	putchar@plt
 	movq	$32, %rdi # space
 	call	putchar@plt
 
-	#pushq	(%rsp) # LAZY HACK: Dupe so disp_cell_lx has something to remove
-	call	disp
+	#pushq	(%rsp) # LAZY HACK: Dupe so print_cell_lx has something to remove
+	call	print
 
 	movq	$32, %rdi # space
 	call	putchar@plt
 
-	.disp_cell_lx: # Done printing list
+	.print_cell_lx: # Done printing list
 	popq	%rdi # Drop top stack item
 	movl	$8, %edi
 	call	putchar@plt # backspace (LAZY HACK)
 	movl	$41, %edi
 	call	putchar@plt # )
 
-	.disp_exit:
+	.print_exit:
 	leaq	NIL(%rip), %rdi
 	movq	%rdi, 8(%rsp) # Return NIL
 	ret

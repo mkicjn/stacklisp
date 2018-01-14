@@ -26,9 +26,9 @@ main:
 
 	call	cons # (sym . 30)
 	call	cons # (10 sym . 30)
-	call	disp
+	call	print
 	call	terpri
-	call	disp
+	call	print
 	call	terpri
 	call	drop
 

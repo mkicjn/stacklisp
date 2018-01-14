@@ -23,7 +23,7 @@
 .endm
 
 .macro	dd
-	call	disp
+	call	print
 	call	drop
 .endm
 
@@ -42,10 +42,10 @@
 	call	scc_terpri
 .endm
 
-.macro	debug_disp_rdi
+.macro	debug_print_rdi
 	pushq	%rdi
 	call	dup
-	call	disp
+	call	print
 	call	drop
 	popq	%rdi
 	call	scc_terpri

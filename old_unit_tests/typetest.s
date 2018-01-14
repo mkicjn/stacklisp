@@ -11,7 +11,7 @@ main:
 	call	new_var
 	pushq	%rax
 	call	type
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 

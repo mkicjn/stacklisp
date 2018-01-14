@@ -21,62 +21,62 @@ freturn: # 0xee
 fother:
 	.string "{0x%X}"
 
-.type	disp_flag, @function
-disp_flag: # Standard calling convention
+.type	print_flag, @function
+print_flag: # Standard calling convention
 	pushq	%rdi
 	cmpq	$0x0, %rdi
-	jz	.disp_flag_null
+	jz	.print_flag_null
 	cmpq	$0xa1, %rdi
-	je	.disp_flag_pushq
+	je	.print_flag_pushq
 	cmpq	$0xaa, %rdi
-	je	.disp_flag_pusharg
+	je	.print_flag_pusharg
 	cmpq	$0xc0, %rdi
-	je	.disp_flag_cond
+	je	.print_flag_cond
 	cmpq	$0xc1, %rdi
-	je	.disp_flag_case
+	je	.print_flag_case
 	cmpq	$0xc2, %rdi
-	je	.disp_flag_case_end
+	je	.print_flag_case_end
 	cmpq	$0xc3, %rdi
-	je	.disp_flag_cond_end
+	je	.print_flag_cond_end
 	cmpq	$0xca, %rdi
-	je	.disp_flag_call
+	je	.print_flag_call
 	cmpq	$0xdd, %rdi
-	je	.disp_flag_drop
+	je	.print_flag_drop
 	cmpq	$0xee, %rdi
-	je	.disp_flag_return
+	je	.print_flag_return
 	movq	%rdi, %rsi
 	leaq	fother(%rip), %rdi
-	jmp	.disp_flag_printf
-	.disp_flag_null:
+	jmp	.print_flag_printf
+	.print_flag_null:
 	leaq	fnull(%rip), %rdi
-	jmp	.disp_flag_printf
-	.disp_flag_pushq:
+	jmp	.print_flag_printf
+	.print_flag_pushq:
 	leaq	fpushq(%rip), %rdi
-	jmp	.disp_flag_printf
-	.disp_flag_pusharg:
+	jmp	.print_flag_printf
+	.print_flag_pusharg:
 	leaq	fpusharg(%rip), %rdi
-	jmp	.disp_flag_printf
-	.disp_flag_cond:
+	jmp	.print_flag_printf
+	.print_flag_cond:
 	leaq	fcond(%rip), %rdi
-	jmp	.disp_flag_printf
-	.disp_flag_case:
+	jmp	.print_flag_printf
+	.print_flag_case:
 	leaq	fcase(%rip), %rdi
-	jmp	.disp_flag_printf
-	.disp_flag_case_end:
+	jmp	.print_flag_printf
+	.print_flag_case_end:
 	leaq	fcase_end(%rip), %rdi
-	jmp	.disp_flag_printf
-	.disp_flag_cond_end:
+	jmp	.print_flag_printf
+	.print_flag_cond_end:
 	leaq	fcond_end(%rip), %rdi
-	jmp	.disp_flag_printf
-	.disp_flag_call:
+	jmp	.print_flag_printf
+	.print_flag_call:
 	leaq	fcall(%rip), %rdi
-	jmp	.disp_flag_printf
-	.disp_flag_drop:
+	jmp	.print_flag_printf
+	.print_flag_drop:
 	leaq	fdrop(%rip), %rdi
-	jmp	.disp_flag_printf
-	.disp_flag_return:
+	jmp	.print_flag_printf
+	.print_flag_return:
 	leaq	freturn(%rip), %rdi
-	.disp_flag_printf:
+	.print_flag_printf:
 	xorq	%rax, %rax
 	call	printf@plt
 	popq	%rdi

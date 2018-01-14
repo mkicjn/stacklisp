@@ -34,7 +34,7 @@ main:
 	call	rplacd
 
 	call	dup
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 
@@ -48,7 +48,7 @@ main:
 
 	call	set
 
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 

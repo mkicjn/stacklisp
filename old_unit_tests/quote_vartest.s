@@ -11,7 +11,7 @@ main:
 	movq	%rax, %rdi
 	call	quote_var
 	pushq	%rax
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 

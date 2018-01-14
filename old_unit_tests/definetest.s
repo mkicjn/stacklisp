@@ -18,7 +18,7 @@ main:
 	call	define
 
 	pushq	ENV(%rip)
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 
@@ -26,7 +26,7 @@ main:
 	call	read_bytes
 	pushq	%rax
 	call	reference
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 	jmp	.main_loop # Infinite loop. Sloppy, but works

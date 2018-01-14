@@ -8,7 +8,7 @@ main:
 
 	movq	GLOBAL_ENV(%rip), %rdi
 	pushq	%rdi
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 

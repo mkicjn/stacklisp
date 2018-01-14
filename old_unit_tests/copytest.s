@@ -39,12 +39,12 @@ main:
 
 	call	print_addr
 	call	dup
-	call	disp
+	call	print
 	call	terpri
 	call	drop
 	call	copy
 	call	print_addr
-	call	disp
+	call	print
 	call	terpri
 	call	drop
 	call	drop

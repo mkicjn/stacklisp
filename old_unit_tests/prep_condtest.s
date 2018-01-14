@@ -12,16 +12,16 @@ main:
 	pushq	%rax
 	call	lread
 	call	dup
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 	call	prep_cond
 	call	dup
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 	call	rpn
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 

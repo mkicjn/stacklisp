@@ -19,7 +19,7 @@ main:
 	call	cons
 	call	cons
 	call	dup
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 	movl	$3, %edi
@@ -35,12 +35,12 @@ main:
 	call	cons
 	call	cons
 	call	dup
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 	call	nconc
 	call	dup
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 

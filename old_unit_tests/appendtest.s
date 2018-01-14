@@ -19,7 +19,7 @@ main:
 	call	cons
 	call	cons
 	call	dup
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 	movl	$3, %edi
@@ -30,19 +30,19 @@ main:
 	pushq	%rax
 	call	cons
 	call	dup
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 	call	over
 	call	over
 	call	append
-	call	disp
+	call	print
 	call	drop
 	call	terpri
-	call	disp
+	call	print
 	call	drop
 	call	terpri
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 

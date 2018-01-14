@@ -26,7 +26,7 @@ main:
 
 	movq	ENV(%rip), %rax
 	pushq	%rax
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 
@@ -36,7 +36,7 @@ main:
 	call	env_assoc
 	pushq	%rax
 	call	cdr
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 

@@ -17,7 +17,7 @@ main:
 	call	new_ivar
 	pushq	%rax
 	call	list
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 

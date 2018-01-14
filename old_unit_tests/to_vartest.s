@@ -18,14 +18,14 @@ main:
 	leaq	str1(%rip), %rdi
 	call	to_var
 	pushq	%rax
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 
 	leaq	str2(%rip), %rdi
 	call	to_var
 	pushq	%rax
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 
@@ -34,7 +34,7 @@ main:
 	leaq	str4(%rip), %rdi
 	call	to_var
 	pushq	%rax
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 

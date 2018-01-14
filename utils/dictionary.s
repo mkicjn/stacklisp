@@ -119,6 +119,16 @@ dict_cond_cell:
 	.quad	0,dict_cond_sym,dict_cond_var
 dict_cond_def:
 	.quad	0,dict_cond_cell,dict_progn_def
+dict_print_str:
+	.string	"PRINT"
+dict_print_sym:
+	.quad	1,dict_print_str
+dict_print_var:
+	.quad	3,print
+dict_print_cell:
+	.quad	0,dict_print_sym,dict_print_var
+dict_print_def:
+	.quad	0,dict_print_cell,dict_cond_def
 dict_null_str:
 	.string	"NULL"
 dict_null_sym:
@@ -128,7 +138,7 @@ dict_null_var:
 dict_null_cell:
 	.quad	0,dict_null_sym,dict_null_var
 dict_null_def:
-	.quad	0,dict_null_cell,dict_cond_def
+	.quad	0,dict_null_cell,dict_print_def
 dict_not_str:
 	.string	"NOT"
 dict_not_sym:
@@ -219,16 +229,6 @@ dict_eq_cell:
 	.quad	0,dict_eq_sym,dict_eq_var
 dict_eq_def:
 	.quad	0,dict_eq_cell,dict_eval_def
-dict_disp_str:
-	.string	"DISP"
-dict_disp_sym:
-	.quad	1,dict_disp_str
-dict_disp_var:
-	.quad	3,disp
-dict_disp_cell:
-	.quad	0,dict_disp_sym,dict_disp_var
-dict_disp_def:
-	.quad	0,dict_disp_cell,dict_eq_def
 dict_declare_str:
 	.string	"DECLARE"
 dict_declare_sym:
@@ -238,7 +238,7 @@ dict_declare_var:
 dict_declare_cell:
 	.quad	0,dict_declare_sym,dict_declare_var
 dict_declare_def:
-	.quad	0,dict_declare_cell,dict_disp_def
+	.quad	0,dict_declare_cell,dict_eq_def
 dict_define_str:
 	.string	"DEFINE"
 dict_define_sym:

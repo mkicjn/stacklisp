@@ -10,7 +10,7 @@ main:
 	call	read_bytes
 	pushq	%rax
 	call	reference
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 

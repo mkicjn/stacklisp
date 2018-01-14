@@ -12,7 +12,7 @@ main:
 	pushq	%rax
 	call	lread
 	call	prep_progn
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 

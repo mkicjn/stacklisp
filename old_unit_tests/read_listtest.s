@@ -13,7 +13,7 @@ main:
 
 	call	read_list
 	pushq	%rax
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 

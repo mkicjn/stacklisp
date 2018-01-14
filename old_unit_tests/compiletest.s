@@ -44,7 +44,7 @@ main:
 	movq	%rax, %rdi
 	call	decompile
 	pushq	%rax
-	call	disp
+	call	print
 	call	drop
 	call	terpri
 
