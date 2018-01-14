@@ -4,8 +4,7 @@ define:
 	leaq	NIL(%rip), %rax
 	cmpq	%rax, %rsi
 	je	.def_const
-	leaq	T(%rip), %rax
-	cmpq	%rax, %rsi
+	cmpq	Tptr(%rip), %rsi
 	je	.def_const
 	leaq	ENV(%rip), %rdi # &env
 	movq	8(%rsp), %rdx # def (arg1)
@@ -22,8 +21,7 @@ declare:
 	leaq	NIL(%rip), %rax
 	cmpq	%rax, %rsi
 	je	.def_const
-	leaq	T(%rip), %rax
-	cmpq	%rax, %rsi
+	cmpq	Tptr(%rip), %rsi
 	je	.def_const
 	leaq	GLOBAL_ENV(%rip), %rdi # &env
 	movq	8(%rsp), %rdx # def (arg1)

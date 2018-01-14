@@ -3,13 +3,8 @@ set: # Stack-based
 	movq	16(%rsp), %rdi
 	cmpq	NILptr(%rip), %rdi
 	je	.set_err
-	pushq	16(%rsp)
-	leaq	T(%rip), %rax
-	pushq	%rax
-	call	eq
-	popq	%rdi
-	cmpq	NILptr(%rip), %rdi
-	jne	.set_err
+	cmpq	T(%rip), %rdi
+	je	.set_err
 
 	movq	16(%rsp), %rdi
 	movq	8(%rsp), %rsi

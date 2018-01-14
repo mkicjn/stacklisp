@@ -2,11 +2,9 @@
 symbol_value: # Stack-based
 	pushq	8(%rsp)
 	movq	(%rsp), %rdi
-	leaq	NIL(%rip), %rax
-	cmpq	%rax, %rdi
+	cmpq	NILptr(%rip), %rdi
 	je	.symbol_value_ret
-	leaq	T(%rip), %rax
-	cmpq	%rax, %rdi
+	cmpq	Tptr(%rip), %rdi
 	je	.symbol_value_ret
 
 	call	local_binding
