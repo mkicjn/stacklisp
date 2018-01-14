@@ -35,7 +35,7 @@ type: # Stack-based
 	leaq	function_str(%rip), %rdi
 	jmp	.type_ret
 	.type_ret:
-	movq	$1, %rsi
+	movl	$1, %esi
 	call	new_var
 	movq	%rax, 8(%rsp)
 	ret

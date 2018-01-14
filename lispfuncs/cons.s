@@ -1,6 +1,6 @@
 .type	cons, @function #|cons|
 cons:
-	movq	$24, %rdi
+	movl	$24, %edi
 	call	malloc@plt
 	popq	%rdi		# preserve return address
 	movq	$0, (%rax)	# type = cell

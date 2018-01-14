@@ -1,6 +1,6 @@
 .type	terpri, @function #|terpri|
 terpri:
-	movq	$'\n', %rdi
+	movl	$'\n', %edi
 	call	putchar@plt
 	popq	%rdi
 	leaq	NIL(%rip), %rax

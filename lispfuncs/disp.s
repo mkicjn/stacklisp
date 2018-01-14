@@ -56,11 +56,11 @@ disp:
 	.disp_dub:
 	movsd	16(%rdi), %xmm0
 	leaq	fdub(%rip), %rdi
-	movq	$1, %rax
+	movl	$1, %eax
 	call	printf@plt
 	jmp	.disp_exit
 	.disp_cell:
-	movq	$40, %rdi
+	movl	$40, %edi
 	call	putchar@plt # (
 
 	pushq	8(%rsp) # Push the cell to the stack
@@ -70,7 +70,7 @@ disp:
 	call	disp # Print the head (and drop from stack)
 	call	drop
 
-	movq	$32, %rdi
+	movl	$32, %edi
 	call	putchar@plt # space
 
 	call	cdr # Get the cell's tail
@@ -98,9 +98,9 @@ disp:
 
 	.disp_cell_lx: # Done printing list
 	popq	%rdi # Drop top stack item
-	movq	$8, %rdi
+	movl	$8, %edi
 	call	putchar@plt # backspace (LAZY HACK)
-	movq	$41, %rdi
+	movl	$41, %edi
 	call	putchar@plt # )
 
 	.disp_exit:

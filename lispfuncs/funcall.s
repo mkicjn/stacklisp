@@ -134,7 +134,7 @@ funcall: # Stack-based. This is the bytecode interpreter.
 	jmp	.funcall_loop
 
 	.funcall_case_exit:
-	movq	$1, %rdi
+	movl	$1, %edi
 	.funcall_case_exit_skip:
 	incq	%rcx
 	movq	(%rax,%rcx,8), %rdx

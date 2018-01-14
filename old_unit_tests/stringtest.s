@@ -12,12 +12,12 @@ main:
 	pushq	%rbp
 	movq	%rsi, %rbp
 
-	movq	$100, %rdi
+	movl	$100, %edi
 	call	malloc@plt
 	pushq	%rax
-	movq	$0, %rdi
+	movl	$0, %edi
 	movq	%rax, %rsi
-	movq	$99, %rdx
+	movl	$99, %edx
 	call	read@plt
 	movq	%rsi, %rdi
 	chain	chomp

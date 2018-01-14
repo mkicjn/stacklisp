@@ -23,7 +23,7 @@ random:
 	xorq	%rdx, %rdx
 	divq	8(%rdi)
 	movq	%rdx, %rdi
-	movq	$2, %rsi
+	movl	$2, %esi
 	call	new_var
 	.random_ret:
 	movq	%rax, 8(%rsp)

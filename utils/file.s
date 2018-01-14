@@ -9,7 +9,7 @@ read_file: # Standard calling convention
 	pushq	%rax
 	movq	%rax, %rdi
 	xorq	%rsi, %rsi
-	movq	$2, %rdx
+	movl	$2, %edx
 	call	fseek@plt
 	movq	(%rsp), %rdi
 	call	ftell@plt
@@ -22,7 +22,7 @@ read_file: # Standard calling convention
 	movq	%rax, %rdi
 	popq	%rdx
 	popq	%rcx
-	movq	$1, %rsi
+	movl	$1, %esi
 	pushq	%rdi
 	pushq	%rcx
 	call	fread@plt

@@ -7,13 +7,13 @@ main:
 	movq	%rsp, %rbp
 
 	pushq	$0
-	movq	$1, %rdi
+	movl	$1, %edi
 	call	new_ivar
 	pushq	%rax
-	movq	$2, %rdi
+	movl	$2, %edi
 	call	new_ivar
 	pushq	%rax
-	movq	$3, %rdi
+	movl	$3, %edi
 	call	new_ivar
 	pushq	%rax
 	call	list

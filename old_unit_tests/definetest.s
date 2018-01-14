@@ -7,7 +7,7 @@ main:
 	movq	%rsp, %rbp
 
 	.main_loop:
-	movq	$200, %rdi
+	movl	$200, %edi
 	call	read_bytes
 	pushq	%rax
 	pushq	%rax
@@ -22,7 +22,7 @@ main:
 	call	drop
 	call	terpri
 
-	movq	$200, %rdi
+	movl	$200, %edi
 	call	read_bytes
 	pushq	%rax
 	call	reference

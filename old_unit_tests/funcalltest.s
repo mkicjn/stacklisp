@@ -6,7 +6,7 @@ lsub:
 	movq	8(%rdi), %rdi
 	movq	8(%rsp), %rax
 	subq	8(%rax), %rdi
-	movq	$2, %rsi
+	movl	$2, %esi
 	call	new_var
 	popq	%rdi
 	movq	%rax, 8(%rsp)
@@ -18,7 +18,7 @@ lmul:
 	movq	8(%rsp), %rdi
 	mulq	8(%rdi)
 	movq	%rax, %rdi
-	movq	$2, %rsi
+	movl	$2, %esi
 	call	new_var
 	popq	%rdi
 	movq	%rax, 8(%rsp)
@@ -45,12 +45,12 @@ main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 
-	movq	$200, %rdi
+	movl	$200, %edi
 	call	read_bytes
 	pushq	%rax
 	call	eval
 
-	movq	$200, %rdi
+	movl	$200, %edi
 	call	read_bytes
 	pushq	%rax
 	call	eval

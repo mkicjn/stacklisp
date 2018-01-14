@@ -8,5 +8,5 @@ zornil: # Returns 1 to %rax if %rdi is 0 or NIL, 0 otherwise
 	xorq	%rax, %rax
 	ret
 .null_ret1:
-	movq	$1, %rax
+	movl	$1, %eax
 	ret

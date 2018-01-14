@@ -6,7 +6,7 @@ main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 
-	movq	$200, %rdi
+	movl	$200, %edi
 	call	read_bytes
 	pushq	%rax
 	call	reference

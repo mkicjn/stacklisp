@@ -24,7 +24,7 @@ emit:
 	ret
 .type	cr, @function
 cr:
-	movq	$10, %rdi
+	movl	$10, %edi
 	call	putchar@plt
 	ret
 .type	pick, @function

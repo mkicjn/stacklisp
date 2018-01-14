@@ -16,7 +16,7 @@ main:
 	jmp	.main_ret
 
 	.repl:
-	movq	$1024, %rdi
+	movl	$1024, %edi
 	call	read_bytes
 	pushq	%rax
 	call	eval

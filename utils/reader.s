@@ -32,13 +32,13 @@ infer_type: # Standard calling convention
 	.infer_type2:
 	cmpq	$1, %rcx
 	jge	.infer_type4
-	movq	$2, %rax
+	movl	$2, %eax
 	ret
 	.infer_type4:
-	movq	$4, %rax
+	movl	$4, %eax
 	ret
 	.infer_type1:
-	movq	$1, %rax
+	movl	$1, %eax
 	ret
 	.infer_type0:
 	cmpb	$'(', (%rdi)
@@ -106,7 +106,7 @@ to_var: # Standard calling convention
 	je	.to_var_nil
 	.to_var2:
 	popq	(%rsp)
-	movq	$24, %rdi
+	movl	$24, %edi
 	call	malloc@plt
 	movq	$2, (%rax)
 	popq	%rdi			# string
@@ -119,7 +119,7 @@ to_var: # Standard calling convention
 	ret
 	.to_var4:
 	popq	(%rsp)
-	movq	$24, %rdi
+	movl	$24, %edi
 	call	malloc@plt
 	movq	$4, (%rax)
 	popq	%rdi			# string
@@ -147,7 +147,7 @@ to_var: # Standard calling convention
 	jz	.to_var_t
 	# Convert to var, quote if quoted
 	popq	%rdi
-	movq	$1, %rsi
+	movl	$1, %esi
 	call	new_var
 	popq	%r10
 	cmpq	$1, %r10
@@ -199,7 +199,7 @@ captok: # Standard calling convention
 	pushq	%rcx
 	movq	%rcx, %rdi
 	incq	%rdi
-	movq	$1, %rsi
+	movl	$1, %esi
 	call	calloc@plt
 	movq	%rax, %rdi
 	popq	%rdx
@@ -236,7 +236,7 @@ caplist: # Standard calling convention
 	pushq	%rcx
 	movq	%rcx, %rdi
 	incq	%rdi
-	movq	$1, %rsi
+	movl	$1, %esi
 	call	calloc@plt
 	movq	%rax, %rdi
 	popq	%rdx
@@ -324,7 +324,7 @@ read_str: # Standard calling convention
 read_bytes: # Standard calling convention.
 	pushq	%rdi
 	incq	%rdi
-	movq	$1, %rsi
+	movl	$1, %esi
 	call	calloc@plt
 	popq	%rdx
 	pushq	%rax

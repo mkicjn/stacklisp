@@ -11,43 +11,43 @@ main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 
-	movq	$10, %rdi
-	movq	$2, %rsi
+	movl	$10, %edi
+	movl	$2, %esi
 	call	new_var
 	pushq	%rax
 
-	movq	$10, %rdi
-	movq	$2, %rsi
+	movl	$10, %edi
+	movl	$2, %esi
 	call	new_var
 	pushq	%rax
 ######################################
-	movq	$10, %rdi
-	movq	$2, %rsi
+	movl	$10, %edi
+	movl	$2, %esi
 	call	new_var
 	pushq	%rax
 
-	movq	$20, %rdi
-	movq	$2, %rsi
-	call	new_var
-	pushq	%rax
-######################################
-	leaq	dbug(%rip), %rdi
-	movq	$1, %rsi
-	call	new_var
-	pushq	%rax
-
-	leaq	dbug(%rip), %rdi
-	movq	$1, %rsi
+	movl	$20, %edi
+	movl	$2, %esi
 	call	new_var
 	pushq	%rax
 ######################################
 	leaq	dbug(%rip), %rdi
-	movq	$1, %rsi
+	movl	$1, %esi
+	call	new_var
+	pushq	%rax
+
+	leaq	dbug(%rip), %rdi
+	movl	$1, %esi
+	call	new_var
+	pushq	%rax
+######################################
+	leaq	dbug(%rip), %rdi
+	movl	$1, %esi
 	call	new_var
 	pushq	%rax
 
 	leaq	dbug2(%rip), %rdi
-	movq	$1, %rsi
+	movl	$1, %esi
 	call	new_var
 	pushq	%rax
 ######################################

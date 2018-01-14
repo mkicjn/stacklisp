@@ -6,8 +6,8 @@ main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 
-	movq	$100, %rdi
-	movq	$2, %rsi
+	movl	$100, %edi
+	movl	$2, %esi
 	call	new_var
 	pushq	%rax
 	call	lread

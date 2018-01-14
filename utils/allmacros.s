@@ -69,7 +69,7 @@
 
 .macro	tab
 	pushregs
-	movq	$'\t', %rdi
+	movl	$'\t', %edi
 	call	putchar@plt
 	popregs
 .endm

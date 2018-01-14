@@ -19,18 +19,18 @@ main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 
-	movq	$10, %rdi
-	movq	$2, %rsi
+	movl	$10, %edi
+	movl	$2, %esi
 	call	new_var
 	pushq	%rax
 
 	leaq	teststr(%rip), %rdi
-	movq	$1, %rsi
+	movl	$1, %esi
 	call	new_var
 	pushq	%rax
 
-	movq	$30, %rdi
-	movq	$2, %rsi
+	movl	$30, %edi
+	movl	$2, %esi
 	call	new_var
 	pushq	%rax
 

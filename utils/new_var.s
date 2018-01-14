@@ -2,24 +2,24 @@
 new_var:
 	pushq	%rdi
 	pushq	%rsi
-	movq	$24, %rdi
+	movl	$24, %edi
 	call	malloc@plt
 	popq	(%rax)	
 	popq	8(%rax)
 	ret
 
 new_ivar:
-	movq	$2, %rsi
+	movl	$2, %esi
 	call	new_var
 	ret
 
 new_svar:
-	movq	$1, %rsi
+	movl	$1, %esi
 	call	new_var
 	ret
 
 new_dvar:
-	movq	$24, %rdi
+	movl	$24, %edi
 	call	malloc@plt
 	movq	$4, (%rax)
 	movsd	%xmm0, 16(%rax)

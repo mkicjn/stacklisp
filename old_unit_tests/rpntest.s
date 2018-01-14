@@ -13,7 +13,7 @@ main:
 	call	to_var
 	pushq	%rax
 
-	movq	$200, %rdi
+	movl	$200, %edi
 	call	read_bytes
 	pushq	%rax
 	dddt

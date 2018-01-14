@@ -6,12 +6,12 @@ main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 
-	movq	$1, %rdi
-	movq	$2, %rsi
+	movl	$1, %edi
+	movl	$2, %esi
 	call	new_var
 	pushq	%rax
-	movq	$2, %rdi
-	movq	$2, %rsi
+	movl	$2, %edi
+	movl	$2, %esi
 	call	new_var
 	pushq	%rax
 	leaq	NIL(%rip), %rax
@@ -22,8 +22,8 @@ main:
 	call	disp
 	call	drop
 	call	terpri
-	movq	$3, %rdi
-	movq	$2, %rsi
+	movl	$3, %edi
+	movl	$2, %esi
 	call	new_var
 	pushq	%rax
 	leaq	NIL(%rip), %rax

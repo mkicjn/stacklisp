@@ -17,7 +17,7 @@ add:
 	jmp	.add2_loop
 	.add2_ret:
 	movq	%rcx, %rdi
-	movq	$2, %rsi
+	movl	$2, %esi
 	call	new_var
 	popq	%rdi
 	pushq	%rax
@@ -53,7 +53,7 @@ add:
 
 .type	mult, @function #|*|
 mult:
-	movq	$1, %rax
+	movl	$1, %eax
 	.mul2_loop:
 	cmpq	$0, 8(%rsp)
 	jz	.mul2_ret
@@ -70,7 +70,7 @@ mult:
 	jmp	.mul2_loop
 	.mul2_ret:
 	movq	%rax, %rdi
-	movq	$2, %rsi
+	movl	$2, %esi
 	call	new_var
 	popq	%rdi
 	pushq	%rax
@@ -138,7 +138,7 @@ subt:
 	movq	%rdx, %rcx
 	.sub2_ret_do:
 	movq	%rcx, %rdi
-	movq	$2, %rsi
+	movl	$2, %esi
 	call	new_var
 	movq	%rax, 8(%rsp)
 	ret
@@ -190,7 +190,7 @@ subt:
 div:
 	cmpq	$0, 16(%rsp)
 	jz	.div_reciprocal
-	movq	$1, %rax
+	movl	$1, %eax
 	.div2_loop:
 	cmpq	$0, 16(%rsp)
 	jz	.div2_ret
@@ -222,7 +222,7 @@ div:
 	jnz	.div2_ret_nz_mod
 	movq	%rax, %rdi
 	.div2_ret2_do:
-	movq	$2, %rsi
+	movl	$2, %esi
 	call	new_var
 	movq	%rax, 8(%rsp)
 	ret
@@ -263,7 +263,7 @@ div:
 	je	.div4_ret4
 	cmpq	$2, (%rdi)
 	je	.div4_ret2
-	movq	$1, %rax
+	movl	$1, %eax
 	movq	%xmm0, %xmm1
 	cvtsi2sd %rax, %xmm0
 	divsd	%xmm1, %xmm0
@@ -283,14 +283,14 @@ div:
 	ret
 	.div_reciprocal:
 	movq	8(%rsp), %rdi
-	movq	$1, %rax
+	movl	$1, %eax
 	cvtsi2sd %rax, %xmm0
 	movsd	16(%rdi), %xmm1
 	cmpq	$2, (%rdi)
 	jne	.div_fp_reciprocal
 	cmpq	$1, 8(%rdi)
 	jne	.div_fp_reciprocal_not1
-	movq	$1, %rdi
+	movl	$1, %edi
 	jmp	.div2_ret2_do
 	.div_fp_reciprocal_not1:
 	cvtsi2sd 8(%rdi), %xmm1
@@ -475,7 +475,7 @@ mod:
 	xorq	%rdx, %rdx
 	divq	8(%rcx)
 	movq	%rdx, %rdi
-	movq	$2, %rsi
+	movl	$2, %esi
 	call	new_var
 	jmp	.mod_ret
 	.mod_2_4:

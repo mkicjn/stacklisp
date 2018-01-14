@@ -6,12 +6,12 @@ main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 
-	movq	$1, %rdi
-	movq	$2, %rsi
+	movl	$1, %edi
+	movl	$2, %esi
 	call	new_var
 	pushq	%rax
-	movq	$2, %rdi
-	movq	$2, %rsi
+	movl	$2, %edi
+	movl	$2, %esi
 	call	new_var
 	pushq	%rax
 	leaq	NIL(%rip), %rax
@@ -19,15 +19,15 @@ main:
 	call	cons
 	call	cons
 
-	movq	$3, %rdi
-	movq	$2, %rsi
+	movl	$3, %edi
+	movl	$2, %esi
 	call	new_var
 	pushq	%rax
 
 	call	rplaca
 
-	movq	$4, %rdi
-	movq	$2, %rsi
+	movl	$4, %edi
+	movl	$2, %esi
 	call	new_var
 	pushq	%rax
 
@@ -38,8 +38,8 @@ main:
 	call	drop
 	call	terpri
 
-	movq	$5, %rdi
-	movq	$2, %rsi
+	movl	$5, %edi
+	movl	$2, %esi
 	call	new_var
 	pushq	%rax
 	leaq	NIL(%rip), %rax

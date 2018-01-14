@@ -16,7 +16,7 @@ subst_args: # Stack-based. Substitutes argument symbols for bytecode flags
 	pushq	32(%rsp) # Recall args
 	pushq	32(%rsp)
 	call	swap # Arguments on top
-	movq	$1, %rbx
+	movl	$1, %ebx
 	# 2 stack items (body | args) + %rbx
 	.subst_args_def_loop:
 	popq	%rdi
