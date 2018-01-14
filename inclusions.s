@@ -5,7 +5,6 @@
 .include "utils/dictionary.s"
 .include "utils/disp_flag.s"
 .include "utils/env.s"
-.include "utils/eqnil.s"
 .include "utils/file.s"
 .include "utils/new_var.s"
 .include "utils/prep_cond.s"

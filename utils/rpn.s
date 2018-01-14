@@ -12,8 +12,7 @@ rpn:
 	pushq	%rax
 	call	eq
 	popq	%rdi
-	call	eqnil
-	cmpq	$1, %rax
+	cmpq	NILptr(%rip), %rdi
 	jne	.rpn_progn
 	pushq	8(%rsp)
 	call	car
@@ -21,8 +20,7 @@ rpn:
 	pushq	%rax
 	call	eq
 	popq	%rdi
-	call	eqnil
-	cmpq	$1, %rax
+	cmpq	NILptr(%rip), %rdi
 	jne	.rpn_cond
 	pushq	8(%rsp)
 	call	car
@@ -30,8 +28,7 @@ rpn:
 	pushq	%rax
 	call	eq
 	popq	%rdi
-	call	eqnil
-	cmpq	$1, %rax
+	cmpq	NILptr(%rip), %rdi
 	jne	.rpn_quote
 	pushq	8(%rsp)
 	call	car
@@ -39,8 +36,7 @@ rpn:
 	pushq	%rax
 	call	eq
 	popq	%rdi
-	call	eqnil
-	cmpq	$1, %rax
+	cmpq	NILptr(%rip), %rdi
 	jne	.rpn_funcall
 	# Finished checking for special cases. Begin reconstructing the input.
 	pushq	8(%rsp)
@@ -103,8 +99,7 @@ rpn:
 	pushq	%rax
 	call	eq
 	popq	%rdi
-	call	eqnil
-	cmpq	$1, %rax
+	cmpq	NILptr(%rip), %rdi
 	je	.rpn_atom_no_return
 	addq	$8, %rsp
 	pushq	$0xee

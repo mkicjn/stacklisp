@@ -2,6 +2,8 @@ self_op_str:
 	.string	"@"
 self_op_sym:
 	.quad	1,self_op_str,0
+self_op_ptr:
+	.quad	self_op_sym
 
 .type	subst_args, @function
 subst_args: # Stack-based. Substitutes argument symbols for bytecode flags
@@ -18,8 +20,7 @@ subst_args: # Stack-based. Substitutes argument symbols for bytecode flags
 	# 2 stack items (body | args) + %rbx
 	.subst_args_def_loop:
 	popq	%rdi
-	call	eqnil
-	cmpq	$1, %rax
+	cmpq	NILptr(%rip), %rdi
 	je	.subst_args_def_self
 	pushq	%rdi
 	pushq	%rdi
@@ -50,8 +51,7 @@ subst_args: # Stack-based. Substitutes argument symbols for bytecode flags
 	.subst_args_loop:
 	# 1 stack item (body) + %rbx
 	movq	(%rsp), %rdi
-	call	eqnil
-	cmpq	$1, %rax
+	cmpq	NILptr(%rip), %rdi
 	je	.subst_args_ret
 	pushq	(%rsp)
 	call	car
@@ -59,8 +59,7 @@ subst_args: # Stack-based. Substitutes argument symbols for bytecode flags
 	je	.subst_args_skip
 	call	local_binding
 	movq	(%rsp), %rdi
-	call	eqnil
-	cmpq	$1, %rax
+	cmpq	NILptr(%rip), %rdi
 	je	.subst_args_undef
 	# The number is on the stack, body underneath
 	call	over

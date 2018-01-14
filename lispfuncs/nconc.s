@@ -2,15 +2,13 @@
 nconc:
 	pushq	16(%rsp) # Fetch the list
 	movq	(%rsp), %rdi
-	call	eqnil
-	cmpq	$1, %rax
+	cmpq	NILptr(%rip), %rdi
 	je	.nconc_nil
 	.nconc_loop:
 	call	dup
 	call	cdr
 	movq	(%rsp), %rdi
-	call	eqnil
-	cmpq	$1, %rax
+	cmpq	NILptr(%rip), %rdi
 	call	drop
 	je	.nconc_do
 	call	cdr

@@ -110,12 +110,10 @@ funcall: # Stack-based. This is the bytecode interpreter.
 
 	.funcall_case:
 	popq	%rdi # Check the top stack item as a condition
-	pushq	%rax # Back up the function
-	call	eqnil
-	movq	%rax, %rdx
+#	pushq	%rax # Back up the function
 	incq	%rcx # Go to next instruction
-	popq	%rax # Recall function
-	cmpq	$1, %rdx
+#	popq	%rax # Recall function
+	cmpq	NILptr(%rip), %rdi
 	jne	.funcall_loop # If the condition isn't nil, execute
 	decq	%rcx # decq to incq at start of loop
 	movq	$1, %rdi # Start with 1 for current present case

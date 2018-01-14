@@ -11,8 +11,7 @@ prep_progn: # Stack-based
 	pushq	$0xdd
 	call	swap
 	movq	(%rsp), %rdi
-	call	eqnil
-	cmpq	$1, %rax
+	cmpq	NILptr(%rip), %rdi
 	jne	.prep_progn_loop
 	popq	(%rsp) # Get rid of last $0xdd
 	.prep_progn_cons_loop:

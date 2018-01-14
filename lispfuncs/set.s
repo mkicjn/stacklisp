@@ -1,16 +1,14 @@
 .type	set, @function #|set|
 set: # Stack-based
 	movq	16(%rsp), %rdi
-	call	eqnil
-	cmpq	$1, %rax
+	cmpq	NILptr(%rip), %rdi
 	je	.set_err
 	pushq	16(%rsp)
 	leaq	T(%rip), %rax
 	pushq	%rax
 	call	eq
 	popq	%rdi
-	call	eqnil
-	cmpq	$1, %rax
+	cmpq	NILptr(%rip), %rdi
 	jne	.set_err
 
 	movq	16(%rsp), %rdi

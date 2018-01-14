@@ -11,8 +11,7 @@ symbol_value: # Stack-based
 
 	call	local_binding
 	movq	(%rsp), %rdi
-	call	eqnil
-	cmpq	$1, %rax
+	cmpq	NILptr(%rip), %rdi
 	jne	.symbol_value_ret
 	addq	$8, %rsp
 	pushq	8(%rsp)

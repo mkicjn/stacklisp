@@ -4,8 +4,7 @@ scc_length: # Standard calling convention
 	xorq	%rcx, %rcx
 	.scc_length_loop:
 	movq	(%rsp), %rdi
-	call	eqnil
-	cmpq	$1, %rax
+	cmpq	NILptr(%rip), %rdi
 	je	.scc_length_ret
 	call	cdr
 	incq	%rcx

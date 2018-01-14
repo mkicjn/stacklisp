@@ -12,8 +12,7 @@ compile: # Standard calling convention. Places every pointer in a list at %rsi i
 	addq	$8, %rbx
 	call	cdr
 	movq	(%rsp), %rdi
-	call	eqnil
-	cmpq	$1, %rax
+	cmpq	NILptr(%rip), %rdi
 	jne	.compile_loop
 	movq	$0xee, (%rbx)
 	movq	$0xfe, 8(%rbx)
