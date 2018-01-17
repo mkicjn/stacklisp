@@ -517,9 +517,20 @@ lfloor:
 
 .type	ceiling, @function #|ceiling|
 ceiling:
-	pushq	8(%rsp)
-	call	lfloor
-	popq	%rax
-	incq	8(%rax)
+	movq	8(%rsp), %rax
+	cmpq	$2, (%rax)
+	je	.ceiling_ret
+	cmpq	$4, (%rax)
+	jne	.ceiling_ret_nil
+	movsd	16(%rax), %xmm0
+	roundsd	$10, %xmm0, %xmm0
+	cvttsd2si %xmm0, %rdi
+	movq	$2, %rsi
+	call	new_var
 	movq	%rax, 8(%rsp)
+	ret
+	.ceiling_ret_nil:
+	leaq	NIL(%rip), %rax
+	movq	%rax, 8(%rsp)
+	.ceiling_ret:
 	ret
