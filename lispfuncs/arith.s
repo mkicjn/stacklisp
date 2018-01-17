@@ -502,9 +502,7 @@ lfloor:
 	je	.lfloor_ret
 	cmpq	$4, (%rax)
 	jne	.lfloor_ret_nil
-	movsd	16(%rax), %xmm0
-	roundsd	$9, %xmm0, %xmm0
-	cvttsd2si %xmm0, %rdi
+	cvttsd2si 16(%rax), %rdi
 	movq	$2, %rsi
 	call	new_var
 	movq	%rax, 8(%rsp)
