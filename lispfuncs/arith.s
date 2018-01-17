@@ -534,3 +534,66 @@ ceiling:
 	movq	%rax, 8(%rsp)
 	.ceiling_ret:
 	ret
+
+.type	expt, @function #|^|
+expt:
+	xorq	%rcx, %rcx
+	#.expt_0: # Check the first argument
+	movq	16(%rsp), %rax
+	cmpq	$2, (%rax)
+	jne	.expt_1
+	cvtsi2sd 8(%rax), %xmm0
+	cmpq	$0, 8(%rax)
+	jl	.expt_2
+	incq	%rcx
+	jmp	.expt_2
+	.expt_1: # First arg could be a double
+	cmpq	$4, (%rax)
+	jne	.expt_ret_nil
+	movsd	16(%rax), %xmm0
+	.expt_2: # Check the second argument
+	movq	8(%rsp), %rax
+	cmpq	$2, (%rax)
+	jne	.expt_3
+	cvtsi2sd 8(%rax), %xmm1
+	cmpq	$0, 8(%rax)
+	jl	.expt_4
+	incq	%rcx
+	jmp	.expt_4
+	.expt_3: # Second arg could be a double
+	cmpq	$4, (%rax)
+	jne	.expt_ret_nil
+	movsd	16(%rax), %xmm1
+	.expt_4:
+	pushq	%rcx
+	movl	%esp, %edx
+	andl	$15, %edx
+	testb	%dl, %dl
+	jz	.expt_aligned
+	subq	$8, %rsp
+	call	pow@plt
+	addq	$8, %rsp
+	jmp	.expt_do
+	.expt_aligned:
+	call	pow@plt
+	.expt_do:
+	popq	%rcx
+	cmpq	$2, %rcx
+	jne	.expt_ret4
+	#.expt_ret2: # Answer is an integer
+	cvttsd2si %xmm0, %rdi
+	movq	$2, %rsi
+	call	new_var
+	popq	(%rsp)
+	movq	%rax, 8(%rsp)
+	ret
+	.expt_ret4:
+	call	new_dvar
+	popq	(%rsp)
+	movq	%rax, 8(%rsp)
+	ret
+	.expt_ret_nil:
+	leaq	NIL(%rip), %rax
+	popq	(%rsp)
+	movq	%rax, 8(%rsp)
+	ret
