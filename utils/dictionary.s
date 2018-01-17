@@ -309,6 +309,16 @@ dict_atom_cell:
 	.quad	0,dict_atom_sym,dict_atom_var
 dict_atom_def:
 	.quad	0,dict_atom_cell,dict_car_def
+dict_lfloor_str:
+	.string	"FLOOR"
+dict_lfloor_sym:
+	.quad	1,dict_lfloor_str
+dict_lfloor_var:
+	.quad	3,lfloor
+dict_lfloor_cell:
+	.quad	0,dict_lfloor_sym,dict_lfloor_var
+dict_lfloor_def:
+	.quad	0,dict_lfloor_cell,dict_atom_def
 dict_mod_str:
 	.string	"MOD"
 dict_mod_sym:
@@ -318,7 +328,7 @@ dict_mod_var:
 dict_mod_cell:
 	.quad	0,dict_mod_sym,dict_mod_var
 dict_mod_def:
-	.quad	0,dict_mod_cell,dict_atom_def
+	.quad	0,dict_mod_cell,dict_lfloor_def
 dict_n_equal_str:
 	.string	"="
 dict_n_equal_sym:

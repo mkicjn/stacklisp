@@ -494,3 +494,23 @@ mod:
 	popq	(%rsp)
 	movq	%rax, 8(%rsp)
 	ret
+
+.type	lfloor, @function #|floor|
+lfloor:
+	movq	8(%rsp), %rax
+	cmpq	$2, (%rax)
+	je	.lfloor_ret
+	cmpq	$4, (%rax)
+	jne	.lfloor_ret_nil
+	movsd	16(%rax), %xmm0
+	roundsd	$9, %xmm0, %xmm0
+	cvttsd2si %xmm0, %rdi
+	movq	$2, %rsi
+	call	new_var
+	movq	%rax, 8(%rsp)
+	ret
+	.lfloor_ret_nil:
+	leaq	NIL(%rip), %rax
+	movq	%rax, 8(%rsp)
+	.lfloor_ret:
+	ret

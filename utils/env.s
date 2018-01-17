@@ -15,14 +15,14 @@ env_assoc: # Standard calling convention
 	pushq	%rsi # sym
 	pushq	%rdi # env
 	.env_assoc_loop:
-	pushq	8(%rsp)
-	pushq	8(%rsp) # Duplicate both arguments
+	pushq	8(%rsp) # symbol
+	pushq	8(%rsp) # environment
 	call	car
 	call	car # Get token for definition
 	call	eq
 	popq	%rdi
-	cmpq	NILptr(%rip), %rdi # Check definition match
-	jne	.env_assoc_ret
+	cmpq	Tptr(%rip), %rdi # Check definition match
+	je	.env_assoc_ret
 	call	cdr
 	movq	(%rsp), %rdi
 	cmpq	NILptr(%rip), %rdi

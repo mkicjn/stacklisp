@@ -22,23 +22,23 @@
 	call	exit@plt
 .endm
 
-.macro	dd
+.macro	dp
 	call	print
 	call	drop
 .endm
 
-.macro	ddd
+.macro	dpd
 	call	dup
-	dd
+	dp
 .endm
 
-.macro	ddt
-	dd
+.macro	dpt
+	dp
 	call	scc_terpri
 .endm
 
-.macro	dddt
-	ddd
+.macro	dpdt
+	dpd
 	call	scc_terpri
 .endm
 
@@ -92,5 +92,23 @@ popstr:
 	popq	\reg
 	leaq	popstr(%rip), %rdi
 	call	puts@plt
+	popregs
+.endm
+
+.data
+debugcounter:
+	.quad	0
+.text
+
+debugstr:
+	.string "DEBUG %li\n"
+
+.macro	printdebug
+	pushregs
+	leaq	debugstr(%rip), %rdi
+	movq	debugcounter(%rip), %rsi
+	xorq	%rax, %rax
+	call	printf@plt
+	incq	debugcounter(%rip)
 	popregs
 .endm
