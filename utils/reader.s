@@ -66,11 +66,6 @@ infer_type: # Standard calling convention
 	movq	$-1, %rax
 	ret
 
-scanl:
-	.string	"%li"
-scand:
-	.string	"%lf"
-
 .type	quote_var, @function
 quote_var: # Standard calling convention
 	leaq	dict_quote_sym(%rip), %rax
@@ -111,11 +106,10 @@ to_var: # Standard calling convention
 	movq	$2, (%rax)
 	popq	%rdi			# string
 	pushq	%rax
-	leaq	scanl(%rip), %rsi	# format
-	leaq	8(%rax), %rdx		# &long
-	xorq	%rax, %rax		# No floating point arguments to sscanf
-	call	sscanf@plt
+	call	atol@plt
+	movq	%rax, %rdx
 	popq	%rax
+	movq	%rdx, 8(%rax)
 	ret
 	.to_var4:
 	popq	(%rsp)
@@ -124,11 +118,10 @@ to_var: # Standard calling convention
 	movq	$4, (%rax)
 	popq	%rdi			# string
 	pushq	%rax
-	leaq	scand(%rip), %rsi	# format
-	leaq	16(%rax), %rdx		# &double
-	xorq	%rax, %rax		# No floating point arguments to sscanf
-	call	sscanf@plt
+	xorq	%rsi, %rsi
+	call	strtod@plt
 	popq	%rax
+	movsd	%xmm0, 16(%rax)
 	ret
 	.to_var1:
 	movq	(%rsp), %rdi
