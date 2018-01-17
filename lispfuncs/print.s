@@ -1,9 +1,9 @@
 fnum:
-	.string "%li"
+	.string "%ld"
 fstr:
 	.string "%s"
 fdub:
-	.string "%lf"
+	.string "%f"
 ffun:
 	.string	"{FUNCTION}"
 fspec:
@@ -57,6 +57,15 @@ print:
 	movsd	16(%rdi), %xmm0
 	leaq	fdub(%rip), %rdi
 	movl	$1, %eax
+	movl	%esp, %edx
+	andl	$15, %edx
+	testb	%dl, %dl
+	jz	.print_dub_aligned
+	subq	$8, %rsp
+	call	printf@plt
+	addq	$8, %rsp
+	jmp	.print_exit
+	.print_dub_aligned:
 	call	printf@plt
 	jmp	.print_exit
 	.print_cell:
