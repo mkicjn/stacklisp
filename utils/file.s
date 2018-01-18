@@ -18,7 +18,8 @@ read_file: # Standard calling convention
 	call	rewind@plt
 	movq	(%rsp), %rdi
 	incq	%rdi
-	call	malloc@plt
+	movl	$1, %esi
+	call	calloc@plt
 	movq	%rax, %rdi
 	popq	%rdx
 	popq	%rcx
