@@ -101,27 +101,18 @@ to_var: # Standard calling convention
 	je	.to_var_nil
 	.to_var2:
 	popq	(%rsp)
-	movl	$24, %edi
-	call	malloc@plt
-	movq	$2, (%rax)
 	popq	%rdi			# string
-	pushq	%rax
 	call	atol@plt
-	movq	%rax, %rdx
-	popq	%rax
-	movq	%rdx, 8(%rax)
+	movq	%rax, %rdi
+	movl	$2, %esi
+	call	new_var
 	ret
 	.to_var4:
 	popq	(%rsp)
-	movl	$24, %edi
-	call	malloc@plt
-	movq	$4, (%rax)
 	popq	%rdi			# string
-	pushq	%rax
 	xorq	%rsi, %rsi
 	call	strtod@plt
-	popq	%rax
-	movsd	%xmm0, 16(%rax)
+	call	new_dvar
 	ret
 	.to_var1:
 	movq	(%rsp), %rdi
