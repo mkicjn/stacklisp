@@ -122,8 +122,8 @@ to_var: # Standard calling convention
 	leaq	NILstr(%rip), %rsi
 	call	strcasecmp@plt
 	cmpq	$0, %rax
-	movq	(%rsp), %rdi
 	jz	.to_var_nil
+	movq	(%rsp), %rdi
 	# Check if T
 	leaq	Tstr(%rip), %rsi
 	call	strcasecmp@plt
