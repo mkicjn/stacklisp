@@ -149,13 +149,11 @@ to_var: # Standard calling convention
 	call	quote_var
 	ret
 	.to_var_nil:
-	popq	(%rsp)
-	addq	$8, %rsp # drop
+	addq	$16, %rsp
 	leaq	NIL(%rip), %rax
 	ret
 	.to_var_t:
-	popq	(%rsp)
-	addq	$8, %rsp # drop
+	addq	$16, %rsp # drop
 	leaq	T(%rip), %rax
 	ret
 
